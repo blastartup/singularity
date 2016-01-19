@@ -23,6 +23,39 @@ namespace Singularity
 		/// Allowing item-based exception handling on collections and LINQ statements.
 		/// </summary>
 		/// <typeparam name="T">Generic type.</typeparam>
+		/// <param name="items">Source enumberable items.</param>
+		/// <param name="action">Action to perform upon exception captured by any item.</param>
+		/// <returns>Original items unchanged.</returns>
+		public static IEnumerable<T> CatchExceptions<T>(this IEnumerable<T> items, Action<Exception> action = null)
+		{
+			using (var enumerator = items.GetEnumerator())
+			{
+				var next = true;
+
+				while (next)
+				{
+					try
+					{
+						next = enumerator.MoveNext();
+					}
+					catch (Exception ex)
+					{
+						action?.Invoke(ex);
+						continue;
+					}
+
+					if (next)
+					{
+						yield return enumerator.Current;
+					}
+				}
+			}
+		}
+
+		/// <summary>
+		/// Allowing item-based exception handling on collections and LINQ statements.
+		/// </summary>
+		/// <typeparam name="T">Generic type.</typeparam>
 		/// <typeparam name="TException">Generic exception type to capture.</typeparam>
 		/// <param name="items">Source enumberable items.</param>
 		/// <param name="action">Action to perform upon exception captured by any item.</param>

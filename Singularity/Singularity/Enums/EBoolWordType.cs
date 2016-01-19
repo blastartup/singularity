@@ -1,7 +1,10 @@
+using System;
+
+// ReSharper disable once CheckNamespace
 
 namespace Singularity
 {
-	public enum EBoolWordTypes : byte
+	public enum EBoolWordType
 	{
 		[EnumAdditional("TrueFalse")]
 		TrueFalse,

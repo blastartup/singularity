@@ -9,13 +9,13 @@ namespace Singularity
 		/// <summary>
 		/// Calculates the percentage of the number
 		/// </summary>
-		/// <param name="val"></param>
 		/// <param name="value">The value against percentage to be calculated</param>
+		/// <param name="percentile"></param>
 		/// <param name="roundOffTo">Precision of the result</param>
 		/// <returns></returns>
-		public static Double Percentage(this Double value, Double aPercentile, Int32 aRoundOffTo)
+		public static Double Percentage(this Double value, Double percentile, Int32 roundOffTo)
 		{
-			return Math.Round((value / 100d) * aPercentile, aRoundOffTo);
+			return Math.Round((value / 100d) * percentile, roundOffTo);
 		}
 
 		public static Double ToRadians(this Double degrees)
@@ -56,13 +56,13 @@ namespace Singularity
 		/// Returns either the given input, maximum or minimum value, effectively limiting the given input value to range within the high low limits.
 		/// </summary>
 		/// <param name="input">Number to be limited</param>
-		/// <param name="aLowLimt">The minimum value.</param>
-		/// <param name="aHighLimit">The maximum value.</param>
+		/// <param name="lowLimit">The minimum value.</param>
+		/// <param name="highLimit">The maximum value.</param>
 		/// <returns>A number between the low and high limits inclusive.</returns>
-		public static Double LimitInRange(this Double input, Double aLowLimt, Double aHighLimit)
+		public static Double LimitInRange(this Double input, Double lowLimit, Double highLimit)
 		{
 			Boolean notUsed;
-			return LimitInRange(input, aLowLimt, aHighLimit, out notUsed);
+			return LimitInRange(input, lowLimit, highLimit, out notUsed);
 		}
 
 		/// <summary>
@@ -70,26 +70,26 @@ namespace Singularity
 		/// If the value is adjusted then set the aWasOutOfRange flag.
 		/// </summary>
 		/// <param name="input">Number to be limited</param>
-		/// <param name="aLowLimt">The minimum value.</param>
-		/// <param name="aHighLimit">The maximum value.</param>
-		/// <param name="aWasOutOfRange">Returning value indicating whether the given value was outside the range.</param>
+		/// <param name="lowLimit">The minimum value.</param>
+		/// <param name="highLimit">The maximum value.</param>
+		/// <param name="wasOutOfRange">Returning value indicating whether the given value was outside the range.</param>
 		/// <returns></returns>
-		public static Double LimitInRange(this Double input, Double aLowLimt, Double aHighLimit, out Boolean aWasOutOfRange)
+		public static Double LimitInRange(this Double input, Double lowLimit, Double highLimit, out Boolean wasOutOfRange)
 		{
-			if (aLowLimt > aHighLimit)
+			if (lowLimit > highLimit)
 			{
-				aLowLimt = aLowLimt.Swap(ref aHighLimit);
+				lowLimit = lowLimit.Swap(ref highLimit);
 			}
 
-			var result = input.LimitMin(aLowLimt).LimitMax(aHighLimit);
-			aWasOutOfRange = input != result;
+			var result = input.LimitMin(lowLimit).LimitMax(highLimit);
+			wasOutOfRange = !input.Equals(result);
 			return result;
 		}
 
-		public static Boolean IsOutOfRange(this Double input, Double aLowLimt, Double aHighLimit)
+		public static Boolean IsOutOfRange(this Double input, Double lowLimit, Double highLimit)
 		{
 			var result = false;
-			LimitInRange(input, aLowLimt, aHighLimit, out result);
+			LimitInRange(input, lowLimit, highLimit, out result);
 			return result;
 		}
 

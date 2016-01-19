@@ -463,7 +463,7 @@ namespace Singularity
 			{
 				successful = DateTime.TryParse(value, out lInnerResult);
 			}
-			catch (Exception)
+			catch (ArithmeticException)
 			{
 			}
 			finally
@@ -897,18 +897,18 @@ namespace Singularity
 		{
 			if (value.Length == 0) return String.Empty;
 
-			Words ignoreWords = null;
+			WordCollection ignoreWords = null;
 			if (ignoreShortWords)
 			{
 				var current = new AssemblyInfo(Assembly.GetEntryAssembly());
 				using (TextReader reader = new StreamReader(current.GetEmbeddedResourceStream(Factory.CurrentCultureInfo.ResourceForShortNoTitleCaseWords())))
 				{
-					ignoreWords = new Words(reader.ReadToEnd(), Environment.NewLine);
+					ignoreWords = new WordCollection(reader.ReadToEnd(), Environment.NewLine);
 				}
 			}
 
 			var result = new StringBuilder(value.Length);
-			var lWordCollection = new Words(value);
+			var lWordCollection = new WordCollection(value);
 			foreach (var iWord in lWordCollection)
 			{
 				if (ignoreShortWords == true && iWord != lWordCollection[0] && ignoreWords.Contains(iWord.ToLower()))
@@ -1101,7 +1101,7 @@ namespace Singularity
 				delimiter = ValueLib.Space.StringValue;
 			}
 
-			var words = new Words(value.Split(delimiter.ToCharArray()));
+			var words = new WordCollection(value.Split(delimiter.ToCharArray()));
 			if (wordCount.Equals(-1))
 			{
 				wordCount = words.Count;
@@ -1137,7 +1137,7 @@ namespace Singularity
 		/// <returns>Returns the last word of the string.</returns>
 		public static String LastWord(this String value, String delimiter)
 		{
-			var words = new Words(value, delimiter, 1, -1);
+			var words = new WordCollection(value, delimiter, 1, -1);
 			return words.Count > 0 ? words[words.Count - 1] : String.Empty;
 		}
 
@@ -1206,7 +1206,7 @@ namespace Singularity
 
 #region Surrounding
 
-		public static Boolean IsSurroundedBy(this String value, params ESurroundTypes[] surroundTypes)
+		public static Boolean IsSurroundedBy(this String value, params ESurroundType[] surroundTypes)
 		{
 			var result = false;
 			if (!value.IsEmpty() && value.Length > 1 && surroundTypes != null)
@@ -1218,31 +1218,31 @@ namespace Singularity
 				{
 					switch (surroundType)
 					{
-						case ESurroundTypes.SingleQuote:
+						case ESurroundType.SingleQuote:
 							result = firstChar.Equals('\'') && lastChar.Equals('\'');
 							break;
 
-						case ESurroundTypes.DoubleQuote:
+						case ESurroundType.DoubleQuote:
 							result = firstChar.Equals('"') && lastChar.Equals('"');
 							break;
 
-						case ESurroundTypes.Braces:
+						case ESurroundType.Braces:
 							result = firstChar.Equals('{') && lastChar.Equals('}');
 							break;
 
-						case ESurroundTypes.SquareBrackets:
+						case ESurroundType.SquareBrackets:
 							result = firstChar.Equals('[') && lastChar.Equals(']');
 							break;
 
-						case ESurroundTypes.RoundBrackets:
+						case ESurroundType.RoundBrackets:
 							result = firstChar.Equals('(') && lastChar.Equals(')');
 							break;
 
-						case ESurroundTypes.AngleBrackets:
+						case ESurroundType.AngleBrackets:
 							result = firstChar.Equals('<') && lastChar.Equals('>');
 							break;
 
-						case ESurroundTypes.DoubleAngleBrackets:
+						case ESurroundType.DoubleAngleBrackets:
 							result = firstChar.Equals('«') && lastChar.Equals('»');
 							break;
 
@@ -1752,7 +1752,7 @@ namespace Singularity
 			}
 			else
 			{
-				var wordCollection = new Words(value);
+				var wordCollection = new WordCollection(value);
 				for (var i = 0; i < wordCollection.Count - 1; i++)
 				{
 					// added one to represent the space.
@@ -1906,11 +1906,11 @@ namespace Singularity
 
 		public static String EncryptSha1(this String password)
 		{
-			var hh = new SHA1Managed();
-			var combinedd = Encoding.ASCII.GetBytes(password);
-			var result = hh.ComputeHash(combinedd);
-
-			return BitConverter.ToString(result).ToLower().Replace("-", "");
+			using (var hh = new SHA1Managed())
+			{
+				var combined = Encoding.ASCII.GetBytes(password);
+				return BitConverter.ToString(hh.ComputeHash(combined)).ToLower().Replace("-", "");
+			}
 		}
 
 		public static String Decrypt(this String input, String key)
@@ -2070,15 +2070,19 @@ namespace Singularity
 		public static Boolean IsTime24(this String time)
 		{
 			if (time.IsEmpty())
+			{
 				return false;
+			}
 
 			time = time.Trim();
 
 			var pattern = @"^\d{1,2}:\d\d(:\d\d){0,1}$";
 			var regex = new Regex(pattern);
 			var match = regex.Match(time);
-			if (match == null)
+			if (!match.Success)
+			{
 				return false;
+			}
 
 			// Make sure that numeric values are valid.
 			var digits = time.Split(':');
@@ -2091,17 +2095,23 @@ namespace Singularity
 			{
 				// Make sure the hour part is between 0 and 23.
 				if (Int32.Parse(digits[0]) > 23)
+				{
 					return false;
+				}
 
 				// Make sure the minute part is between 0 and 59.
 				if (Int32.Parse(digits[1]) > 59)
+				{
 					return false;
+				}
 
 				// Make sure the second part is between 0 and 59.
 				if (digits.Length == 3 && Int32.Parse(digits[2]) > 59)
+				{
 					return false;
+				}
 			}
-			catch
+			catch (ArithmeticException)
 			{
 				return false;
 			}

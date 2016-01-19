@@ -48,7 +48,7 @@ namespace Singularity
 		public static IList<String> GetNames(Type enumType)
 		{
 			var result = new List<String>();
-			result.AddRange(GetEnumsCore(enumType).Select(e => e.Name));
+			result.AddRange(GetEnumsCore(enumType).Select(e => e.HumanisedName));
 			return result;
 		}
 
@@ -72,17 +72,18 @@ namespace Singularity
 			{
 				//Check for our custom attribute
 				var attributes = fieldInfo.GetCustomAttributes(typeof(EnumAdditionalAttribute), false) as EnumAdditionalAttribute[];
-				if (attributes.Length > 0)
+				if (attributes != null && attributes.Length > 0)
 				{
 					var attribute = attributes[0];
-					attribute.Value = (Int32)fieldInfo.GetValue(enumType);
-					attribute.ValueName = fieldInfo.Name;
+					attribute.EnumValue = (Int32)fieldInfo.GetValue(enumType);
+					//attribute.ValueName = fieldInfo.Name;
 					result.Add(attribute);
 				}
 			}
 			return result;
 		}
 
+		[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1007:UseGenericsWhereAppropriate")]
 		public static Boolean ParseCode(Type type, String code, Boolean ignoreCase, ref Object value)
 		{
 			var defaultValue = (value != null) ? value : null;
@@ -177,7 +178,7 @@ namespace Singularity
 				var attributes = fieldInfo.GetCustomAttributes(typeof(EnumAdditionalAttribute), false) as EnumAdditionalAttribute[];
 				if (attributes.Length > 0)
 				{
-					lEnumStringCode = attributes[0].Name;
+					lEnumStringCode = attributes[0].HumanisedName;
 
 					//Check for equality then select actual enum value.
 					if (String.Compare(lEnumStringCode, code, ignoreCase) == 0)
@@ -204,7 +205,7 @@ namespace Singularity
 			var resource = provider.GetEnumResource(enumValue);
 			if (resource != null)
 			{
-				result = resource.Value;
+				result = resource.EnumValue;
 			}
 			return result;
 		}
@@ -278,7 +279,7 @@ namespace Singularity
 			var enumAdditionalList = GetEnumAdditionals(enumType);
 			foreach (var enumAdditional in enumAdditionalList)
 			{
-				returnValue.Add(new KeyValuePair<Int32, String>(enumAdditional.Value, enumAdditional.Name));
+				returnValue.Add(new KeyValuePair<Int32, String>(enumAdditional.EnumValue, enumAdditional.HumanisedName));
 			}
 			return returnValue;
 		}

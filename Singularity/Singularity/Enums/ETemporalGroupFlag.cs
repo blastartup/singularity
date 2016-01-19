@@ -4,10 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+// ReSharper disable once CheckNamespace
+
 namespace Singularity
 {
 	[Flags]
-	public enum TemporalGroupFlags
+	public enum ETemporalGroupFlag
 	{
 		[TimeSpan("year", Days = 365)]
 		Year = 1,

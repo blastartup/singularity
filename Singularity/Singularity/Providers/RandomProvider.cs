@@ -148,8 +148,10 @@ namespace Singularity
 		/// <returns></returns>
 		public Int32 Next(Int32 lowerBound, Int32 upperBound)
 		{
-			if(lowerBound>upperBound)
-				throw new ArgumentOutOfRangeException("upperBound", upperBound, "upperBound must be >=lowerBound");
+			if (lowerBound > upperBound)
+			{
+				throw new ArgumentOutOfRangeException(nameof(upperBound), upperBound, "upperBound must be >=lowerBound");
+			}
 
 			var t=(_x^(_x<<11));
 			_x=_y; _y=_z; _z=_w;
@@ -174,8 +176,10 @@ namespace Singularity
 		/// <returns></returns>
 		public Double NextDouble()
 		{	
-			var t=(_x^(_x<<11));
-			_x=_y; _y=_z; _z=_w;
+			var t = (_x^(_x<<11));
+			_x = _y;
+			_y = _z;
+			_z = _w;
 
 			// Here we can gain a 2x speed improvement by generating a value that can be cast to 
 			// an int instead of the more easily available uint. If we then explicitly cast to an 
@@ -198,18 +202,20 @@ namespace Singularity
 		public void NextBytes(Byte[] buffer)
 		{
 			// Fill up the bulk of the buffer in chunks of 4 bytes at a time.
-			UInt32 x=this._x, y=this._y, z=this._z, w=this._w;
-			var i=0;
+			UInt32 x = _x, y = _y, z = _z, w = _w;
+			var i = 0;
 			UInt32 t;
-			for(var bound=buffer.Length-3; i<bound;)
+			for(var bound=buffer.Length-3; i < bound;)
 			{	
 				// Generate 4 bytes. 
 				// Increased performance is achieved by generating 4 random bytes per loop.
 				// Also note that no mask needs to be applied to zero out the higher order bytes before
 				// casting because the cast ignores thos bytes. Thanks to Stefan Troschütz for pointing this out.
-				t=(x^(x<<11));
-				x=y; y=z; z=w;
-				w=(w^(w>>19))^(t^(t>>8));
+				t = (x^(x<<11));
+				x = y;
+				y = z;
+				z = w;
+				w = (w^(w>>19))^(t^(t>>8));
 
 				buffer[i++] = (Byte)w;
 				buffer[i++] = (Byte)(w>>8);
@@ -218,17 +224,19 @@ namespace Singularity
 			}
 
 			// Fill up any remaining bytes in the buffer.
-			if(i<buffer.Length)
+			if(i < buffer.Length)
 			{
 				// Generate 4 bytes.
-				t=(x^(x<<11));
-				x=y; y=z; z=w;
-				w=(w^(w>>19))^(t^(t>>8));
+				t = (x^(x<<11));
+				x = y;
+				y = z;
+				z = w;
+				w = (w^(w>>19))^(t^(t>>8));
 
 				buffer[i++] = (Byte)w;
 				if(i<buffer.Length)
 				{
-					buffer[i++]=(Byte)(w>>8);
+					buffer[i++] = (Byte)(w>>8);
 					if(i<buffer.Length)
 					{	
 						buffer[i++] = (Byte)(w>>16);
@@ -239,7 +247,10 @@ namespace Singularity
 					}
 				}
 			}
-			this._x=x; this._y=y; this._z=z; this._w=w;
+			_x = x;
+			_y = y;
+			_z = z;
+			_w = w;
 		}
 
 
@@ -292,7 +303,8 @@ namespace Singularity
 		/// random number generator algorithm generates 32 random bits that can be cast directly to 
 		/// a uint.
 		/// </summary>
-		/// <returns></returns>
+		/// <returns>A positive unsigned random integer very quickly.</returns>
+		[CLSCompliant(false)]
 		public UInt32 NextUInt()
 		{
 			var t=(_x^(_x<<11));
@@ -308,7 +320,7 @@ namespace Singularity
 		/// The slight difference in range means this method is slightly faster than Next()
 		/// but is not functionally equivalent to System.Random.Next().
 		/// </summary>
-		/// <returns></returns>
+		/// <returns>A positive random integer quickly.</returns>
 		public Int32 NextInt()
 		{
 			var t=(_x^(_x<<11));
@@ -327,7 +339,7 @@ namespace Singularity
 		/// This method's performance is improved by generating 32 bits in one operation and storing them
 		/// ready for future calls.
 		/// </summary>
-		/// <returns></returns>
+		/// <returns>A random boolean value.</returns>
 		public Boolean NextBool()
 		{
 			if(_bitMask==1)

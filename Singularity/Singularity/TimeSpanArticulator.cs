@@ -11,7 +11,7 @@ namespace Singularity
 		// static constructor
 		static TimeSpanArticulator()
 		{
-			_mGroupTypes = new List<TemporalGroupFlags>(Enum.GetValues(typeof(TemporalGroupFlags)) as IEnumerable<TemporalGroupFlags>);
+			_mGroupTypes = new List<ETemporalGroupFlag>(Enum.GetValues(typeof(ETemporalGroupFlag)) as IEnumerable<ETemporalGroupFlag>);
 		}
 
 		/// <summary>
@@ -28,7 +28,7 @@ namespace Singularity
 		/// </summary>
 		/// <param name="span">The TimeSpan to articulate</param>
 		/// <param name="accuracy">Accuracy Flags</param>
-		public static String Articulate(TimeSpan span, TemporalGroupFlags accuracy)
+		public static String Articulate(TimeSpan span, ETemporalGroupFlag accuracy)
 		{
 			// populate a list with temporalgroupings. Each temporal grouping
 			// represents a particular element of the articulation, ordered
@@ -91,21 +91,21 @@ namespace Singularity
 		}
 
 		// a cache of all the TemporalGroupTypes
-		private static List<TemporalGroupFlags> _mGroupTypes;
+		private static List<ETemporalGroupFlag> _mGroupTypes;
 
 		private static readonly String Seperator = ",";
 		private static readonly String Plural = "s";
 		private static readonly String And = "and";
 		private static readonly String Space = ValueLib.Space.StringValue;
 
-		private static readonly TemporalGroupFlags DefaultAccuracy =
-			 TemporalGroupFlags.Hour | TemporalGroupFlags.Day |
-			 TemporalGroupFlags.Week | TemporalGroupFlags.Month |
-			 TemporalGroupFlags.Year;
+		private static readonly ETemporalGroupFlag DefaultAccuracy =
+			 ETemporalGroupFlag.Hour | ETemporalGroupFlag.Day |
+			 ETemporalGroupFlag.Week | ETemporalGroupFlag.Month |
+			 ETemporalGroupFlag.Year;
 
 		internal class TemporalGrouping
 		{
-			internal TemporalGrouping(TemporalGroupFlags type, Int32 magnitude)
+			internal TemporalGrouping(ETemporalGroupFlag type, Int32 magnitude)
 			{
 				this.Type = type;
 				this.Magnitude = magnitude;
@@ -115,7 +115,7 @@ namespace Singularity
 			/// The type of the temporal grouping
 			/// e.g. 'hour' or 'day'
 			/// </summary>
-			internal TemporalGroupFlags Type
+			internal ETemporalGroupFlag Type
 			{
 				get;
 				private set;

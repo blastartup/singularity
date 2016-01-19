@@ -3,7 +3,9 @@ using System.Diagnostics;
 using System.Net.Mail;
 using System.Text.RegularExpressions;
 
-namespace Singularity
+// ReSharper disable once CheckNamespace
+
+namespace Singularity.EmailService
 {
 	[DebuggerStepThrough]
 	public static class MailAddressExtension

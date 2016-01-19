@@ -14,13 +14,13 @@ namespace Singularity
 	/// A special class to handle worded text.
 	/// </summary>
 	[DebuggerStepThrough]
-	public class Words : IEnumerable<String>, ICloneable<Words>, IStateEmpty
+	public class WordCollection : IEnumerable<String>, ICloneable<WordCollection>, IStateEmpty
 	{
 		/// <summary>
 		/// Instantiate an empty word delemiter.
 		/// </summary>
 		[DebuggerHidden]
-		public Words()
+		public WordCollection()
 		{
 			_internalList = new List<String>();
 			_delimiter = ValueLib.Space.StringValue;
@@ -31,8 +31,9 @@ namespace Singularity
 		/// </summary>
 		/// <param name="collection">A string collection of words.</param>
 		/// <param name="delimiter">The word delimiter which by default is a Space.</param>
+		[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed")]
 		[DebuggerHidden]
-		public Words(ICollection<String> collection, String delimiter = ValueLib.Space.StringValue) 
+		public WordCollection(ICollection<String> collection, String delimiter = ValueLib.Space.StringValue) 
 		{
 			_internalList = new List<String>(collection);
 			_delimiter = delimiter;
@@ -43,7 +44,7 @@ namespace Singularity
 		/// </summary>
 		/// <param name="value">Primary space delimited string on which to extrapolate words from.</param>
 		[DebuggerHidden]
-		public Words(String value)
+		public WordCollection(String value)
 			: this(value, ValueLib.Space.StringValue, 1, -1)
 		{
 		}
@@ -54,7 +55,7 @@ namespace Singularity
 		/// <param name="value">Primary space delimited string on which to extrapolate words from.</param>
 		/// <param name="positionOfWord">Position of word to be returned.  Must be 1 or greater.</param>
 		[DebuggerHidden]
-		public Words(String value, Int32 positionOfWord)
+		public WordCollection(String value, Int32 positionOfWord)
 			: this(value, ValueLib.Space.StringValue, positionOfWord, -1)
 		{
 		}
@@ -66,7 +67,7 @@ namespace Singularity
 		/// <param name="positionOfFirstWord">Position of first word to be returned.  Must be 1 or greater.</param>
 		/// <param name="wordCount">Number of words to return.</param>
 		[DebuggerHidden]
-		public Words(String value, Int32 positionOfFirstWord, Int32 wordCount)
+		public WordCollection(String value, Int32 positionOfFirstWord, Int32 wordCount)
 			: this(value, ValueLib.Space.StringValue, positionOfFirstWord, wordCount)
 		{
 		}
@@ -78,7 +79,7 @@ namespace Singularity
 		/// <param name="delimiter">A string of characters that separate the words, usually a space.</param>
 		/// <returns>Returns a list of a all words delimited by the given delimiter.</returns>
 		[DebuggerHidden]
-		public Words(String value, String delimiter)
+		public WordCollection(String value, String delimiter)
 			: this(value, delimiter, 1, -1)
 		{
 		}
@@ -92,7 +93,7 @@ namespace Singularity
 		/// <param name="wordCount">Number of words to return. If -1, then all words from the position of the first word will be returned.</param>
 		/// <modified Date="15 October 2009">Created.</modified>
 		[DebuggerHidden]
-		public Words(String value, String delimiter, Int32 positionOfFirstWord, Int32 wordCount)
+		public WordCollection(String value, String delimiter, Int32 positionOfFirstWord, Int32 wordCount)
 		{
 			Contract.Requires(positionOfFirstWord > 0);
 			Contract.Requires(wordCount >= -1);
@@ -128,28 +129,37 @@ namespace Singularity
 		}
 
 		/// <summary>
+		/// Add another word collection to this one.
+		/// </summary>
+		/// <param name="anotherWordCollection">The word collection to add.  It can have a different delimiter than this one has.</param>
+		public void Add(WordCollection anotherWordCollection)
+		{
+			_internalList.AddRange(anotherWordCollection);
+		}
+
+		/// <summary>
 		/// Add to Word Handlers together, returning a new Words with combined set of words.
 		/// </summary>
-		/// <param name="a"></param>
-		/// <param name="b"></param>
+		/// <param name="leftCollection"></param>
+		/// <param name="rightCollection"></param>
 		/// <returns></returns>
-		public static Words operator +(Words a, Words b)
+		public static WordCollection operator +(WordCollection leftCollection, WordCollection rightCollection)
 		{
-			return new Words
+			return new WordCollection
 			{
-				_delimiter = a._delimiter,
-				_internalList = new List<String>(a._internalList.Union(b._internalList))
+				_delimiter = leftCollection._delimiter,
+				_internalList = new List<String>(leftCollection._internalList.Union(rightCollection._internalList))
 			};
 		}
 
 		/// <summary>
 		/// Implicitly cast Words to a String.
 		/// </summary>
-		/// <param name="w"></param>
+		/// <param name="wordCollection"></param>
 		/// <returns></returns>
-		public static implicit operator String(Words w)
+		public static implicit operator String(WordCollection wordCollection)
 		{
-			return w.ToString();
+			return wordCollection.ToString();
 		}
 
 		/// <remarks>This is exception safe if the index is invalid.</remarks>
@@ -194,7 +204,7 @@ namespace Singularity
 		}
 
 		[DebuggerHidden]
-		public Boolean Append(Words words, Boolean includeEmptyWords = false)
+		public Boolean Append(WordCollection words, Boolean includeEmptyWords = false)
 		{
 			if (!words.IsEmpty())
 			{
@@ -219,9 +229,9 @@ namespace Singularity
 		}
 
 		[DebuggerHidden]
-		public Words Clone()
+		public WordCollection Clone()
 		{
-			return new Words(ToString(), _delimiter);
+			return new WordCollection(ToString(), _delimiter);
 		}
 
 		[DebuggerHidden]
@@ -237,31 +247,31 @@ namespace Singularity
 		}
 
 		[DebuggerHidden]
-		public Words Extract(Int32 index, Int32 count = 1)
+		public WordCollection Extract(Int32 index, Int32 count = 1)
 		{
 			Contract.Requires(index >= 0);
 			Contract.Requires(count >= 1);
 
 			if (_internalList.Count.Equals(0))
 			{
-				return new Words();
+				return new WordCollection();
 			}
 
 			count = count.LimitInRange(1, _internalList.Count - index);
 
-			var result = new Words(_internalList.GetRange(index, count));
+			var result = new WordCollection(_internalList.GetRange(index, count));
 			_internalList.RemoveRange(index, count);
 			return result;
 		}
 
-		public Words FormatWith(Object model, String beginTag = "{{", String endTag = "}}")
+		public WordCollection FormatWith(Object model, String beginTag = "{{", String endTag = "}}")
 		{
 			var result = new List<String>(_internalList.Count);
 			for (var idx = 0; idx < _internalList.Count; idx++)
 			{
 				result.Add(_internalList[idx].FormatWith(model, beginTag, endTag));
 			}
-			return new Words(result, _delimiter);
+			return new WordCollection(result, _delimiter);
 		}
 
 		[DebuggerHidden]
@@ -271,19 +281,19 @@ namespace Singularity
 		}
 
 		[DebuggerHidden]
-		public Words GetWords(Int32 startIndex, Int32? count = null)
+		public WordCollection GetWords(Int32 startIndex, Int32? count = null)
 		{
 			Contract.Requires(startIndex >= 0);
 
-			return new Words(_internalList.GetRange(startIndex, count.GetValueOrDefault(_internalList.Count - startIndex)));
+			return new WordCollection(_internalList.GetRange(startIndex, count.GetValueOrDefault(_internalList.Count - startIndex)));
 		}
 
-		public Words GetRangeNonEmpty(Int32 startIndex, Int32? count = null)
+		public WordCollection GetRangeNonEmpty(Int32 startIndex, Int32? count = null)
 		{
 			Contract.Requires(startIndex >= 0);
 			Contract.Requires(count >= 1);
 
-			return new Words(_internalList.GetRangeNonEmpty(startIndex, count.GetValueOrDefault(_internalList.Count - startIndex)));
+			return new WordCollection(_internalList.GetRangeNonEmpty(startIndex, count.GetValueOrDefault(_internalList.Count - startIndex)));
 		}
 
 		[DebuggerHidden]
@@ -316,7 +326,7 @@ namespace Singularity
 			return result;
 		}
 
-		public Boolean InsertRange(Int32 index, Words words)
+		public Boolean InsertRange(Int32 index, WordCollection words)
 		{
 			Contract.Requires(index >= 0);
 
@@ -350,7 +360,7 @@ namespace Singularity
 		}
 
 		[DebuggerHidden]
-		public Boolean Remove(Words words)
+		public Boolean Remove(WordCollection words)
 		{
 			return Remove(words._internalList.ToArray());
 		}
@@ -361,7 +371,7 @@ namespace Singularity
 			var result = false;
 			foreach (var wordString in wordStrings)
 			{
-				var removeWords = new Words(wordString);
+				var removeWords = new WordCollection(wordString);
 				foreach (var removeWord in removeWords)
 				{
 					var foundWord = _internalList.FirstOrDefault(w => w.ToUpper() == removeWord);
@@ -391,18 +401,18 @@ namespace Singularity
 		}
 
 		[DebuggerHidden]
-		public Words RemoveRange(Int32 index, Int32 count)
+		public WordCollection RemoveRange(Int32 index, Int32 count)
 		{
 			Contract.Requires(index >= 0);
 			Contract.Requires(count >= 1);
 
-			Words result = null;
+			WordCollection result = null;
 			if (index.IsInRange(0, _internalList.Count - 1) && (count + index).IsInRange(1, _internalList.Count))
 			{
-				result = new Words(_internalList.GetRange(index, count), _delimiter);
+				result = new WordCollection(_internalList.GetRange(index, count), _delimiter);
 				_internalList.RemoveRange(index, count);
 			}
-			return result ?? new Words() { _delimiter = _delimiter };
+			return result ?? new WordCollection() { _delimiter = _delimiter };
 		}
 
 		public void Sort()
@@ -411,7 +421,7 @@ namespace Singularity
 		}
 
 		[DebuggerHidden]
-		public Words ToUpper()
+		public WordCollection ToUpper()
 		{
 			for (var idx = 0; idx < _internalList.Count; idx++)
 			{
@@ -421,7 +431,7 @@ namespace Singularity
 		}
 
 		[DebuggerHidden]
-		public Words ToLower()
+		public WordCollection ToLower()
 		{
 			for (var idx = 0; idx < _internalList.Count; idx++)
 			{
@@ -436,7 +446,7 @@ namespace Singularity
 			return String.Join(_delimiter, _internalList.ToArray());
 		}
 
-		public void UpdateRange(CodeRegion originalRegion, Words newWords)
+		public void UpdateRange(CodeRegion originalRegion, WordCollection newWords)
 		{
 			RemoveRange(originalRegion.StartLineIndex + 1, (originalRegion.LineIndexCount - 2).LimitMin(1));
 			InsertRange(originalRegion.StartLineIndex + 1, newWords);

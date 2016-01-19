@@ -127,21 +127,23 @@ namespace Singularity
 
 			// Make sure that the format of the time string is valid.
 			if (time.IsTime24())
+			{
 				return false;
+			}
 
 			// Split the time parts.
 			var digits = time.Split(':');
 
 			// At the least, we must have hour and minute.
 			if (digits.Length < 2)
+			{
 				return false;
-
-			Int32 temp;
+			}
 
 			try
 			{
 				// Make sure the hour part is between 0 and 23.
-				temp = Int32.Parse(digits[0]);
+				Int32 temp = Int32.Parse(digits[0]);
 
 				if (temp > 23)
 					return false;
@@ -167,7 +169,7 @@ namespace Singularity
 					second = temp;
 				}
 			}
-			catch
+			catch (ArithmeticException)
 			{
 				return false;
 			}

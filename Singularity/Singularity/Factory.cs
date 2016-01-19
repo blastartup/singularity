@@ -27,7 +27,7 @@ namespace Singularity
 		/// </remarks>
 		public static List<T> NewList<T>()
 		{
-			return NewList<T>(EListCapacityTypes.Minimum);
+			return NewList<T>(EListCapacityType.Minimum);
 		}
 
 		/// <summary>
@@ -41,17 +41,17 @@ namespace Singularity
 		/// </remarks>
 		public static List<T> NewList<T>(Int32 capacity)
 		{
-			if (capacity > (Int32)EListCapacityTypes.Medium)
+			if (capacity > (Int32)EListCapacityType.Medium)
 			{
-				capacity = (Int32)EListCapacityTypes.Maximum;
+				capacity = (Int32)EListCapacityType.Maximum;
 			}
-			else if (capacity > (Int32)EListCapacityTypes.Minimum)
+			else if (capacity > (Int32)EListCapacityType.Minimum)
 			{
-				capacity = (Int32)EListCapacityTypes.Medium;
+				capacity = (Int32)EListCapacityType.Medium;
 			}
 			else
 			{
-				capacity = (Int32)EListCapacityTypes.Minimum;
+				capacity = (Int32)EListCapacityType.Minimum;
 			}
 			return new List<T>(capacity);
 		}
@@ -65,7 +65,7 @@ namespace Singularity
 		/// the capacity needs to be expanded to account for the large size.  The EListCapacityTypes is a
 		/// logrithmic scale of 10, 100, 1000 (Minium, Medium, Maximum respectively).
 		/// </remarks>
-		public static List<T> NewList<T>(EListCapacityTypes capacityChunk)
+		public static List<T> NewList<T>(EListCapacityType capacityChunk)
 		{
 			return new List<T>((Int32)capacityChunk);
 		}
@@ -78,7 +78,7 @@ namespace Singularity
 		{
 			Contract.Requires(collection != null);
 
-			var internalList = new List<T>((Int32)EListCapacityTypes.Minimum);
+			var internalList = new List<T>((Int32)EListCapacityType.Minimum);
 			internalList.AddRange(collection);
 			return internalList;
 		}
@@ -115,7 +115,7 @@ namespace Singularity
 		/// </summary>
 		/// <param name="capacityChunk">The starting capcity for the list.</param>
 		/// <param name="collection">An array of T elements.</param>
-		public static List<T> NewList<T>(EListCapacityTypes capacityChunk, IEnumerable<T> collection)
+		public static List<T> NewList<T>(EListCapacityType capacityChunk, IEnumerable<T> collection)
 		{
 			Contract.Requires(collection != null);
 

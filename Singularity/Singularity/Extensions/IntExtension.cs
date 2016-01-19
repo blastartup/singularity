@@ -143,13 +143,13 @@ namespace Singularity
 		/// Returns either the given input, maximum or minimum value, effectively limiting the given input value to range within the high low limits.
 		/// </summary>
 		/// <param name="input">Number to be limited</param>
-		/// <param name="aLowLimt">The minimum value.</param>
-		/// <param name="aHighLimit">The maximum value.</param>
+		/// <param name="lowLimit">The minimum value.</param>
+		/// <param name="highLimit">The maximum value.</param>
 		/// <returns>A number between the low and high limits inclusive.</returns>
-		public static Int32 LimitInRange(this Int32 input, Int32 aLowLimt, Int32 aHighLimit)
+		public static Int32 LimitInRange(this Int32 input, Int32 lowLimit, Int32 highLimit)
 		{
 			Boolean notUsed;
-			return LimitInRange(input, aLowLimt, aHighLimit, out notUsed);
+			return LimitInRange(input, lowLimit, highLimit, out notUsed);
 		}
 
 		/// <summary>
@@ -157,26 +157,26 @@ namespace Singularity
 		/// If the value is adjusted then set the aWasOutOfRange flag.
 		/// </summary>
 		/// <param name="input">Number to be limited</param>
-		/// <param name="aLowLimt">The minimum value.</param>
-		/// <param name="aHighLimit">The maximum value.</param>
-		/// <param name="aWasOutOfRange">Returning value indicating whether the given value was outside the range.</param>
+		/// <param name="lowLimit">The minimum value.</param>
+		/// <param name="highLimit">The maximum value.</param>
+		/// <param name="wasOutOfRange">Returning value indicating whether the given value was outside the range.</param>
 		/// <returns></returns>
-		public static Int32 LimitInRange(this Int32 input, Int32 aLowLimt, Int32 aHighLimit, out Boolean aWasOutOfRange)
+		public static Int32 LimitInRange(this Int32 input, Int32 lowLimit, Int32 highLimit, out Boolean wasOutOfRange)
 		{
-			if (aLowLimt > aHighLimit)
+			if (lowLimit > highLimit)
 			{
-				aLowLimt = aLowLimt.Swap(ref aHighLimit);
+				lowLimit = lowLimit.Swap(ref highLimit);
 			}
 
-			var result = input.LimitMin(aLowLimt).LimitMax(aHighLimit);
-			aWasOutOfRange = input != result;
+			var result = input.LimitMin(lowLimit).LimitMax(highLimit);
+			wasOutOfRange = input != result;
 			return result;
 		}
 
-		public static Boolean IsOutOfRange(this Int32 input, Int32 aLowLimt, Int32 aHighLimit)
+		public static Boolean IsOutOfRange(this Int32 input, Int32 lowLimt, Int32 highLimit)
 		{
 			var result = false;
-			LimitInRange(input, aLowLimt, aHighLimit, out result);
+			LimitInRange(input, lowLimt, highLimit, out result);
 			return result;
 		}
 

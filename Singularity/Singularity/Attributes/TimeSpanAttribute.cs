@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Singularity
 {
-	internal class TimeSpanAttribute : Attribute
+	internal sealed class TimeSpanAttribute : Attribute
 	{
 		public Int32 Days { get; set; }
 		public Int32 Hours { get; set; }

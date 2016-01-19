@@ -51,24 +51,24 @@ namespace Singularity
 		/// Returns either the given input or minimum value, effectively limiting the given input value to the given minimum argument.
 		/// </summary>
 		/// <param name="input">Number to be limited.</param>
-		/// <param name="maxValue">The minimum value.</param>
+		/// <param name="minValue">The minimum value.</param>
 		/// <returns></returns>
-		public static Decimal LimitMin(this Decimal input, Decimal aMinValue)
+		public static Decimal LimitMin(this Decimal input, Decimal minValue)
 		{
-			return aMinValue * Convert.ToDecimal(input < aMinValue) + input * Convert.ToDecimal(input >= aMinValue);
+			return minValue * Convert.ToDecimal(input < minValue) + input * Convert.ToDecimal(input >= minValue);
 		}
 
 		/// <summary>
 		/// Returns either the given input, maximum or minimum value, effectively limiting the given input value to range within the high low limits.
 		/// </summary>
 		/// <param name="input">Number to be limited</param>
-		/// <param name="aLowLimt">The minimum value.</param>
-		/// <param name="aHighLimit">The maximum value.</param>
+		/// <param name="lowLimit">The minimum value.</param>
+		/// <param name="highLimit">The maximum value.</param>
 		/// <returns>A number between the low and high limits inclusive.</returns>
-		public static Decimal LimitInRange(this Decimal input, Decimal aLowLimt, Decimal aHighLimit)
+		public static Decimal LimitInRange(this Decimal input, Decimal lowLimit, Decimal highLimit)
 		{
 			Boolean notUsed;
-			return LimitInRange(input, aLowLimt, aHighLimit, out notUsed);
+			return LimitInRange(input, lowLimit, highLimit, out notUsed);
 		}
 
 		/// <summary>
@@ -76,26 +76,26 @@ namespace Singularity
 		/// If the value is adjusted then set the aWasOutOfRange flag.
 		/// </summary>
 		/// <param name="input">Number to be limited</param>
-		/// <param name="aLowLimt">The minimum value.</param>
-		/// <param name="aHighLimit">The maximum value.</param>
-		/// <param name="aWasOutOfRange">Returning value indicating whether the given value was outside the range.</param>
+		/// <param name="lowLimit">The minimum value.</param>
+		/// <param name="highLimit">The maximum value.</param>
+		/// <param name="wasOutOfRange">Returning value indicating whether the given value was outside the range.</param>
 		/// <returns></returns>
-		public static Decimal LimitInRange(this Decimal input, Decimal aLowLimt, Decimal aHighLimit, out Boolean aWasOutOfRange)
+		public static Decimal LimitInRange(this Decimal input, Decimal lowLimit, Decimal highLimit, out Boolean wasOutOfRange)
 		{
-			if (aLowLimt > aHighLimit)
+			if (lowLimit > highLimit)
 			{
-				aLowLimt = aLowLimt.Swap(ref aHighLimit);
+				lowLimit = lowLimit.Swap(ref highLimit);
 			}
 
-			var result = input.LimitMin(aLowLimt).LimitMax(aHighLimit);
-			aWasOutOfRange = input != result;
+			var result = input.LimitMin(lowLimit).LimitMax(highLimit);
+			wasOutOfRange = input != result;
 			return result;
 		}
 
-		public static Boolean IsOutOfRange(this Decimal input, Decimal aLowLimt, Decimal aHighLimit)
+		public static Boolean IsOutOfRange(this Decimal input, Decimal lowLimit, Decimal highLimit)
 		{
 			var result = false;
-			LimitInRange(input, aLowLimt, aHighLimit, out result);
+			LimitInRange(input, lowLimit, highLimit, out result);
 			return result;
 		}
 

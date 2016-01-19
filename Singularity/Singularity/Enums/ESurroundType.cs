@@ -1,7 +1,9 @@
 ﻿
+ // ReSharper disable once CheckNamespace
+
 namespace Singularity
 {
-	public enum ESurroundTypes
+	public enum ESurroundType
 	{
 		SingleQuote,
 		DoubleQuote,

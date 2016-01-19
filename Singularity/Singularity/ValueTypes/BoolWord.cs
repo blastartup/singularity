@@ -41,11 +41,11 @@ namespace Singularity
 		{
 			_mValue = aValue;
 			_mDefault = false;
-			_mType = EBoolWordTypes.TrueFalse;
+			_mType = EBoolWordType.TrueFalse;
 		}
 
 		[DebuggerStepThrough]
-		public BoolWord(Boolean aValue, EBoolWordTypes aType)
+		public BoolWord(Boolean aValue, EBoolWordType aType)
 		{
 			_mValue = aValue;
 			_mDefault = false;
@@ -60,11 +60,11 @@ namespace Singularity
 			_mValue = Convert.ToBoolean(idx);
 			if (!idx.Equals(0))
 			{
-				_mType = (EBoolWordTypes)idx;
+				_mType = (EBoolWordType)idx;
 			}
 			else
 			{
-				_mType = EBoolWordTypes.TrueFalse;
+				_mType = EBoolWordType.TrueFalse;
 			}
 			_mDefault = false;
 		}
@@ -78,11 +78,11 @@ namespace Singularity
 			_mValue = Convert.ToBoolean(idx);
 			if (!idx.Equals(0))
 			{
-				_mType = (EBoolWordTypes)idx;
+				_mType = (EBoolWordType)idx;
 			}
 			else
 			{
-				_mType = EBoolWordTypes.TrueFalse;
+				_mType = EBoolWordType.TrueFalse;
 			}
 			_mDefault = false;
 		}
@@ -105,7 +105,7 @@ namespace Singularity
 		public Char ToChar()
 		{
 			var result = 'F';
-			if (_mType < EBoolWordTypes.OnOff)
+			if (_mType < EBoolWordType.OnOff)
 			{
 				result = _mValue ? MTrueCollection[(Int32)_mType][0] : MFalseCollection[(Int32)_mType][0];
 			}
@@ -187,6 +187,6 @@ namespace Singularity
 		#endregion
 
 		private readonly Boolean _mValue;
-		private readonly EBoolWordTypes _mType;
+		private readonly EBoolWordType _mType;
 	}
 }

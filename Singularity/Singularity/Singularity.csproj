@@ -20,6 +20,8 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <RunCodeAnalysis>true</RunCodeAnalysis>
+    <CodeAnalysisRuleSet>Singularity.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -28,6 +30,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>Singularity.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -41,17 +44,18 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Attributes\TimeSpanAttribute.cs" />
-    <Compile Include="Collections\Words.cs" />
+    <Compile Include="Collections\WordCollection.cs" />
     <Compile Include="EnumAdditional\EnumAdditionalAttribute.cs" />
     <Compile Include="EnumAdditional\EnumAdditionalProvider.cs" />
     <Compile Include="EnumAdditional\EnumUtil.cs" />
-    <Compile Include="Enums\EBoolWordTypes.cs" />
-    <Compile Include="Enums\EListCapacityTypes.cs" />
-    <Compile Include="Enums\ESurroundTypes.cs" />
-    <Compile Include="Enums\TemporalGroupFlags.cs" />
+    <Compile Include="Enums\EBoolWordType.cs" />
+    <Compile Include="Enums\EListCapacityType.cs" />
+    <Compile Include="Enums\ESurroundType.cs" />
+    <Compile Include="Enums\ETemporalGroupFlag.cs" />
     <Compile Include="Extensions\ArrayExtension.cs" />
     <Compile Include="Extensions\BooleanExtension.cs" />
     <Compile Include="Extensions\CharExtension.cs" />
+    <Compile Include="Extensions\CollectionExtension.cs" />
     <Compile Include="Extensions\CultureInfoExtension.cs" />
     <Compile Include="Extensions\DateTimeExtension.cs" />
     <Compile Include="Extensions\DecimalExtension.cs" />
@@ -66,17 +70,17 @@
     <Compile Include="Extensions\ListExtension.cs" />
     <Compile Include="Extensions\IListExtension.cs" />
     <Compile Include="Extensions\IntExtension.cs" />
-    <Compile Include="Extensions\MailAddressExtension.cs" />
-    <Compile Include="Extensions\MailMessageExtension.cs" />
     <Compile Include="Extensions\NameValueCollectionExtension.cs" />
     <Compile Include="Extensions\ObjectExtension.cs" />
-    <Compile Include="Extensions\PropertyInfoExtension.cs" />
+    <Compile Include="Extensions\MemberInfoExtension.cs" />
     <Compile Include="Extensions\StringExtension.cs" />
     <Compile Include="Extensions\TimeSpanExtension.cs" />
     <Compile Include="Extensions\TimeZoneInfoExtension.cs" />
     <Compile Include="Extensions\TypeExtension.cs" />
     <Compile Include="Factory.cs" />
+    <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Interfaces\ICloneable.cs" />
+    <Compile Include="Interfaces\INotification.cs" />
     <Compile Include="Interfaces\IStateAged.cs" />
     <Compile Include="Interfaces\IStateValid.cs" />
     <Compile Include="Interfaces\IStateEmpty.cs" />
@@ -91,9 +95,11 @@
     <Compile Include="ValueTypes\BoolWordTypeConverter.cs" />
     <Compile Include="ValueTypes\JsonDateTime.cs" />
     <Compile Include="ValueTypes\KeyValuePairs.cs" />
+    <Compile Include="ValueTypes\Notification.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+    <None Include="Singularity.ruleset" />
     <None Include="_CreateNewNuGetPackage\Config.ps1" />
     <None Include="_CreateNewNuGetPackage\DoNotModify\CreateNuGetPackage.ps1" />
     <None Include="_CreateNewNuGetPackage\DoNotModify\New-NuGetPackage.ps1" />

@@ -89,43 +89,43 @@ namespace Singularity
 		/// <summary>
 		/// Output the value of this object to a humanised form.
 		/// </summary>
-		/// <param name="objectValue">Any given object.</param>
+		/// <param name="value">Any given object.</param>
 		/// <returns>Either a string representation of the object value, "Empty", "Null", or "DBNull".</returns>
 		[DebuggerStepThrough]
-		public static String ToDescription(this Object objectValue)
+		public static String ToDescription(this Object value)
 		{
 			String result;
-			if (objectValue == null)
+			if (value == null)
 			{
 				result = ValueLib.NullDescription.StringValue;
 			}
-			else if (objectValue is DBNull)
+			else if (value is DBNull)
 			{
 				result = ValueLib.DbNullDescription.StringValue;
 			}
-			else if (objectValue is IStateEmpty && ((IStateEmpty)objectValue).IsEmpty)
+			else if (IsStateEmpty(value as IStateEmpty))
 			{
 				result = ValueLib.EmptyDescription.StringValue;
 			}
-			else if (objectValue is IStateValid && !((IStateValid)objectValue).IsValid)
+			else if (value is IStateValid && !((IStateValid)value).IsValid)
 			{
 				result = ValueLib.InvalidDescription.StringValue;
 			}
-			else if (objectValue is IStateAged && !((IStateAged)objectValue).IsAged)
+			else if (value is IStateAged && !((IStateAged)value).IsAged)
 			{
 				result = ValueLib.NotAgedDescription.StringValue;
 			}
-			else if (objectValue is TimeSpan)
+			else if (value is TimeSpan)
 			{
-				result = TimeSpanArticulator.Articulate((TimeSpan)objectValue);
+				result = TimeSpanArticulator.Articulate((TimeSpan)value);
 			}
-			else if (objectValue is Type)
+			else if (value is Type)
 			{
-				result = ((Type)objectValue).Name;
+				result = ((Type)value).Name;
 			}
-			else if (objectValue is IDictionary)
+			else if (value is IDictionary)
 			{
-				var dictionary = objectValue as IDictionary;
+				var dictionary = value as IDictionary;
 				var innerResult = new DelimitedStringBuilder(dictionary.Count);
 				foreach (var key in dictionary.Keys)
 				{
@@ -135,9 +135,14 @@ namespace Singularity
 			}
 			else
 			{
-				result = objectValue.ToString();
+				result = value.ToString();
 			}
 			return result;
+		}
+
+		private static Boolean IsStateEmpty(IStateEmpty stateEmpty)
+		{
+			return stateEmpty != null && stateEmpty.IsEmpty;
 		}
 
 		[DebuggerStepThrough]
@@ -171,14 +176,7 @@ namespace Singularity
 		[DebuggerStepThrough]
 		public static String ToStringSafe(this Object value, String replacementValue)
 		{
-			var result = replacementValue;
-			try
-			{
-				result = value != null ? value.ToString() : replacementValue;
-			}
-			catch (Exception) { }
-
-			return result;
+			return value?.ToString() ?? replacementValue;
 		}
 
 		#region ToInt

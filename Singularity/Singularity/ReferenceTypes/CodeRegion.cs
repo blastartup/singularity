@@ -9,7 +9,7 @@ namespace Singularity
 {
 	public class CodeRegion : IStateEmpty
 	{
-		public CodeRegion(String regionName, Words sourceCode)
+		public CodeRegion(String regionName, WordCollection sourceCode)
 		{
 			_isEmpty = true;
 			_name = regionName;
@@ -55,11 +55,11 @@ namespace Singularity
 			get { return _endLineIndex - _startLineIndex; }
 		}
 
-		public Words Lines
+		public WordCollection Lines
 		{
 			get { return _lines; }
 		}
-		private Words _lines;
+		private WordCollection _lines;
 
 		public Boolean IsEmpty 
 		{

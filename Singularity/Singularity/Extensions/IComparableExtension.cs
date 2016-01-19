@@ -47,9 +47,9 @@ namespace Singularity
 		/// <param name="maxValue">The maximum value.</param>
 		/// <returns></returns>
 		[DebuggerStepThrough]
-		public static IComparable LimitMax(this IComparable input, IComparable aMaxValue)
+		public static IComparable LimitMax(this IComparable input, IComparable maxValue)
 		{
-			return input.CompareTo(aMaxValue).Equals(1) ? aMaxValue : input;
+			return input.CompareTo(maxValue).Equals(1) ? maxValue : input;
 		}
 
 		/// <summary>
@@ -58,9 +58,9 @@ namespace Singularity
 		/// <param name="input">Number to be limited.</param>
 		/// <param name="maxValue">The minimum value.</param>
 		/// <returns></returns>
-		public static IComparable LimitMin(this IComparable input, IComparable aMinValue)
+		public static IComparable LimitMin(this IComparable input, IComparable minValue)
 		{
-			return input.CompareTo(aMinValue).Equals(-1) ? aMinValue : input;
+			return input.CompareTo(minValue).Equals(-1) ? minValue : input;
 		}
 
 		/// <summary>
@@ -68,19 +68,19 @@ namespace Singularity
 		/// If the value is adjusted then set the aWasOutOfRange flag.
 		/// </summary>
 		/// <param name="input">Number to be limited</param>
-		/// <param name="aLowLimt">The minimum value.</param>
-		/// <param name="aHighLimit">The maximum value.</param>
-		/// <param name="aWasOutOfRange">Returning value indicating whether the given value was outside the range.</param>
+		/// <param name="lowLimit">The minimum value.</param>
+		/// <param name="highLimit">The maximum value.</param>
+		/// <param name="wasOutOfRange">Returning value indicating whether the given value was outside the range.</param>
 		/// <returns></returns>
-		public static IComparable LimitInRange(this IComparable input, IComparable aLowLimt, IComparable aHighLimit, out Boolean aWasOutOfRange)
+		public static IComparable LimitInRange(this IComparable input, IComparable lowLimit, IComparable highLimit, out Boolean wasOutOfRange)
 		{
-			if (aLowLimt.CompareTo(aHighLimit) > 0)
+			if (lowLimit.CompareTo(highLimit) > 0)
 			{
-				aLowLimt = aLowLimt.Swap(ref aHighLimit);
+				lowLimit = lowLimit.Swap(ref highLimit);
 			}
 
-			var result = LimitMax(LimitMin(input, aLowLimt), aHighLimit);
-			aWasOutOfRange = input != result;
+			var result = LimitMax(LimitMin(input, lowLimit), highLimit);
+			wasOutOfRange = input != result;
 			return result;
 		}
 

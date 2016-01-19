@@ -7,9 +7,9 @@ using System.Reflection;
 namespace Singularity
 {
 	[DebuggerStepThrough]
-	public static class PropertyInfoExtension
+	public static class MemberInfoExtension
 	{
-		public static T GetAttribute<T>(this PropertyInfo property) where T : Attribute
+		public static T GetAttribute<T>(this MemberInfo property) where T : Attribute
 		{
 			T result = null;
 			if (Attribute.IsDefined(property, typeof(T)))
@@ -19,7 +19,7 @@ namespace Singularity
 			return result;
 		}
 
-		public static T GetField<T>(this PropertyInfo property) where T : Attribute
+		public static T GetField<T>(this MemberInfo property) where T : Attribute
 		{
 			T result = null;
 			if (Attribute.IsDefined(property, typeof(T)))
@@ -29,7 +29,7 @@ namespace Singularity
 			return result;
 		}
 
-		public static IList<T> GetFields<T>(this PropertyInfo property) where T : Attribute
+		public static IList<T> GetFields<T>(this MemberInfo property) where T : Attribute
 		{
 			var result = new List<T>();
 			if (Attribute.IsDefined(property, typeof(T)))
@@ -39,7 +39,7 @@ namespace Singularity
 			return result;
 		}
 
-		public static void AssertSingleAttribute<TAttribute>(this PropertyInfo property, Type parentType) where TAttribute : Attribute
+		public static void AssertSingleAttribute<TAttribute>(this MemberInfo property, Type parentType) where TAttribute : Attribute
 		{
 			if (property.GetCustomAttributes(typeof(TAttribute), true).Length > 1)
 			{

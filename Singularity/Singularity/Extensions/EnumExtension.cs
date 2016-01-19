@@ -35,7 +35,7 @@ namespace Singularity
 			Contract.Requires(enumValue != null);
 
 			var provider = new EnumAdditionalProvider<EnumAdditionalAttribute>();
-			return provider.GetEnumResource(enumValue)?.AdditionalValue;
+			return provider.GetEnumResource(enumValue)?.AlternateValue;
 		}
 
 		/// <summary>
@@ -61,21 +61,21 @@ namespace Singularity
 			Contract.Requires(enumValue != null);
 
 			var provider = new EnumAdditionalProvider<EnumAdditionalAttribute>();
-			return provider.GetEnumResource(enumValue)?.Name ?? Enum.GetName(enumValue.GetType(), enumValue) ?? String.Empty;
+			return provider.GetEnumResource(enumValue)?.HumanisedName ?? Enum.GetName(enumValue.GetType(), enumValue) ?? String.Empty;
 		}
 
-		/// <summary>
-		/// Gets a Value Name for a particular enum value.
-		/// </summary>
-		/// <param name="enumValue">Enum value</param>
-		/// <returns>String Value Name associated via a <see cref="EnumAdditionalAttribute"/> attribute, or null if not found.</returns>
-		public static String GetValueName(this Enum enumValue)
-		{
-			Contract.Requires(enumValue != null);
+		///// <summary>
+		///// Gets a Value Name for a particular enum value.
+		///// </summary>
+		///// <param name="enumValue">Enum value</param>
+		///// <returns>String Value Name associated via a <see cref="EnumAdditionalAttribute"/> attribute, or null if not found.</returns>
+		//public static String GetValueName(this Enum enumValue)
+		//{
+		//	Contract.Requires(enumValue != null);
 
-			var provider = new EnumAdditionalProvider<EnumAdditionalAttribute>();
-			return provider.GetEnumResource(enumValue)?.ValueName ?? String.Empty;
-		}
+		//	var provider = new EnumAdditionalProvider<EnumAdditionalAttribute>();
+		//	return provider.GetEnumResource(enumValue)?.ValueName ?? String.Empty;
+		//}
 
 		/// <summary>
 		/// Gets a Description for a particular enum value.
@@ -112,9 +112,9 @@ namespace Singularity
 				{
 					result = resource.Code;
 				}
-				else if (!resource.Name.IsEmpty())
+				else if (!resource.HumanisedName.IsEmpty())
 				{
-					result = resource.Name;
+					result = resource.HumanisedName;
 				}
 				else if (!resource.Description.IsEmpty())
 				{

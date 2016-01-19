@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
+using System.Linq;
+
+// ReSharper disable once CheckNamespace
 
 namespace Singularity
 {
@@ -10,9 +13,9 @@ namespace Singularity
 		public static IEnumerable<KeyValuePair<String, String>> ToKeyValuePairs(this NameValueCollection collection)
 		{
 			var result = new List<KeyValuePair<String, String>>();
-			foreach (var key in collection.AllKeys)
+			if (!collection.IsEmpty())
 			{
-				result.Add(new KeyValuePair<String, String>(key, collection[key]));
+				result.AddRange(collection.AllKeys.Select(key => new KeyValuePair<String, String>(key, collection[key])));
 			}
 			return result;
 		}

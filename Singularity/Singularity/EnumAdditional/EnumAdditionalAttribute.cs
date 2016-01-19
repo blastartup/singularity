@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 
 // ReSharper disable ConvertToAutoProperty
 // ReSharper disable CheckNamespace
@@ -16,16 +17,17 @@ namespace Singularity
 		/// <summary>
 		/// Creates a new <see cref="EnumAdditionalAttribute"/> instance.
 		/// </summary>
-		/// <param name="name">A name or heading to assign to Enum.</param>
+		/// <param name="humanisedName">A humanised name or heading to assign to Enum.</param>
 		/// <param name="code">A code to assign to Enum.</param>
 		/// <param name="description">Describe the Enum.</param>
 		/// <param name="keyGuid">A primary key (Guid) as a string matching the equivelant enum in the database type table.</param>
-		public EnumAdditionalAttribute(String name, String code = "", String description = "", String keyGuid = null, String additionalValue = null)
+		/// <param name="alternateValue">An alternate value other than the enum numerical one.</param>
+		public EnumAdditionalAttribute(String humanisedName, String code = null, String description = null, String keyGuid = null, String alternateValue = null)
 		{
-			_name = name;
+			_humanisedName = humanisedName;
 			_code = code;
 			_description = description;
-			_additionalValue = additionalValue;
+			_alternateValue = alternateValue;
 
 			if (!keyGuid.IsEmpty() && keyGuid.IsGuid())
 			{
@@ -36,8 +38,8 @@ namespace Singularity
 		/// <summary>
 		/// Gets the enum Code.
 		/// </summary>
-		public String AdditionalValue => _additionalValue;
-		private readonly String _additionalValue;
+		public String AlternateValue => _alternateValue;
+		private readonly String _alternateValue;
 
 		/// <summary>
 		/// Gets the enum Code.
@@ -54,8 +56,8 @@ namespace Singularity
 		/// <summary>
 		/// Gets the enum Name.
 		/// </summary>
-		public String Name => _name;
-		private readonly String _name;
+		public String HumanisedName => _humanisedName;
+		private readonly String _humanisedName;
 
 		/// <summary>
 		/// Gets the enum primary Key.
@@ -64,25 +66,39 @@ namespace Singularity
 		private readonly Guid? _key;
 
 		/// <summary>
-		/// Get or Set an alternate integer to the enum.
+		/// Get the enum integer.
 		/// </summary>
-		public Int32 Value
+		public Int32 EnumValue
 		{
-			get { return _value; }
-			set { _value = value; }
+			get { return _enumValue; }
+			internal set { _enumValue = value; }
+		}
+		private Int32 _enumValue;
+
+		public override Boolean Equals(Object obj)
+		{
+			return ReferenceEquals(this, obj);
 		}
 
-		private Int32 _value;
-
-		/// <summary>
-		/// Get or Set an alternate value to the enum.
-		/// </summary>
-		public String ValueName
+		public Int32 GetHashCode(EnumAdditionalAttribute obj)
 		{
-			get { return _valueName; }
-			set { _valueName = value; }
+			return obj?.GetHashCode() ?? 0;
 		}
-		private String _valueName;
+
+		public override Int32 GetHashCode()
+		{
+			unchecked // Overflow is fine, just wrap
+			{
+				int hash = (int)2166136261;
+				// Suitable nullity checks etc, of course :)
+				hash = hash * 16777619 ^ _alternateValue.GetHashCode();
+				hash = hash * 16777619 ^ _code.GetHashCode();
+				hash = hash * 16777619 ^ _description.GetHashCode();
+				hash = hash * 16777619 ^ _humanisedName.GetHashCode();
+				hash = hash * 16777619 ^ _key.GetHashCode();
+				return hash;
+			}
+		}
 
 		/// <summary>
 		/// Compare to another EnumAdditionalAttribute
@@ -91,7 +107,7 @@ namespace Singularity
 		/// <returns>Standard comparison values.</returns>
 		public Int32 CompareTo(EnumAdditionalAttribute other)
 		{
-			return String.Compare(Name, other.Name, StringComparison.Ordinal);
+			return String.Compare(HumanisedName, other.HumanisedName, StringComparison.Ordinal);
 		}
 
 		/// <summary>
@@ -102,7 +118,7 @@ namespace Singularity
 		public Int32 CompareTo(Object obj)
 		{
 			var attribute = obj as EnumAdditionalAttribute;
-			return attribute != null ? String.Compare(Name, attribute.Name, StringComparison.Ordinal) : 0;
+			return attribute != null ? String.Compare(HumanisedName, attribute.HumanisedName, StringComparison.Ordinal) : 0;
 		}
 	}
 }

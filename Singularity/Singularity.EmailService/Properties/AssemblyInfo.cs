@@ -6,11 +6,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("Singularity")]
+[assembly: AssemblyTitle("Singularity.EmailService")]
 [assembly: AssemblyDescription("Common Application Library and Extensions")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("https://github.com/blastartup/singularity")]
-[assembly: AssemblyProduct("Singularity")]
+[assembly: AssemblyProduct("Singularity.EmailService")]
 [assembly: AssemblyCopyright("Copyright ©  2016")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -22,5 +22,5 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("350f5c90-f18f-41a9-8b84-92e0ca74d619")]
-[assembly: AssemblyVersion("2.0.1.0")]
+[assembly: Guid("57fff19a-7501-40fb-95a9-0939ba34dc5b")]
+[assembly: AssemblyVersion("2.0.0.0")]

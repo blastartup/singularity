@@ -79,7 +79,7 @@ namespace Singularity
 			return TimeSpanArticulator.Articulate(value);
 		}
 
-		public static String ToDescription(this TimeSpan value, TemporalGroupFlags accuracy)
+		public static String ToDescription(this TimeSpan value, ETemporalGroupFlag accuracy)
 		{
 			Contract.Requires(value != null);
 			return TimeSpanArticulator.Articulate(value, accuracy);
