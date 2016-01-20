@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Singularity", "Singularity\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Singularity.EmailService", "Singularity.EmailService\Singularity.EmailService.csproj", "{57FFF19A-7501-40FB-95A9-0939BA34DC5B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Singularity.DataService", "Singularity.DataService\Singularity.DataService.csproj", "{FCC22A92-6E01-4DDF-B6EE-0D1CE43E3E56}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{57FFF19A-7501-40FB-95A9-0939BA34DC5B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{57FFF19A-7501-40FB-95A9-0939BA34DC5B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{57FFF19A-7501-40FB-95A9-0939BA34DC5B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FCC22A92-6E01-4DDF-B6EE-0D1CE43E3E56}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FCC22A92-6E01-4DDF-B6EE-0D1CE43E3E56}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FCC22A92-6E01-4DDF-B6EE-0D1CE43E3E56}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FCC22A92-6E01-4DDF-B6EE-0D1CE43E3E56}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
