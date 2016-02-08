@@ -41,10 +41,15 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Enums\EFileTypes.cs" />
+    <Compile Include="Enums\ParserState.cs" />
     <Compile Include="Extensions\FileInfoExtension.cs" />
     <Compile Include="Interfaces\IAsset.cs" />
     <Compile Include="Interfaces\IFileContent.cs" />
     <Compile Include="Interfaces\IFileContentType.cs" />
+    <Compile Include="Parser\FieldType.cs" />
+    <Compile Include="Parser\GenericParser.cs" />
+    <Compile Include="Parser\GenericParserAdapter.cs" />
+    <Compile Include="Parser\ParsingException.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ReferenceTypes\SerialisedFileInfo.cs" />
     <Compile Include="ValueTypes\ContentAndFileType.cs" />
@@ -52,6 +57,8 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+    <None Include="Parser\Help\GenericParsing.chm" />
+    <None Include="Parser\Help\GenericParsing.mshc" />
     <None Include="_CreateNewNuGetPackage\Config.ps1" />
     <None Include="_CreateNewNuGetPackage\DoNotModify\CreateNuGetPackage.ps1" />
     <None Include="_CreateNewNuGetPackage\DoNotModify\New-NuGetPackage.ps1" />
@@ -66,6 +73,9 @@
       <Project>{350f5c90-f18f-41a9-8b84-92e0ca74d619}</Project>
       <Name>Singularity</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Parser\GenericParser.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
