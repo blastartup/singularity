@@ -1,10 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics;
 
+// ReSharper disable once CheckNamespace
+
 namespace Singularity
 {
 	[DebuggerStepThrough]
-	public static class CollectionExtension
+	public static class ICollectionExtension
 	{
 		/// <summary>
 		/// Add a new collection to this existing collection.

@@ -1,5 +1,7 @@
 ﻿using System;
 
+// ReSharper disable once CheckNamespace
+
 namespace Singularity
 {
 	public interface INotification

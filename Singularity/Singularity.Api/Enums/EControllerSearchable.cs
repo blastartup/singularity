@@ -4,12 +4,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Singularity.Extensions
+// ReSharper disable once CheckNamespace
+
+namespace Singularity.Api
 {
-	/// <summary>
-	/// Exte
-	/// </summary>
-	public static class CollectionExtension
+	public enum EControllerSearchable
 	{
+		Not,
+		Partial,
+		Exact
 	}
 }

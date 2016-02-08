@@ -3,6 +3,8 @@ using System.Collections;
 using System.ComponentModel;
 using System.Diagnostics;
 
+// ReSharper disable once CheckNamespace
+
 namespace Singularity
 {
 	/// <LastModified Date="25-Jul-13" User="dean">New Boolean Word Structure.</LastModified>

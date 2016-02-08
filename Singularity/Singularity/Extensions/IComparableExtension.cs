@@ -2,6 +2,8 @@
 using System.Diagnostics;
 using System.Diagnostics.Contracts;
 
+// ReSharper disable once CheckNamespace
+
 namespace Singularity
 {
 	[DebuggerStepThrough]
@@ -113,7 +115,7 @@ namespace Singularity
 		/// </summary>
 		/// <typeparam name="T">Any object or struct type.</typeparam>
 		/// <param name="predicate">Predicate of a condition.</param>
-		/// <param name="value">Current value of an object or struct to apply condition on.</param>
+		/// <param name="sourceValue">Current value of an object or struct to apply condition on.</param>
 		/// <param name="trueValue">True value to return if condition is true.</param>
 		/// <param name="falseValue">False value to return if condition is false.</param>
 		/// <returns>Given true value or false value depending on whether the condition is true or false.</returns>

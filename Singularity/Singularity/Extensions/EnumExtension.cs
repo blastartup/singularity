@@ -5,6 +5,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+// ReSharper disable once CheckNamespace
+
 namespace Singularity
 {
 	/// <summary>
@@ -30,7 +32,7 @@ namespace Singularity
 		/// </summary>
 		/// <param name="enumValue">Enum value</param>
 		/// <returns>String Value associated via a <see cref="EnumAdditionalAttribute"/> attribute, or null if not found.</returns>
-		public static String GetAdditionalValue(this Enum enumValue)
+		public static String GetAlternateValue(this Enum enumValue)
 		{
 			Contract.Requires(enumValue != null);
 

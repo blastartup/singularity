@@ -208,6 +208,24 @@ namespace Singularity
 			return result;
 		}
 
+		public static String RemovePrefix(this String input, String prefix, StringComparison comparison = StringComparison.Ordinal)
+		{
+			if (prefix == null || !input.StartsWith(prefix, comparison))
+			{
+				return input;
+			}
+			return RemoveSafe(input, 0, prefix.Length);
+		}
+
+		public static String RemoveSuffix(this String input, String suffix, StringComparison comparison = StringComparison.Ordinal)
+		{
+			if (suffix == null || !input.EndsWith(suffix, comparison))
+			{
+				return input;
+			}
+			return RemoveSafe(input, input.Length - suffix.Length, suffix.Length);
+		}
+
 		[DebuggerStepperBoundary]
 		public static String RemoveSafe(this String input, Int32 startIndex, Int32 count)
 		{

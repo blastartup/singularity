@@ -1,5 +1,7 @@
 using System;
 
+// ReSharper disable once CheckNamespace
+
 namespace Singularity
 {
 	/// <summary>
@@ -37,7 +39,7 @@ namespace Singularity
 	///  FRandom are in use or if being used in a multi-threaded environment.
 	/// 
 	/// </summary>
-	public class RandomProvider
+	public sealed class RandomProvider
 	{
 		// The +1 ensures NextDouble doesn't generate 1.0
 		private const Double RealUnitInt = 1.0/((Double)Int32.MaxValue+1.0);
