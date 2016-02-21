@@ -46,8 +46,13 @@
     <Compile Include="Enums\FileAccessFlags.cs" />
     <Compile Include="Enums\FileAttributeFlags.cs" />
     <Compile Include="Enums\FileShareFlags.cs" />
+    <Compile Include="Enums\ResourceDisplaytype.cs" />
+    <Compile Include="Enums\ResourceScope.cs" />
+    <Compile Include="Enums\ResourceType.cs" />
+    <Compile Include="Enums\SystemErrorCodes.cs" />
     <Compile Include="Native\FILETIME.cs" />
     <Compile Include="Native\NativeMethods.cs" />
+    <Compile Include="Native\NetResource.cs" />
     <Compile Include="Native\POINTAPI.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Native\RECT.cs" />
@@ -56,6 +61,7 @@
     <Compile Include="Native\SECURITY_ATTRIBUTES.cs" />
     <Compile Include="Native\WIN32_FIND_DATA.cs" />
     <Compile Include="Native\WINDOWPLACEMENT.cs" />
+    <Compile Include="Providers\NetworkConnection.cs" />
     <Compile Include="Providers\SequentialGuidProvider.cs" />
   </ItemGroup>
   <ItemGroup>
