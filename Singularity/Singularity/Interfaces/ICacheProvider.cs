@@ -8,14 +8,18 @@ namespace Singularity
 	public interface ICacheProvider<TKey, TValue>
 	{
 		/// <summary>
-		/// Retrieve cached item
+		/// Retrieve cached item or after adding a new item to the cache.
+		/// </summary>
+		TValue GetOrAdd(TKey key);
+
+		/// <summary>
+		/// Retrieve cached item or new uncached item
 		/// </summary>
 		/// <typeparam name="T">Type of cached item</typeparam>
 		/// <param name="key">Name of cached item</param>
-		/// <param name="value">Cached value. Default(T) if
-		/// item doesn't exist.</param>
+		/// <param name="value">Cached value. Default(T) if item doesn't exist.</param>
 		/// <returns>Cached item as type</returns>
-		Boolean Get(TKey key, out TValue value);
+		Boolean GetOrNew(TKey key, out TValue value);
 
 		/// <summary>
 		/// Insert value into the cache using

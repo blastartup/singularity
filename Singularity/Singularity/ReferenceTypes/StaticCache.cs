@@ -14,7 +14,29 @@ namespace Singularity
 			return new Dictionary<TKey, TValue>();
 		}
 
-		public override Boolean Get(TKey key, out TValue value)
+		/// <summary>
+		/// Retrieve cached item or after adding a new item to the cache.
+		/// </summary>
+		public override TValue GetOrAdd(TKey key)
+		{
+			if (Cache.ContainsKey(key))
+			{
+				return Cache[key];
+			}
+
+			var value = default(TValue);
+			Cache.Add(key, value);
+			return value;
+		}
+
+		/// <summary>
+		/// Retrieve cached item
+		/// </summary>
+		/// <typeparam name="T">Type of cached item</typeparam>
+		/// <param name="key">Name of cached item</param>
+		/// <param name="value">Cached value. Default(T) if item doesn't exist.</param>
+		/// <returns>Cached item as type</returns>
+		public override Boolean GetOrNew(TKey key, out TValue value)
 		{
 			var result = false;
 			if (Cache.ContainsKey(key))
@@ -30,6 +52,13 @@ namespace Singularity
 			return result;
 		}
 
+		/// <summary>
+		/// Insert value into the cache using
+		/// appropriate name/value pairs
+		/// </summary>
+		/// <typeparam name="T">Type of cached item</typeparam>
+		/// <param name="value">Item to be cached</param>
+		/// <param name="key">Name of item</param>
 		public override void Set(TKey key, TValue value)
 		{
 			if (Cache.ContainsKey(key))
@@ -57,6 +86,10 @@ namespace Singularity
 			return result;
 		}
 
+		/// <summary>
+		/// Remove item from cache
+		/// </summary>
+		/// <param name="key">Name of cached item</param>        
 		public override void Clear(TKey key)
 		{
 			Cache.Remove(key);
