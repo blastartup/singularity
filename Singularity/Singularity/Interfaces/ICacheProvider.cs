@@ -10,7 +10,7 @@ namespace Singularity
 		/// <summary>
 		/// Retrieve cached item or after adding a new item to the cache.
 		/// </summary>
-		TValue GetOrAdd(TKey key);
+		TValue GetOrAdd(TKey key, TValue newValue);
 
 		/// <summary>
 		/// Retrieve cached item or new uncached item

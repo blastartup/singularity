@@ -6,8 +6,8 @@ using System.Linq;
 // ReSharper disable once CheckNamespace
 namespace Singularity
 {
-	[DebuggerStepThrough]
-	public class StaticCache<TKey, TValue> : Cacher<TKey, TValue>
+	//[DebuggerStepThrough]
+	public class StaticCache<TKey, TValue> : Cacher<TKey, TValue> where TValue : class, new()
 	{
 		protected override IDictionary<TKey, TValue> InitCache()
 		{
@@ -17,16 +17,15 @@ namespace Singularity
 		/// <summary>
 		/// Retrieve cached item or after adding a new item to the cache.
 		/// </summary>
-		public override TValue GetOrAdd(TKey key)
+		public override TValue GetOrAdd(TKey key, TValue newValue)
 		{
 			if (Cache.ContainsKey(key))
 			{
 				return Cache[key];
 			}
 
-			var value = default(TValue);
-			Cache.Add(key, value);
-			return value;
+			Cache.Add(key, newValue);
+			return newValue;
 		}
 
 		/// <summary>

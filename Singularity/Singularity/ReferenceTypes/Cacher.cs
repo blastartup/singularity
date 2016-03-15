@@ -6,8 +6,8 @@ using System.Diagnostics;
 
 namespace Singularity
 {
-	[DebuggerStepThrough]
-	public abstract class Cacher<TKey, TValue> : ICacheProvider<TKey, TValue>
+	//[DebuggerStepThrough]
+	public abstract class Cacher<TKey, TValue> : ICacheProvider<TKey, TValue> where TValue : class, new()
 	{
 		protected Cacher()
 		{
@@ -21,7 +21,7 @@ namespace Singularity
 		/// <summary>
 		/// Retrieve cached item or after adding a new item to the cache.
 		/// </summary>
-		public abstract TValue GetOrAdd(TKey key);
+		public abstract TValue GetOrAdd(TKey key, TValue newValue);
 
 		/// <summary>
 		/// Retrieve cached item

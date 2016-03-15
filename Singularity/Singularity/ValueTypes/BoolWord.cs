@@ -7,116 +7,62 @@ using System.Diagnostics;
 
 namespace Singularity
 {
-	/// <LastModified Date="25-Jul-13" User="dean">New Boolean Word Structure.</LastModified>
-	[TypeConverter(typeof(BoolWordTypeConverter))]
-	[DebuggerDisplay("{_mValue}")]
+	[DebuggerDisplay("{_value}")]
 	public struct BoolWord : IComparable, IComparable<BoolWord>, IComparable<Boolean>, IStateEmpty, IStateValid
 	{
-		/// <summary>
-		/// Initialise BoolWord with a default value.
-		/// </summary>
-		/// <param name="aValue">A value if convertible to Boolean will be the default value otherwise False will be used.</param>
-		/// <exception cref="FormatException"></exception>
 		[DebuggerStepThrough]
-		public BoolWord(Object aValue)
+		public BoolWord(Boolean value, EBoolWordStyle wordStyle = EBoolWordStyle.TrueFalse)
 		{
-			if (aValue is Boolean)
-			{
-				this = new BoolWord((Boolean)aValue);
-			}
-         else
-         {
-				var typeConverter = new BoolWordTypeConverter();
-				if (aValue != null && typeConverter.CanConvertFrom(aValue.GetType()))
-				{
-					this = (BoolWord)typeConverter.ConvertFrom(aValue);
-				}
-				else
-				{
-					throw new FormatException("The given argument (aValue) type ({0}) is not supported by {1}.".FormatX(aValue.GetType(), typeof(BoolWord)));
-				}
-			}
+			_value = value;
+			_default = false;
+			_style = wordStyle;
 		}
 
 		[DebuggerStepThrough]
-		public BoolWord(Boolean aValue)
+		public BoolWord(Char value, EBoolCharStyle charStyle = EBoolCharStyle.Yn)
 		{
-			_mValue = aValue;
-			_mDefault = false;
-			_mType = EBoolWordType.TrueFalse;
+			_value = value.Equals(charStyle.GetAlternateValue()[0]);
+			_default = false;
+			_style = (EBoolWordStyle)charStyle;
 		}
 
 		[DebuggerStepThrough]
-		public BoolWord(Boolean aValue, EBoolWordType aType)
+		public BoolWord(String value, EBoolWordStyle wordStyle = EBoolWordStyle.TrueFalse)
 		{
-			_mValue = aValue;
-			_mDefault = false;
-			_mType = aType;
+			var trueValue = wordStyle.GetAlternateValue().KeepLeft(ValueLib.Comma.CharValue);
+			_value = value.Equals(trueValue, StringComparison.OrdinalIgnoreCase);
+			_default = false;
+			_style = wordStyle;
 		}
 
-		[DebuggerStepThrough]
-		public BoolWord(Char aValue)
-		{
-			var idx = (((IList)MFalseCollection).IndexOf(aValue.ToString().ToUpper()) + 1) * -1;
-			idx += ((IList)MTrueCollection).IndexOf(aValue.ToString().ToUpper()) + 1;
-			_mValue = Convert.ToBoolean(idx);
-			if (!idx.Equals(0))
-			{
-				_mType = (EBoolWordType)idx;
-			}
-			else
-			{
-				_mType = EBoolWordType.TrueFalse;
-			}
-			_mDefault = false;
-		}
-
-		[DebuggerStepThrough]
-		public BoolWord(String value)
-		{
-			var lookupValue = value.FirstCaps();
-			var idx = (((IList)MFalseCollection).IndexOf(lookupValue) + 1) * -1;
-			idx += ((IList)MTrueCollection).IndexOf(lookupValue) + 1;
-			_mValue = Convert.ToBoolean(idx);
-			if (!idx.Equals(0))
-			{
-				_mType = (EBoolWordType)idx;
-			}
-			else
-			{
-				_mType = EBoolWordType.TrueFalse;
-			}
-			_mDefault = false;
-		}
-
-		private static readonly String[] MTrueCollection = { "True", "T", "Yes", "Y", "+", "On", "Positive", "Up", "Right", "Open" };
-		private static readonly String[] MFalseCollection = { "False", "F", "No", "N", "-", "Off", "Negative", "Down", "Left", "Close" };
 
 		#region Object Overrides
 		public override Boolean Equals(Object obj)
 		{
 			return (obj is BoolWord && (BoolWord)obj == this) ||
-					(obj is Boolean && (Boolean)obj == _mValue);
+					(obj is Boolean && (Boolean)obj == _value);
 		}
 
 		public override Int32 GetHashCode()
 		{
-			return _mValue.GetHashCode();
+			return _value.GetHashCode();
 		}
 
 		public Char ToChar()
 		{
 			var result = 'F';
-			if (_mType < EBoolWordType.OnOff)
+			if (_style < EBoolWordStyle.OnOff)
 			{
-				result = _mValue ? MTrueCollection[(Int32)_mType][0] : MFalseCollection[(Int32)_mType][0];
+				var values = _style.GetAlternateValue().Split(ValueLib.Comma.CharValue);
+				result = values[Convert.ToInt32(!_value)][0];
 			}
 			return result;
 		}
 
 		public override String ToString()
 		{
-			return _mValue ? MTrueCollection[(Int32)_mType] : MFalseCollection[(Int32)_mType];
+			var values = _style.GetAlternateValue().Split(ValueLib.Comma.CharValue);
+			return values[Convert.ToInt32(!_value)];
 		}
 
 		#endregion
@@ -124,15 +70,15 @@ namespace Singularity
 		#region Casting
 
 		[DebuggerStepThrough]
-		public static implicit operator BoolWord(Boolean aValue)
+		public static implicit operator BoolWord(Boolean value)
 		{
-			return aValue ? BoolWord.True : BoolWord.False;
+			return value ? True : False;
 		}
 
 		[DebuggerStepThrough]
-		public static implicit operator Boolean(BoolWord aValue)
+		public static implicit operator Boolean(BoolWord value)
 		{
-			return aValue._mValue;
+			return value._value;
 		}
 
 		#endregion
@@ -142,30 +88,20 @@ namespace Singularity
 		public static readonly BoolWord False = new BoolWord(false);
 		#endregion
 
-		public Boolean IsEmpty
-		{
-			get { return false; }
-		}
+		public Boolean IsEmpty => false;
 
-		public Boolean IsDefault
-		{
-			get { return this == _mDefault; }
-		}
+		public Boolean IsDefault => this == _default;
 
 		public BoolWord Default
 		{
-			get { return _mDefault; }
-			set { _mDefault = value._mValue; }
+			get { return _default; }
+			set { _default = value._value; }
 		}
-
-		private Boolean _mDefault;
+		private Boolean _default;
 
 		#region IFStateValid Members
 
-		public Boolean IsValid
-		{
-			get { return true; }
-		}
+		public Boolean IsValid => true;
 
 		#endregion
 
@@ -173,22 +109,22 @@ namespace Singularity
 
 		public Int32 CompareTo(Object aOther)
 		{
-			return _mValue.CompareTo(aOther);
+			return _value.CompareTo(aOther);
 		}
 
 		public Int32 CompareTo(BoolWord aOther)
 		{
-			return _mValue.CompareTo(aOther._mValue);
+			return _value.CompareTo(aOther._value);
 		}
 
 		public Int32 CompareTo(Boolean aOther)
 		{
-			return _mValue.CompareTo(aOther);
+			return _value.CompareTo(aOther);
 		}
 
 		#endregion
 
-		private readonly Boolean _mValue;
-		private readonly EBoolWordType _mType;
+		private readonly Boolean _value;
+		private readonly EBoolWordStyle _style;
 	}
 }

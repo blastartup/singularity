@@ -51,7 +51,7 @@
     <Compile Include="EnumAdditional\EnumAdditionalProvider.cs" />
     <Compile Include="EnumAdditional\EnumUtil.cs" />
     <Compile Include="Enums\DistanceUnit.cs" />
-    <Compile Include="Enums\EBoolWordType.cs" />
+    <Compile Include="Enums\EBoolWordStyle.cs" />
     <Compile Include="Enums\EDateTimeFormatTypes.cs" />
     <Compile Include="Enums\EDateTimeIntervalTypes.cs" />
     <Compile Include="Enums\EDaysOfWeekTypes.cs" />
@@ -64,6 +64,8 @@
     <Compile Include="Enums\ETemporalGroupFlag.cs" />
     <Compile Include="Enums\ETimePeriodRelationshipType.cs" />
     <Compile Include="ErrorHandling\BaseFaultManager.cs" />
+    <Compile Include="ErrorHandling\ErrorMemo.cs" />
+    <Compile Include="ErrorHandling\ExceptionMemo.cs" />
     <Compile Include="Extensions\ArrayExtension.cs" />
     <Compile Include="Extensions\BooleanExtension.cs" />
     <Compile Include="Extensions\CharExtension.cs" />
@@ -144,7 +146,6 @@
     <Compile Include="ValueLib.cs" />
     <Compile Include="ValueTypes\BaseN.cs" />
     <Compile Include="ValueTypes\BoolWord.cs" />
-    <Compile Include="Converters\BoolWordTypeConverter.cs" />
     <Compile Include="ValueTypes\Coord.cs" />
     <Compile Include="ValueTypes\DecimalUnit.cs" />
     <Compile Include="ValueTypes\DoubleUnit.cs" />

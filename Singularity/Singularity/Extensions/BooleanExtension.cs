@@ -9,7 +9,7 @@ namespace Singularity
 	[DebuggerStepThrough]
 	public static class BooleanExtension
 	{
-		public static BoolWord ToBoolWord(this Boolean value, EBoolWordType boolWordType = EBoolWordType.YesNo)
+		public static BoolWord ToBoolWord(this Boolean value, EBoolWordStyle boolWordType = EBoolWordStyle.TrueFalse)
 		{
 			return new BoolWord(value, boolWordType);
 		}
