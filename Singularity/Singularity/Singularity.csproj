@@ -157,6 +157,7 @@
     <Compile Include="ValueTypes\Position.cs" />
     <Compile Include="ValueTypes\Radial.cs" />
     <Compile Include="ValueTypes\SearchWordAndType.cs" />
+    <Compile Include="ValueTypes\SortElement.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

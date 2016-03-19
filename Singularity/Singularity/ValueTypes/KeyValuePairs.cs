@@ -8,7 +8,7 @@ using System.Linq;
 
 namespace Singularity
 {
-	//[DebuggerStepThrough]
+	[DebuggerStepThrough]
 	public struct KeyValuePairs : IEnumerable<KeyValuePair<String, String>>
 	{
 		public KeyValuePairs(String keyValueString) : this(keyValueString, ValueLib.SemiColon.CharValue, ValueLib.EqualsSign.CharValue, false) { }
@@ -88,10 +88,7 @@ namespace Singularity
 			return InternalValue.ContainsKey(LowerCaseKeyIfCaseInsensitive(key));
 		}
 
-		public IList<String> Keys
-		{
-			get { return new List<String>(InternalValue.Keys); }
-		}
+		public IList<String> Keys => new List<String>(InternalValue.Keys);
 
 		public Boolean Remove(String key)
 		{
@@ -103,10 +100,7 @@ namespace Singularity
 			return InternalValue.TryGetValue(LowerCaseKeyIfCaseInsensitive(key), out value);
 		}
 
-		public IList<String> Values
-		{
-			get { return new List<String>(InternalValue.Values); }
-		}
+		public IList<String> Values => new List<String>(InternalValue.Values);
 
 		public String this[String key]
 		{
@@ -150,15 +144,9 @@ namespace Singularity
 			throw new NotImplementedException();
 		}
 
-		public Int32 Count
-		{
-			get { return InternalValue.Count; }
-		}
+		public Int32 Count => InternalValue.Count;
 
-		public Boolean IsReadOnly
-		{
-			get { return false; }
-		}
+		public Boolean IsReadOnly => false;
 
 		public Boolean Remove(KeyValuePair<String, String> item)
 		{
@@ -193,36 +181,18 @@ namespace Singularity
 		private const String Pattern = "{0}{1}{2}";
 
 
-		public Char PairDelimiter
-		{
-			get { return !_pairDelimiter.IsEmpty() ? _pairDelimiter : (_pairDelimiter = ValueLib.SemiColon.CharValue); }
-		}
-
+		public Char PairDelimiter => !_pairDelimiter.IsEmpty() ? _pairDelimiter : (_pairDelimiter = ValueLib.SemiColon.CharValue);
 		private Char _pairDelimiter;
 
-		public Char KeyValueDelimiter
-		{
-			get { return !_keyValueDelimiter.IsEmpty() ? _keyValueDelimiter : (_keyValueDelimiter = ValueLib.EqualsSign.CharValue); }
-		}
-
+		public Char KeyValueDelimiter => !_keyValueDelimiter.IsEmpty() ? _keyValueDelimiter : (_keyValueDelimiter = ValueLib.EqualsSign.CharValue);
 		private Char _keyValueDelimiter;
 
-		public Dictionary<String, String> PairsDictionary
-		{
-			get { return InternalValue;  }
-		}
+		public Dictionary<String, String> PairsDictionary => InternalValue;
 
-		private Dictionary<String, String> InternalValue
-		{
-			get { return _internalValue ?? (_internalValue = new Dictionary<String, String>()); }
-		}
-
+		private Dictionary<String, String> InternalValue => _internalValue ?? (_internalValue = new Dictionary<String, String>());
 		private Dictionary<String, String> _internalValue;
 
-		public Boolean IsEmpty
-		{
-			get { return InternalValue.Count == 0; }
-		}
+		public Boolean IsEmpty => InternalValue.Count == 0;
 
 		private String LowerCaseKeyIfCaseInsensitive(String key)
 		{

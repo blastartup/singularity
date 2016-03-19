@@ -5,6 +5,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Diagnostics.Contracts;
 using System.Dynamic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Reflection;
 using System.Text;
 
@@ -460,6 +461,76 @@ namespace Singularity
 			return result.ToString();
 		}
 
+		public static IOrderedEnumerable<T> OrderBys<T>(this IEnumerable<T> items, IEnumerable<SortElement> sortElements)
+		{
+			if (sortElements.IsEmpty())
+			{
+				return items.OrderBy(s => s);
+			}
+
+			var type = typeof(T);
+			IOrderedEnumerable<T> result = null;
+			var thenBy = false;
+
+
+			foreach (var sortProperty in sortElements.Select(p => new { PropertyInfo = type.GetProperty(p.PropertyName), p.Descending }))
+			{
+				var parameter = Expression.Parameter(type, "o");
+				var propertyInfo = sortProperty.PropertyInfo;
+				var propertyType = propertyInfo.PropertyType;
+				var descending = sortProperty.Descending;
+
+				if (thenBy)
+				{
+					var prevExpr = Expression.Parameter(typeof(IOrderedEnumerable<T>), "prevExpr");
+					var thenByExpression = Expression.Lambda<Func<IOrderedEnumerable<T>, IOrderedEnumerable<T>>>(
+						 Expression.Call(
+							  (!descending ? ThenByMethod : ThenByDescendingMethod).MakeGenericMethod(type, propertyType),
+							  prevExpr,
+							  Expression.Lambda(
+									typeof(Func<,>).MakeGenericType(type, propertyType), Expression.MakeMemberAccess(parameter, propertyInfo), parameter)
+							  ),
+						 prevExpr).Compile();
+
+					result = thenByExpression(result);
+				}
+				else
+				{
+					var prevExpr = Expression.Parameter(typeof(IEnumerable<T>), "prevExpr");
+					var orderByExpression = Expression.Lambda<Func<IEnumerable<T>, IOrderedEnumerable<T>>>(
+						 Expression.Call(
+							  (!descending ? OrderByMethod : OrderByDescendingMethod).MakeGenericMethod(type, propertyType),
+							  prevExpr,
+							  Expression.Lambda(
+									typeof(Func<,>).MakeGenericType(type, propertyType),
+									Expression.MakeMemberAccess(parameter, propertyInfo), parameter)
+							  ),
+						 prevExpr).Compile();
+
+					result = orderByExpression(items);
+					thenBy = true;
+				}
+			}
+			return result;
+		}
+
+		private static readonly MethodInfo OrderByMethod =
+			 MethodOf(() => default(IEnumerable<Object>).OrderBy(default(Func<Object, Object>))).GetGenericMethodDefinition();
+
+		private static readonly MethodInfo OrderByDescendingMethod =
+			 MethodOf(() => default(IEnumerable<Object>).OrderByDescending(default(Func<Object, Object>))).GetGenericMethodDefinition();
+
+		private static readonly MethodInfo ThenByMethod =
+			 MethodOf(() => default(IOrderedEnumerable<Object>).ThenBy(default(Func<Object, Object>))).GetGenericMethodDefinition();
+
+		private static readonly MethodInfo ThenByDescendingMethod =
+			 MethodOf(() => default(IOrderedEnumerable<Object>).ThenByDescending(default(Func<Object, Object>))).GetGenericMethodDefinition();
+
+		public static MethodInfo MethodOf<T>(Expression<Func<T>> method)
+		{
+			var methodCallExpression = (MethodCallExpression)method.Body;
+			return methodCallExpression.Method;
+		}
 	}
 }
 

@@ -62,6 +62,7 @@
     <Compile Include="Extensions\EntityICollectionExtension.cs" />
     <Compile Include="Extensions\EntityObjectExtension.cs" />
     <Compile Include="Extensions\EntityReferenceExtension.cs" />
+    <Compile Include="Extensions\IOrderedEnumerableExtension.cs" />
     <Compile Include="Extensions\IQueryableExtension.cs" />
     <Compile Include="Extensions\LinqExtentions.cs" />
     <Compile Include="Extensions\ObjectQueryExtenstion.cs" />
@@ -101,7 +102,9 @@
   <ItemGroup>
     <None Include="_CreateNewNuGetPackage\DoNotModify\NuGet.exe" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="ValueTypes\" />
+  </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Singularity\Singularity.csproj">
       <Project>{350f5c90-f18f-41a9-8b84-92e0ca74d619}</Project>

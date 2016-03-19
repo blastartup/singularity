@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 
 // ReSharper disable InconsistentNaming
+// ReSharper disable once CheckNamespace
 
 namespace Singularity.DataService
 {
