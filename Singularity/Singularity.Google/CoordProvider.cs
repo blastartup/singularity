@@ -2,7 +2,7 @@
 using GeoCoding;
 using GeoCoding.Google;
 
-namespace Singularity.Web
+namespace Singularity.Google
 {
 	public class Google
 	{

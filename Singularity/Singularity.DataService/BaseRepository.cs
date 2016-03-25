@@ -17,29 +17,29 @@ namespace Singularity.DataService
 			DbSet = context.Set<TEntity>();
 		}
 
-		public virtual List<TEntity> GetList(Expression<Func<TEntity, bool>> filter = null,
+		public virtual List<TEntity> GetList(Expression<Func<TEntity, Boolean>> filter = null,
 			Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null, Paging paging = null,
-			params Expression<Func<TEntity, object>>[] navigationProperties)
+			params Expression<Func<TEntity, Object>>[] navigationProperties)
 		{
 			return Get(filter, orderBy, paging, navigationProperties).ToList();
 		}
 
-		public virtual TEntity GetEntity(Expression<Func<TEntity, bool>> filter = null,
+		public virtual TEntity GetEntity(Expression<Func<TEntity, Boolean>> filter = null,
 			Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null,
-			params Expression<Func<TEntity, object>>[] navigationProperties)
+			params Expression<Func<TEntity, Object>>[] navigationProperties)
 		{
 			return Get(filter, orderBy, null, navigationProperties).FirstOrDefault();
 		}
 
-		protected IQueryable<TEntity> Get(Expression<Func<TEntity, bool>> filter = null,
+		protected IQueryable<TEntity> Get(Expression<Func<TEntity, Boolean>> filter = null,
 			Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null, Paging paging = null,
-			params Expression<Func<TEntity, object>>[] navigationProperties)
+			params Expression<Func<TEntity, Object>>[] navigationProperties)
 		{
 			IQueryable<TEntity> dbQuery = DbSet;
 			_filter = filter;
 
 			//Apply eager loading
-			foreach (Expression<Func<TEntity, object>> navigationProperty in navigationProperties)
+			foreach (Expression<Func<TEntity, Object>> navigationProperty in navigationProperties)
 			{
 				dbQuery = dbQuery.Include(navigationProperty).AsNoTracking();
 			}
@@ -62,9 +62,9 @@ namespace Singularity.DataService
 			return dbQuery;
 		}
 
-		public virtual TEntity GetById(object id)
+		public virtual TEntity GetById(Object id)
 		{
-			if (id is Guid || id is int)
+			if (id is Guid || id is Int32)
 			{
 				TEntity entity = DbSet.Find(id);
 				if (entity is IDeleteion && ((IDeleteion)entity).IsDeleted)
@@ -76,7 +76,7 @@ namespace Singularity.DataService
 			return null;
 		}
 
-		public virtual Boolean Exists(Expression<Func<TEntity, bool>> filter)
+		public virtual Boolean Exists(Expression<Func<TEntity, Boolean>> filter)
 		{
 			return DbSet.Any(filter);
 		}
@@ -97,7 +97,7 @@ namespace Singularity.DataService
 			DbSet.Add(entity);
 		}
 
-		public virtual void Deactivate(object id)
+		public virtual void Deactivate(Object id)
 		{
 			TEntity entityToDeactivate = DbSet.Find(id);
 			Deactivate(entityToDeactivate);
@@ -119,7 +119,7 @@ namespace Singularity.DataService
 			Context.Entry(entityToDeactivate).State = EntityState.Modified;
 		}
 
-		public virtual void Delete(object id)
+		public virtual void Delete(Object id)
 		{
 			TEntity entityToDelete = DbSet.Find(id);
 			Delete(entityToDelete);
@@ -144,7 +144,7 @@ namespace Singularity.DataService
 			Context.Entry(entityToUpdate).State = EntityState.Modified;
 		}
 
-		public bool Any(Expression<Func<TEntity, bool>> filter = null)
+		public Boolean Any(Expression<Func<TEntity, Boolean>> filter = null)
 		{
 			IQueryable<TEntity> dbQuery = DbSet;
 			if (filter != null)
@@ -159,7 +159,7 @@ namespace Singularity.DataService
 			return dbQuery.Any();
 		}
 
-		public int Count(Expression<Func<TEntity, bool>> filter = null)
+		public Int32 Count(Expression<Func<TEntity, Boolean>> filter = null)
 		{
 			IQueryable<TEntity> dbQuery = DbSet;
 			if (filter != null)
@@ -175,6 +175,6 @@ namespace Singularity.DataService
 		}
 
 		protected abstract DateTime NowDateTime { get; }
-		private Expression<Func<TEntity, bool>> _filter;
+		private Expression<Func<TEntity, Boolean>> _filter;
 	}
 }
