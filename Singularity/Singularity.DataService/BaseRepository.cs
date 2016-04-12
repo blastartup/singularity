@@ -105,14 +105,16 @@ namespace Singularity.DataService
 
 		public virtual void Deactivate(TEntity entityToDeactivate)
 		{
-			if (entityToDeactivate is IDeletable)
+			var deletable = entityToDeactivate as IDeletable;
+			if (deletable != null)
 			{
-				((IDeletable)entityToDeactivate).IsDeleted = true;
+				deletable.IsDeleted = true;
 			}
 
-			if (entityToDeactivate is IModifiable)
+			var modifiable = entityToDeactivate as IModifiable;
+			if (modifiable != null)
 			{
-				((IModifiable)entityToDeactivate).ModifiedDate = NowDateTime;
+				modifiable.ModifiedDate = NowDateTime;
 			}
 
 			DbSet.Attach(entityToDeactivate);
