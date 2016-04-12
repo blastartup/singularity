@@ -4,8 +4,8 @@
 
 namespace Singularity.DataService
 {
-	public interface IDeleteion
+	public interface IUsable
 	{
-		Boolean IsDeleted { get; set; }
+		Boolean Enabled { get; set; }
 	}
 }

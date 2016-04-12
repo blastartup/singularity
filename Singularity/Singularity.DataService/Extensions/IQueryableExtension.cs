@@ -16,7 +16,7 @@ namespace Singularity.DataService
 		/// <typeparam name="TEntity">An IActivatable object context entity.</typeparam>
 		/// <param name="collection">An IQueryable list of IActivatables.</param>
 		/// <returns>An IQueryable list of only those entities that are Active.</returns>
-		public static IQueryable<TEntity> Actives<TEntity>(this IQueryable<TEntity> collection) where TEntity : class, IDeleteion
+		public static IQueryable<TEntity> Actives<TEntity>(this IQueryable<TEntity> collection) where TEntity : class, IDeletable
 		{
 			return collection.Where(x => !x.IsDeleted);
 		}

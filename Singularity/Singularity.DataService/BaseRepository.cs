@@ -67,7 +67,7 @@ namespace Singularity.DataService
 			if (id is Guid || id is Int32)
 			{
 				TEntity entity = DbSet.Find(id);
-				if (entity is IDeleteion && ((IDeleteion)entity).IsDeleted)
+				if (entity is IDeletable && ((IDeletable)entity).IsDeleted)
 				{
 					return null;
 				}
@@ -105,9 +105,9 @@ namespace Singularity.DataService
 
 		public virtual void Deactivate(TEntity entityToDeactivate)
 		{
-			if (entityToDeactivate is IDeleteion)
+			if (entityToDeactivate is IDeletable)
 			{
-				((IDeleteion)entityToDeactivate).IsDeleted = true;
+				((IDeletable)entityToDeactivate).IsDeleted = true;
 			}
 
 			if (entityToDeactivate is IModifiable)
