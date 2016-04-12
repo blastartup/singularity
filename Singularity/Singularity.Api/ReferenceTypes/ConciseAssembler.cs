@@ -12,6 +12,7 @@ namespace Singularity.Api
 	{
 	}
 
+	[CLSCompliant(true)]
 	public abstract class ConciseAssembler<TIn, TOut> : ConciseAssembler
 		where TIn : class
 		where TOut : class, new()

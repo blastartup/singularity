@@ -8,6 +8,7 @@ namespace Singularity.Api
 	/// <summary>
 	/// A class to give us a neat response. Can have great extensibility in future.
 	/// </summary>
+	[CLSCompliant(true)]
 	public class Response<T> where T : DtoBase
 	{
 		public Response()

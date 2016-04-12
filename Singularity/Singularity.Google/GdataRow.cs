@@ -15,7 +15,7 @@ namespace Singularity.Google
 			Cells.Add(cellEntry.Cell.Column, cellEntry);
 		}
 
-		protected String GetValue(uint index)
+		protected String GetValue(UInt32 index)
 		{
 			CellEntry returnCell;
 			if (Cells.TryGetValue(index, out returnCell))
@@ -25,7 +25,7 @@ namespace Singularity.Google
 			return String.Empty;
 		}
 
-		protected void SetValue(uint index, String value)
+		protected void SetValue(UInt32 index, String value)
 		{
 			CellEntry cellEntry;
 			if (Cells.TryGetValue(index, out cellEntry))
@@ -55,14 +55,11 @@ namespace Singularity.Google
 
 		public SpreadsheetsService Service { get; set; }
 
-		public uint RowNbr { get; set; }
+		public UInt32 RowNbr { get; set; }
 
-		public abstract int LastColumn { get; }
+		public abstract Int32 LastColumn { get; }
 
-		private IDictionary<uint, CellEntry> Cells
-		{
-			get { return _cells ?? (_cells = new Dictionary<uint, CellEntry>()); }
-		}
-		private Dictionary<uint, CellEntry> _cells;
+		private IDictionary<UInt32, CellEntry> Cells => _cells ?? (_cells = new Dictionary<UInt32, CellEntry>());
+		private Dictionary<UInt32, CellEntry> _cells;
 	}
 }
