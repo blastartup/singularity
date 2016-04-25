@@ -73,6 +73,7 @@
     <Compile Include="Interfaces\ICompletable.cs" />
     <Compile Include="Interfaces\IConfiguration.cs" />
     <Compile Include="Interfaces\ICreatable.cs" />
+    <Compile Include="Interfaces\IImportable.cs" />
     <Compile Include="Interfaces\IUsable.cs" />
     <Compile Include="Interfaces\IDeletable.cs" />
     <Compile Include="Interfaces\IDescribable.cs" />
