@@ -66,6 +66,9 @@
     <Compile Include="Extensions\IQueryableExtension.cs" />
     <Compile Include="Extensions\LinqExtentions.cs" />
     <Compile Include="Extensions\ObjectQueryExtenstion.cs" />
+    <Compile Include="Extensions\DbTypeExtension.cs" />
+    <Compile Include="Extensions\TypeExtension.cs" />
+    <Compile Include="Extensions\SqlDbTypeExtension.cs" />
     <Compile Include="Extensions\SqlDateTimeExtension.cs" />
     <Compile Include="FillTable.cs" />
     <Compile Include="Interfaces\IAddressable.cs" />
@@ -86,6 +89,7 @@
     <Compile Include="Providers\ConfigValueHelper.cs" />
     <Compile Include="QueryExtractraction.cs" />
     <Compile Include="ReferenceType\Paging.cs" />
+    <Compile Include="ReferenceType\TypeConverter.cs" />
     <Compile Include="Replies\ReplyDataTable.cs" />
     <Compile Include="UniqueCodeService\CodeServices\UniqueCodeService.cs" />
     <Compile Include="UniqueCodeService\Strageties\CodeStrategy.cs" />
