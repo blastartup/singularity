@@ -75,6 +75,11 @@ namespace Singularity
 				foreach (var item in (IEnumerable)value)
 				{
 					allItemsEmpty &= item.IsEmpty();
+
+					if (!allItemsEmpty)
+					{
+						break;
+					}
 				}
 				result = allItemsEmpty;
 			}
