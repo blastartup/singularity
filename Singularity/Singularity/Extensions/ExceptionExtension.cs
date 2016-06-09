@@ -14,8 +14,8 @@ namespace Singularity
 		/// <summary>
 		/// Return exception details as a single string for logging purposes.
 		/// </summary>
-		/// <param name="exception"></param>
-		/// <returns></returns>
+		/// <param name="exception">An exception whose details you want to log as a single string.</param>
+		/// <returns>All the main properties of this exception and any inner exceptions as a single lined string.</returns>
 		public static String ToLogString(this Exception exception)
 		{
 			var result = String.Empty;
