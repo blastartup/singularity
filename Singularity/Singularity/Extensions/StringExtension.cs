@@ -402,7 +402,8 @@ namespace Singularity
 			{
 				return input;
 			}
-			else if (startIndex < input.Length && length > 0)
+
+			if (startIndex < input.Length && length > 0)
 			{
 				Int32 internalStartIndex, lSafeLength;
 				internalStartIndex = Math.Min(startIndex, input.Length - 1);
