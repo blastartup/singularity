@@ -2012,16 +2012,14 @@ namespace Singularity
 			{
 				return value;
 			}
-			else if (characters != null)
+
+			if (characters != null)
 			{
 				var result = value;
-				characters.ForEach(c => result.Replace(c.ToString(), ""));
+				characters.ForEach(c => result = result.Replace(c.ToString(), ""));
 				return result;
 			}
-			else
-			{
-				return Regex.Replace(value, @"[^\w\s]", "", RegexOptions.Compiled).TrimIntra();
-			}
+			return Regex.Replace(value, @"[^\w\s]", "", RegexOptions.Compiled).TrimIntra();
 		}
 
 		public static String CleanPunctuation(this String value)
