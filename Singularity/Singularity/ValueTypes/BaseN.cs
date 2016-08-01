@@ -241,7 +241,7 @@ namespace Singularity
 		public static Boolean TryParse(String aValue, out BaseN aResult)
 		{
 			Double lTryParseResult;
-			var lSuccess = Double.TryParse(aValue, NumberStyles.Integer, CultureProvider.Current.NumberFormat, out lTryParseResult)
+			var lSuccess = Double.TryParse(aValue, NumberStyles.Integer, Factory.CurrentCultureInfo.NumberFormat, out lTryParseResult)
 				&& CanConvertToFBaseN(lTryParseResult);
 			aResult = lSuccess ? (BaseN)lTryParseResult : Zero;
 			return lSuccess;

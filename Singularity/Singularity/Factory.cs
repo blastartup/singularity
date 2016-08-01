@@ -18,6 +18,9 @@ namespace Singularity
 		[ThreadStatic]
 		private static CultureInfo _current;
 
+		public static IDateTimeProvider CurrentDateTimeProvider { get; set; }
+
+
 		/// <summary>
 		/// Instantiate the list with a default starting capacity of 10.
 		/// </summary>

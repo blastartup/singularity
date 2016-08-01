@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.24720.0
+VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Singularity", "Singularity\Singularity.csproj", "{350F5C90-F18F-41A9-8B84-92E0CA74D619}"
 EndProject
@@ -28,6 +28,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Singularity.FileService", "Singularity.FileService\Singularity.FileService.csproj", "{3BEEA464-8459-48D4-A785-E87D42977AE5}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Singularity.Test", "Singularity.Test\Singularity.Test.csproj", "{24242953-E6A3-4006-9371-DD4E08872F08}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Singularity.WinForm", "Singularity.WinForm\Singularity.WinForm.csproj", "{CD25F57E-67FB-4065-B088-899FAE0D6891}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -86,6 +88,10 @@ Global
 		{24242953-E6A3-4006-9371-DD4E08872F08}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{24242953-E6A3-4006-9371-DD4E08872F08}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{24242953-E6A3-4006-9371-DD4E08872F08}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CD25F57E-67FB-4065-B088-899FAE0D6891}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CD25F57E-67FB-4065-B088-899FAE0D6891}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CD25F57E-67FB-4065-B088-899FAE0D6891}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CD25F57E-67FB-4065-B088-899FAE0D6891}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
