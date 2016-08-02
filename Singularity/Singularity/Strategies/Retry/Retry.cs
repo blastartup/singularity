@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading;
 
 // ReSharper disable once CheckNamespace
@@ -21,14 +22,21 @@ namespace Singularity
 			RetryStrategry.Started = DateTime.UtcNow;
 			while (CanContinue())
 			{
-				if ((result = ExecuteAction()).Condition)
+				try
 				{
-					break;
+					if ((result = ExecuteAction()).Condition)
+					{
+						break;
+					}
+					RetryStrategry.Attempts++;
+					if (ShouldWait())
+					{
+						ExecuteDelay();
+					}
 				}
-				RetryStrategry.Attempts++;
-				if (ShouldWait())
+				catch (Exception ex)
 				{
-					ExecuteDelay();
+					Exceptions.Add(ex);
 				}
 			}
 			return result;
@@ -50,6 +58,12 @@ namespace Singularity
 		{
 			Thread.Sleep(RetryStrategry.Delay);
 		}
+
+		public AggregateException AggregateException => _aggregateException ?? (_aggregateException = Exceptions.Count > 0 ? new AggregateException(Exceptions) : null);
+		private AggregateException _aggregateException;
+
+		protected List<Exception> Exceptions => _exceptions ?? (_exceptions = new List<Exception>());
+		private List<Exception> _exceptions;
 
 		protected readonly RetryStrategry RetryStrategry;
 	}
