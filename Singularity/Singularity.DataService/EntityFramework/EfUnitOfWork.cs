@@ -5,7 +5,7 @@ using System.Data.Entity.Core.Objects;
 
 namespace Singularity.DataService
 {
-	public abstract class BaseUnitOfWork<TDbContext> : IDisposable
+	public abstract class EfUnitOfWork<TDbContext> : IDisposable
 		where TDbContext : DbContext, new()
 	{
 		public Boolean Save(Boolean clearContext = false)
@@ -20,7 +20,30 @@ namespace Singularity.DataService
 			return result;
 		}
 
-		private Boolean _disposed = false;
+		public void Dispose()
+		{
+			Dispose(true);
+			GC.SuppressFinalize(this);
+		}
+
+		public Boolean LazyLoadingEnabled
+		{
+			get { return Context.Configuration.LazyLoadingEnabled; }
+			set { Context.Configuration.LazyLoadingEnabled = value; }
+		}
+
+		public TDbContext Context => _context ?? (_context = NewDbContext());
+		private TDbContext _context;
+
+		protected virtual TDbContext NewDbContext()
+		{
+			return new TDbContext();	
+		}
+
+		protected virtual TDbContext ResetDbContext()
+		{
+			return NewDbContext();
+		}
 
 		protected virtual void Dispose(Boolean disposing)
 		{
@@ -34,33 +57,7 @@ namespace Singularity.DataService
 			_disposed = true;
 		}
 
-		public void Dispose()
-		{
-			Dispose(true);
-			GC.SuppressFinalize(this);
-		}
-		public Boolean LazyLoadingEnabled
-		{
-			get { return Context.Configuration.LazyLoadingEnabled; }
-			set { Context.Configuration.LazyLoadingEnabled = value; }
-		}
-
-		public TDbContext Context
-		{
-			get { return _context ?? (_context = NewDbContext()); }
-		}
-		private TDbContext _context;
-
-		protected virtual TDbContext NewDbContext()
-		{
-			return new TDbContext();	
-		}
-
-		protected virtual TDbContext ResetDbContext()
-		{
-			return NewDbContext();
-		}
-
 		protected abstract void ResetRepositories();
+		private Boolean _disposed = false;
 	}
 }

@@ -6,12 +6,12 @@ using System.Linq.Expressions;
 
 namespace Singularity.DataService
 {
-	public abstract class BaseRepository<TEntity> where TEntity : class
+	public abstract class EfRepository<TEntity> where TEntity : class
 	{
 		protected DbContext Context;
 		protected DbSet<TEntity> DbSet;
 
-		public BaseRepository(DbContext context)
+		protected EfRepository(DbContext context)
 		{
 			Context = context;
 			DbSet = context.Set<TEntity>();
