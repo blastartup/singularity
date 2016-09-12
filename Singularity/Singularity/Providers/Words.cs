@@ -111,7 +111,7 @@ namespace Singularity
 			_delimiter = delimiter;
 
 			// todo - fix delimiter when it is a pipe character...
-			var lWordCollection = new List<String>(Regex.Split(value, delimiter));
+			var lWordCollection = new List<String>(Regex.Split(value, delimiter.Replace(@"\", @"\\")));
 			if (wordCount.Equals(-1))
 			{
 				wordCount = lWordCollection.Count;
@@ -275,7 +275,7 @@ namespace Singularity
 		{
 			Contract.Requires(startIndex >= 0);
 
-			return new Words(_internalList.GetRange(startIndex, count.GetValueOrDefault(_internalList.Count - startIndex)));
+			return new Words(_internalList.GetRange(startIndex, count.GetValueOrDefault(_internalList.Count - startIndex)), _delimiter);
 		}
 
 		public Words GetRangeNonEmpty(Int32 startIndex, Int32? count = null)
@@ -283,7 +283,7 @@ namespace Singularity
 			Contract.Requires(startIndex >= 0);
 			Contract.Requires(count >= 1);
 
-			return new Words(_internalList.GetRangeNonEmpty(startIndex, count.GetValueOrDefault(_internalList.Count - startIndex)));
+			return new Words(_internalList.GetRangeNonEmpty(startIndex, count.GetValueOrDefault(_internalList.Count - startIndex)), _delimiter);
 		}
 
 		[DebuggerHidden]
@@ -361,7 +361,7 @@ namespace Singularity
 			var result = false;
 			foreach (var wordString in wordStrings)
 			{
-				var removeWords = new Words(wordString);
+				var removeWords = new Words(wordString, _delimiter);
 				foreach (var removeWord in removeWords)
 				{
 					var foundWord = _internalList.FirstOrDefault(w => w.ToUpper() == removeWord);
