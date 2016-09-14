@@ -4,11 +4,11 @@ using System.Data.Entity;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Linq.Expressions;
-using Singularity.DataService.Interfaces;
 
 namespace Singularity.DataService.SqlFramework
 {
-	public abstract class SqlRepository<TSqlEntity> where TSqlEntity : ISqlEntity
+	public abstract class SqlRepository<TSqlEntity> : IDisposable
+		where TSqlEntity : class
 	{
 		protected SqlEntityContext Context;
 
@@ -31,32 +31,32 @@ namespace Singularity.DataService.SqlFramework
 			}
 
 			selectColumns = selectColumns ?? SelectAllColunms();
-			return Select(selectColumns, filter, filterParameters, orderBy, paging).ToList();
+			return AssembleClassList(SelectQuery(selectColumns, filter, filterParameters, orderBy, paging));
 		}
 
 		public List<TSqlEntity> GetListByIds<T>(IEnumerable<T> ids, String selectColumns = null, String orderBy = null, Paging paging = null)
 		{
 			selectColumns = selectColumns ?? SelectAllColunms();
-			return Select(selectColumns, FilterIn(ids), null, orderBy, paging).ToList();
+			return AssembleClassList(SelectQuery(selectColumns, FilterIn(ids), null, orderBy, paging));
 		}
 
 		public virtual TSqlEntity GetEntity(String filter = "", SqlParameter[] filterParameters = null, String selectColumns = null)
 		{
 			selectColumns = selectColumns ?? SelectAllColunms();
-			return Select(selectColumns, filter, filterParameters, null, new Paging(1)).FirstOrDefault();
+			return ReadAndAssembleClass(SelectQuery(selectColumns, filter, filterParameters, null, new Paging(1)));
 		}
 
 		public TSqlEntity GetById(Object id, String selectColumns = null)
 		{
 			selectColumns = selectColumns ?? SelectAllColunms();
-			return Select(selectColumns, WhereClause(), Parameters(id)).FirstOrDefault();
+			return ReadAndAssembleClass(SelectQuery(selectColumns, WhereClause(), Parameters(id)));
 		}
 
-		public virtual Boolean Exists(String filter = "", SqlParameter[] filterParameters = null, String selectColumns = null)
-		{
-			selectColumns = selectColumns ?? SelectAllColunms();
-			return Select(selectColumns, filter, filterParameters, null, new Paging(1)).Any();
-		}
+		//public virtual Boolean Exists(String filter = "", SqlParameter[] filterParameters = null, String selectColumns = null)
+		//{
+		//	selectColumns = selectColumns ?? SelectAllColunms();
+		//	return SelectQuery(selectColumns, filter, filterParameters, null, new Paging(1)).HasRows;
+		//}
 
 		public void Insert(TSqlEntity sqlEntity)
 		{
@@ -79,15 +79,20 @@ namespace Singularity.DataService.SqlFramework
 			InsertCore(sqlEntity, InsertColunms(), GetInsertValues(sqlEntity));
 		}
 
-		//public virtual void Update(TEntity entityToUpdate)
-		//{
-		//	if (entityToUpdate is IModifiable)
-		//	{
-		//		((IModifiable)entityToUpdate).ModifiedDate = NowDateTime;
-		//	}
-		//	DbSet.Attach(entityToUpdate);
-		//	Context.Entry(entityToUpdate).State = EntityState.Modified;
-		//}
+		public virtual void Update(TSqlEntity sqlEntity)
+		{
+			if (SaveChangesTransactionally)
+			{
+				Context.BeginTransaction();
+			}
+
+			if (sqlEntity is IModifiable)
+			{
+				((IModifiable)sqlEntity).ModifiedDate = NowDateTime;
+			}
+
+			UpdateCore(sqlEntity, GetUpdateColumnValuePairs(sqlEntity), GetUpdateKeyColumnValuePair(sqlEntity));
+		}
 
 		//public Int32 Count(Expression<Func<TEntity, Boolean>> filter = null)
 		//{
@@ -143,7 +148,7 @@ namespace Singularity.DataService.SqlFramework
 		//	DbSet.Remove(entityToDelete);
 		//}
 
-		protected IList<TSqlEntity> Select(String selectColumns, String filter = "", SqlParameter[] filterParameters = null, String orderBy = null, 
+		protected SqlDataReader SelectQuery(String selectColumns, String filter = "", SqlParameter[] filterParameters = null, String orderBy = null, 
 			Paging paging = null)
 		{
 			String query = null;
@@ -174,13 +179,19 @@ namespace Singularity.DataService.SqlFramework
 			}
 
 			query = "select {0}{1} from {2}{3}{4}".FormatX(takeFilter, selectColumns, FromTables(), filter, orderBy);
-			return AssembleList(Context.ExecDataReader(query, filterParameters));
+			return Context.ExecDataReader(query, filterParameters);
 		}
 
 		protected void InsertCore(TSqlEntity sqlEntity, String insertColumns, String insertValues)
 		{
-			String insertStatement = InsertColumnsPattern.FormatX(((ISqlEntity)sqlEntity).Name, insertColumns, insertValues);
+			String insertStatement = InsertColumnsPattern.FormatX(TableName, insertColumns, insertValues);
 			SetEntityPrimaryKey(sqlEntity, Context.ExecScalar(insertStatement, new SqlParameter[] {}));
+		}
+
+		protected void UpdateCore(TSqlEntity sqlEntity, String updateColumnValuePairs, String updateKeyColumValuePair)
+		{
+			String updateStatement = UpdateColumnsPattern.FormatX(TableName, updateColumnValuePairs, updateKeyColumValuePair);
+			SetEntityPrimaryKey(sqlEntity, Context.ExecScalar(updateStatement, new SqlParameter[] { }));
 		}
 
 		protected virtual String SelectAllColunms()
@@ -244,16 +255,43 @@ namespace Singularity.DataService.SqlFramework
 
 		public Boolean SaveChangesTransactionally { get; set; }
 
-		protected abstract List<TSqlEntity> AssembleList(SqlDataReader dataReader);
+		protected abstract List<TSqlEntity> AssembleClassList(SqlDataReader dataReader);
+		protected abstract TSqlEntity ReadAndAssembleClass(SqlDataReader dataReader);
 		protected abstract DateTime NowDateTime { get; }
 		protected abstract String TableName { get; }
 		protected abstract String PrimaryKeyName { get; }
 		protected abstract String InsertColunms();
-		protected abstract String GetInsertValues(TSqlEntity entity);
-		protected abstract void SetEntityPrimaryKey(TSqlEntity entity, Object newPrimaryKey);
+		protected abstract String GetInsertValues(TSqlEntity sqlEntity);
+		protected abstract String GetUpdateColumnValuePairs(TSqlEntity sqlEntity);
+		protected abstract String GetUpdateKeyColumnValuePair(TSqlEntity sqlEntity);
+		protected abstract void SetEntityPrimaryKey(TSqlEntity sqlEntity, Object newPrimaryKey);
 
+		#region IDisposable Support
 
+		public void Dispose()
+		{
+			Dispose(true);
+		}
+
+		protected virtual void Dispose(Boolean disposing)
+		{
+			if (!_disposedValue)
+			{
+				if (disposing)
+				{
+					Context?.Dispose();
+				}
+			}
+			_disposedValue = true;
+		}
+
+		private Boolean _disposedValue;
+
+		#endregion
+
+		protected const String UpdateColumnValuePattern = "{0} = {1}";
 		private const String InsertColumnsPattern = "Insert [{0}] ({1}) Values({2}) SELECT @@IDENTITY";
+		private const String UpdateColumnsPattern = "Update [{0}] Set {1} Where {2}";
 		private const String StringValuePattern = "'{0}'";
 		private const String DateTimeFormat = "yyyy/MM/dd HH:mm:ss.fff";
 	}

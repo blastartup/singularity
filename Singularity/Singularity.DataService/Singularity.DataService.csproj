@@ -78,7 +78,6 @@
     <Compile Include="Interfaces\ICreatable.cs" />
     <Compile Include="Interfaces\IImportable.cs" />
     <Compile Include="Interfaces\IItemisable.cs" />
-    <Compile Include="Interfaces\ISqlEntity.cs" />
     <Compile Include="Interfaces\IUsable.cs" />
     <Compile Include="Interfaces\IDeletable.cs" />
     <Compile Include="Interfaces\IDescribable.cs" />
@@ -93,6 +92,7 @@
     <Compile Include="ReferenceType\Paging.cs" />
     <Compile Include="ReferenceType\TypeConverter.cs" />
     <Compile Include="Replies\ReplyDataTable.cs" />
+    <Compile Include="SqlFramework\SqlAssembler.cs" />
     <Compile Include="SqlFramework\SqlEntityContext.cs" />
     <Compile Include="SqlFramework\SqlRepository.cs" />
     <Compile Include="SqlFramework\SqlUnitOfWork.cs" />
