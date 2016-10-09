@@ -31,10 +31,14 @@ namespace Singularity.DataService.SqlFramework
 			TValue result = defaultValue;
 			try
 			{
-				Object value = DataReader[columnName];
-				if (value != null)
+				// Massive performance improvement here...
+				if (ColumnNameExists(columnName))
 				{
-					result = (TValue)value;
+					Object value = DataReader[columnName];
+					if (value != null && value != DBNull.Value)
+					{
+						result = (TValue)value;
+					}
 				}
 			}
 			catch(IndexOutOfRangeException) { }
@@ -43,6 +47,23 @@ namespace Singularity.DataService.SqlFramework
 
 			return result;
 		}
+
+		private Boolean ColumnNameExists(String columnName)
+		{
+			if (_columnNames == null)
+			{
+				_columnNames = new List<String>(DataReader.FieldCount);
+				if (DataReader.HasRows && DataReader.FieldCount > 0)
+				{
+					for (int idx = 0; idx < DataReader.FieldCount - 1; idx++)
+					{
+						_columnNames.Add(DataReader.GetName(idx));
+					}
+				}
+			}
+			return _columnNames.Any(f => f.Equals(columnName, StringComparison.OrdinalIgnoreCase));
+		}
+		private List<String> _columnNames;
 
 		public SqlDataReader DataReader { get; private set; }
 	}
