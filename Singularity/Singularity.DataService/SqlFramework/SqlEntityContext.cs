@@ -33,6 +33,14 @@ namespace Singularity.DataService.SqlFramework
 			}
 		}
 
+		public Int32 ExecuteNonQuery(String query, SqlParameter[] filterParameters)
+		{
+			using (SqlCommand cmd = CreateCommand(query, CommandType.Text, filterParameters))
+			{
+				return cmd.ExecuteNonQuery();
+			}
+		}
+
 		public SqlTransaction BeginTransaction()
 		{
 			return _sqlTransaction ?? (_sqlTransaction = _sqlConnection.BeginTransaction());

@@ -133,20 +133,16 @@ namespace Singularity.DataService.SqlFramework
 		//	Context.Entry(entityToDeactivate).State = EntityState.Modified;
 		//}
 
-		//public virtual void Delete(Object id)
-		//{
-		//	TEntity entityToDelete = DbSet.Find(id);
-		//	Delete(entityToDelete);
-		//}
+		public virtual Int32 Delete(Object id)
+		{
+			var query = "delete from {0} where {1} = @PrimaryKeyName".FormatX(TableName, PrimaryKeyName);
+			return Context.ExecuteNonQuery(query, new SqlParameter[]
+			{
+				new SqlParameter("@PrimaryKeyName", id)
+			});
+		}
 
-		//public virtual void Delete(TEntity entityToDelete)
-		//{
-		//	if (Context.Entry(entityToDelete).State == EntityState.Detached)
-		//	{
-		//		DbSet.Attach(entityToDelete);
-		//	}
-		//	DbSet.Remove(entityToDelete);
-		//}
+		public abstract void Delete(TSqlEntity entityToDelete);
 
 		protected SqlDataReader SelectQuery(String selectColumns, String filter = "", SqlParameter[] filterParameters = null, String orderBy = null, 
 			Paging paging = null)

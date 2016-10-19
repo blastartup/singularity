@@ -55,6 +55,21 @@ namespace Singularity
 			return result;
 		}
 
+		public static String LineNumber(this Exception exception)
+		{
+			var stackTrace = new StackTrace(exception, true);
+			var stackFrames = stackTrace.GetFrames();
+			if (stackFrames != null)
+			{
+				foreach (var stackFrame in stackFrames.Where(f => f.GetFileLineNumber() > 0))
+				{
+					return $"Line: {stackFrame.GetFileLineNumber()}";
+				}
+			}
+
+			return "Line:Unknown";
+		}
+
 		private static IEnumerable<T> GetStackTraceWorkFlow<T>(Exception exception)
 		{
 			var traceSteps = new List<T>();
