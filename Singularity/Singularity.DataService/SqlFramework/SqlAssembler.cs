@@ -55,7 +55,7 @@ namespace Singularity.DataService.SqlFramework
 				_columnNames = new List<String>(DataReader.FieldCount);
 				if (DataReader.HasRows && DataReader.FieldCount > 0)
 				{
-					for (int idx = 0; idx < DataReader.FieldCount - 1; idx++)
+					for (int idx = 0; idx < DataReader.FieldCount; idx++)
 					{
 						_columnNames.Add(DataReader.GetName(idx));
 					}
