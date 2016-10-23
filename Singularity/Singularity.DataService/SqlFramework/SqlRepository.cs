@@ -94,20 +94,28 @@ namespace Singularity.DataService.SqlFramework
 			UpdateCore(sqlEntity, GetUpdateColumnValuePairs(sqlEntity), GetUpdateKeyColumnValuePair(sqlEntity));
 		}
 
-		//public Int32 Count(Expression<Func<TEntity, Boolean>> filter = null)
-		//{
-		//	IQueryable<TEntity> dbQuery = DbSet;
-		//	if (filter != null)
-		//	{
-		//		return dbQuery.Count(filter);
-		//	}
+		public Int64 Count(String filter = "", SqlParameter[] filterParameters = null)
+		{
+			if (filterParameters != null && filter == null)
+			{
+				throw new ArgumentException("FilterParameters can only be applied to a filtered result.");
+			}
 
-		//	if (_filter != null)
-		//	{
-		//		return dbQuery.Count(_filter);
-		//	}
-		//	return dbQuery.Count();
-		//}
+			String query = null;
+
+			if (!String.IsNullOrEmpty(filter))
+			{
+				filter = " where " + filter;
+			}
+
+			if (filterParameters == null)
+			{
+				filterParameters = new SqlParameter[] { };
+			}
+
+			query = "Select Count(*) from {0}{1}".FormatX(FromTables(), filter);
+			return Context.ExecuteNonQuery(query, filterParameters);
+		}
 
 		//public virtual void Deactivate(Object id)
 		//{
