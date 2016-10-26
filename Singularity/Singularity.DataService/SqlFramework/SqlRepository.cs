@@ -150,6 +150,27 @@ namespace Singularity.DataService.SqlFramework
 			});
 		}
 
+		public virtual Int32 Delete(String filter = "", SqlParameter[] filterParameters = null)
+		{
+			if (filter.IsEmpty())
+			{
+				throw new ArgumentException("Filter is required.");
+			}
+
+			if (filterParameters != null && filter == null)
+			{
+				throw new ArgumentException("FilterParameters can only be applied to a filtered result.");
+			}
+
+			if (filterParameters == null)
+			{
+				filterParameters = new SqlParameter[] { };
+			}
+
+			var query = $"delete from {TableName} where {filter}";
+			return Context.ExecuteNonQuery(query, filterParameters);
+		}
+
 		public abstract void Delete(TSqlEntity entityToDelete);
 
 		protected SqlDataReader SelectQuery(String selectColumns, String fromTables, String join = "", String filter = "", SqlParameter[] filterParameters = null, String orderBy = null, 
