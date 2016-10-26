@@ -1285,7 +1285,7 @@ namespace Singularity
 
 		public static String Surround(this String value, String surroundValue)
 		{
-			return Surround(surroundValue, surroundValue);
+			return Surround(value, surroundValue, surroundValue);
 		}
 
 		public static String Surround(this String value, String startSurroundValue, String endSurroundValue)
