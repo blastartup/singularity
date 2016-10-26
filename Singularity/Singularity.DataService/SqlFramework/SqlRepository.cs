@@ -31,25 +31,25 @@ namespace Singularity.DataService.SqlFramework
 			}
 
 			selectColumns = selectColumns ?? SelectAllColunms();
-			return AssembleClassList(SelectQuery(selectColumns, "", filter, filterParameters, orderBy, paging));
+			return AssembleClassList(SelectQuery(selectColumns, FromTables(), "", filter, filterParameters, orderBy, paging));
 		}
 
 		public List<TSqlEntity> GetListByIds<T>(IEnumerable<T> ids, String selectColumns = null, String orderBy = null, Paging paging = null)
 		{
 			selectColumns = selectColumns ?? SelectAllColunms();
-			return AssembleClassList(SelectQuery(selectColumns, "", FilterIn(ids), null, orderBy, paging));
+			return AssembleClassList(SelectQuery(selectColumns, FromTables(), "", FilterIn(ids), null, orderBy, paging));
 		}
 
 		public virtual TSqlEntity GetEntity(String filter = "", SqlParameter[] filterParameters = null, String selectColumns = null)
 		{
 			selectColumns = selectColumns ?? SelectAllColunms();
-			return ReadAndAssembleClass(SelectQuery(selectColumns, "", filter, filterParameters, null, new Paging(1)));
+			return ReadAndAssembleClass(SelectQuery(selectColumns, FromTables(), "", filter, filterParameters, null, new Paging(1)));
 		}
 
 		public TSqlEntity GetById(Object id, String selectColumns = null)
 		{
 			selectColumns = selectColumns ?? SelectAllColunms();
-			return ReadAndAssembleClass(SelectQuery(selectColumns, "", WhereClause(), Parameters(id)));
+			return ReadAndAssembleClass(SelectQuery(selectColumns, FromTables(), "", WhereClause(), Parameters(id)));
 		}
 
 		//public virtual Boolean Exists(String filter = "", SqlParameter[] filterParameters = null, String selectColumns = null)
@@ -152,7 +152,7 @@ namespace Singularity.DataService.SqlFramework
 
 		public abstract void Delete(TSqlEntity entityToDelete);
 
-		protected SqlDataReader SelectQuery(String selectColumns, String join = "", String filter = "", SqlParameter[] filterParameters = null, String orderBy = null, 
+		protected SqlDataReader SelectQuery(String selectColumns, String fromTables, String join = "", String filter = "", SqlParameter[] filterParameters = null, String orderBy = null, 
 			Paging paging = null)
 		{
 			String query = null;
@@ -182,7 +182,7 @@ namespace Singularity.DataService.SqlFramework
 				takeFilter = $"Top {paging.Take} ";
 			}
 
-			query = $"select {takeFilter}{selectColumns} from {FromTables()}{join}{filter}{orderBy}";
+			query = $"select {takeFilter}{selectColumns} from {fromTables}{join}{filter}{orderBy}";
 			return Context.ExecDataReader(query, filterParameters);
 		}
 
