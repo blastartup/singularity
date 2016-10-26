@@ -157,6 +157,11 @@ namespace Singularity.DataService.SqlFramework
 		{
 			String query = null;
 
+			if (!join.IsEmpty())
+			{
+				join = join.Surround(ValueLib.Space.StringValue);
+			}
+
 			if (!String.IsNullOrEmpty(filter))
 			{
 				filter = " where " + filter;
