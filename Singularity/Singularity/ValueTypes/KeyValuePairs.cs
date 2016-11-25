@@ -9,8 +9,10 @@ using System.Linq;
 namespace Singularity
 {
 	[DebuggerStepThrough]
-	public struct KeyValuePairs : IEnumerable<KeyValuePair<String, String>>
+	public class KeyValuePairs : IEnumerable<KeyValuePair<String, String>>
 	{
+		public KeyValuePairs() : this(String.Empty, ValueLib.SemiColon.CharValue, ValueLib.EqualsSign.CharValue, false) { }
+
 		public KeyValuePairs(String keyValueString) : this(keyValueString, ValueLib.SemiColon.CharValue, ValueLib.EqualsSign.CharValue, false) { }
 
 		public KeyValuePairs(String keyValueString, Char pairDelimiter, Char keyValueDelimiter, Boolean caseInsensitive = false)
@@ -170,6 +172,11 @@ namespace Singularity
 
 		public override String ToString()
 		{
+			if (InternalValue.Count == 0)
+			{
+				return String.Empty;
+			}
+
 			var builder = new DelimitedStringBuilder(InternalValue.Count);
 			foreach (var keyValue in InternalValue)
 			{

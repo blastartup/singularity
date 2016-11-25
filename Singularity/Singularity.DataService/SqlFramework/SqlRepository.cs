@@ -220,8 +220,9 @@ namespace Singularity.DataService.SqlFramework
 
 		protected void UpdateCore(TSqlEntity sqlEntity, String updateColumnValuePairs, String updateKeyColumValuePair)
 		{
+			// NB: Don't need to update the primary key because it doesn't change nor is returned from an Update SQL query.
 			String updateStatement = UpdateColumnsPattern.FormatX(TableName, updateColumnValuePairs, updateKeyColumValuePair);
-			SetEntityPrimaryKey(sqlEntity, Context.ExecScalar(updateStatement, new SqlParameter[] { }));
+			Context.ExecScalar(updateStatement, new SqlParameter[] { });
 		}
 
 		protected virtual String SelectAllColunms()
