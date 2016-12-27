@@ -50,6 +50,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Attributes\OriginallyKnownAsAttribute.cs" />
     <Compile Include="EntityFramework\EfRepository.cs" />
     <Compile Include="EntityFramework\EfUnitOfWork.cs" />
     <Compile Include="CsvWriter.cs" />

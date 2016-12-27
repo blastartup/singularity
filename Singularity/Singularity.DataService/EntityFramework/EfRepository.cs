@@ -4,6 +4,7 @@ using System.Linq;
 using System.Data.Entity;
 using System.Linq.Expressions;
 
+// ReSharper disable once CheckNamespace
 namespace Singularity.DataService
 {
 	public abstract class EfRepository<TEntity> where TEntity : class
