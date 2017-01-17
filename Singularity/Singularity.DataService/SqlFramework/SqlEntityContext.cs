@@ -117,7 +117,9 @@ namespace Singularity.DataService.SqlFramework
 		public Boolean AutomaticTransactions { get; set; }
 		public String Name => _sqlConnectionStringBuilder.InitialCatalog;
 
+		public SqlConnection SqlConnection => _sqlConnection;
 		private readonly SqlConnection _sqlConnection;
+
 		private SqlTransaction _sqlTransaction;
 		private Boolean _disposed;
 		private readonly SqlConnectionStringBuilder _sqlConnectionStringBuilder;

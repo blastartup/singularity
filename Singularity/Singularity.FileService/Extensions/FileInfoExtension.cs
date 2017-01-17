@@ -35,7 +35,7 @@ namespace Singularity.FileService
 			};
 		}
 
-		public static Task WriteAllTextTask(this FileInfo fileInfo, String text, out FileStream sourceStream)
+		public static Task WriteAllTextTaskAsync(this FileInfo fileInfo, String text, out FileStream sourceStream)
 		{
 			byte[] plainText = text.ToByteArray();
 
@@ -116,6 +116,11 @@ namespace Singularity.FileService
 		public static IFileContent ToFileContent(this FileInfo fileInfo)
 		{
 			return new FileContent(new SerialisedFileInfo(fileInfo.OpenRead(), fileInfo));
+		}
+
+		public static Boolean IsValidFilename(this FileInfo fileInfo)
+		{
+			return fileInfo.Name.IndexOfAny(Path.GetInvalidFileNameChars()) >= 0;
 		}
 	}
 }

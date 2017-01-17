@@ -66,9 +66,6 @@
     <None Include="_CreateNewNuGetPackage\RunMeToUploadNuGetPackage.cmd" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="_CreateNewNuGetPackage\DoNotModify\NuGet.exe" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\Singularity\Singularity.csproj">
       <Project>{350f5c90-f18f-41a9-8b84-92e0ca74d619}</Project>
       <Name>Singularity</Name>
@@ -76,6 +73,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Parser\GenericParser.xml" />
+    <None Include="_CreateNewNuGetPackage\DoNotModify\NuGet.exe" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

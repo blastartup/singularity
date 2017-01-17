@@ -31,7 +31,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Omu.ValueInjecter, Version=3.1.1.0, Culture=neutral, PublicKeyToken=c7694541b0ac80e4, processorArchitecture=MSIL">
-      <HintPath>..\packages\valueinjecter.3.1.1.2\lib\net40\Omu.ValueInjecter.dll</HintPath>
+      <HintPath>..\packages\valueinjecter.3.1.1.3\lib\net40\Omu.ValueInjecter.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
@@ -56,9 +56,6 @@
     <None Include="_CreateNewNuGetPackage\RunMeToUploadNuGetPackage.cmd" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="_CreateNewNuGetPackage\DoNotModify\NuGet.exe" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\Singularity.Api\Singularity.Api.csproj">
       <Project>{fdd13b64-c3e3-4dac-bd53-e56f1bf471e2}</Project>
       <Name>Singularity.Api</Name>
@@ -75,6 +72,9 @@
       <Project>{350f5c90-f18f-41a9-8b84-92e0ca74d619}</Project>
       <Name>Singularity</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="_CreateNewNuGetPackage\DoNotModify\NuGet.exe" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
