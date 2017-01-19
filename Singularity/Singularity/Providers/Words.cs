@@ -275,7 +275,12 @@ namespace Singularity
 		{
 			Contract.Requires(startIndex >= 0);
 
-			return new Words(_internalList.GetRange(startIndex, count.GetValueOrDefault(_internalList.Count - startIndex)), _delimiter);
+			if (startIndex > _internalList.Count - 1)
+			{
+				return new Words(_delimiter);
+			}
+
+			return new Words(_internalList.GetRange(startIndex, count.GetValueOrDefault(_internalList.Count - startIndex).LimitMax(_internalList.Count - startIndex)), _delimiter);
 		}
 
 		public Words GetRangeNonEmpty(Int32 startIndex, Int32? count = null)
@@ -433,7 +438,7 @@ namespace Singularity
 		[DebuggerHidden]
 		public override String ToString()
 		{
-			return String.Join(_delimiter, _internalList.ToArray());
+			return String.Join(_delimiter, _internalList.ToArray()).CutEnd(_delimiter.Length);
 		}
 
 		public void UpdateRange(CodeRegion originalRegion, Words newWords)
