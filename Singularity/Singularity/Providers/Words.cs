@@ -231,10 +231,7 @@ namespace Singularity
 		}
 
 		[DebuggerHidden]
-		public Int32 Count
-		{
-			get { return _internalList.Count(); }
-		}
+		public Int32 Count => _internalList.Count();
 
 		[DebuggerHidden]
 		public Words Extract(Int32 index, Int32 count = 1)
@@ -257,9 +254,9 @@ namespace Singularity
 		public Words FormatWith(Object model, String beginTag = "{{", String endTag = "}}")
 		{
 			var result = new List<String>(_internalList.Count);
-			for (var idx = 0; idx < _internalList.Count; idx++)
+			foreach (String item in _internalList)
 			{
-				result.Add(_internalList[idx].FormatWith(model, beginTag, endTag));
+				result.Add(item.FormatWith(model, beginTag, endTag));
 			}
 			return new Words(result, _delimiter);
 		}
@@ -277,7 +274,7 @@ namespace Singularity
 
 			if (startIndex > _internalList.Count - 1)
 			{
-				return new Words(_delimiter);
+				return new Words() { Delimiter = _delimiter };
 			}
 
 			return new Words(_internalList.GetRange(startIndex, count.GetValueOrDefault(_internalList.Count - startIndex).LimitMax(_internalList.Count - startIndex)), _delimiter);
@@ -410,6 +407,7 @@ namespace Singularity
 			return result ?? new Words() { _delimiter = _delimiter };
 		}
 
+		[DebuggerHidden]
 		public void Sort()
 		{
 			_internalList.Sort();
@@ -438,7 +436,7 @@ namespace Singularity
 		[DebuggerHidden]
 		public override String ToString()
 		{
-			return String.Join(_delimiter, _internalList.ToArray()).CutEnd(_delimiter.Length);
+			return String.Join(_delimiter, _internalList.ToArray());
 		}
 
 		public void UpdateRange(CodeRegion originalRegion, Words newWords)
