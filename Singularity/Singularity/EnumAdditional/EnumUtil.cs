@@ -38,14 +38,14 @@ namespace Singularity
 			return result;
 		}
 
-		public static IList<String> GetNames(params Enum[] enumValues)
+		public static IList<String> GetHumanisedNames(params Enum[] enumValues)
 		{
 			var result = new List<String>(enumValues.Length);
-			enumValues.ForEach(ev => result.Add(ev.GetName()));
+			enumValues.ForEach(ev => result.Add(ev.GetHumanisedName()));
 			return result;
 		}
 
-		public static IList<String> GetNames(Type enumType)
+		public static IList<String> GetHumanisedNames(Type enumType)
 		{
 			var result = new List<String>();
 			result.AddRange(GetEnumsCore(enumType).Select(e => e.HumanisedName));
@@ -146,49 +146,20 @@ namespace Singularity
 		}
 
 		/// <summary>
-		/// Parses the supplied enum and string value to find an associated enum value (case sensitive).
-		/// </summary>
-		/// <param name="type">Type.</param>
-		/// <param name="stringValue">String value.</param>
-		/// <returns>Enum value associated with the string value, or null if not found.</returns>
-		public static Object ParseName(Type type, String code)
-		{
-			return ParseName(type, code, false);
-		}
-
-		/// <summary>
 		/// Parses the supplied enum and string value to find an associated enum value.
 		/// </summary>
 		/// <param name="type">Type.</param>
-		/// <param name="stringValue">String value.</param>
+		/// <param name="enumName">String value.</param>
 		/// <param name="ignoreCase">Denotes whether to conduct a case-insensitive match on the supplied string value</param>
 		/// <returns>Enum value associated with the string value, or null if not found.</returns>
-		public static Object ParseName(Type type, String code, Boolean ignoreCase)
+		public static Object ParseName(Type type, String enumName)
 		{
 			Contract.Requires(type.IsEnum);
-			Contract.Requires(!String.IsNullOrEmpty(code));
+			Contract.Requires(!String.IsNullOrEmpty(enumName));
 
-			Object lOutput = null;
-			var lEnumStringCode = String.Empty;
-
-			//Look for our string value associated with fields in this enum
-			foreach (var fieldInfo in type.GetFields())
-			{
-				//Check for our custom attribute
-				var attributes = fieldInfo.GetCustomAttributes(typeof(EnumAdditionalAttribute), false) as EnumAdditionalAttribute[];
-				if (attributes.Length > 0)
-				{
-					lEnumStringCode = attributes[0].HumanisedName;
-
-					//Check for equality then select actual enum value.
-					if (String.Compare(lEnumStringCode, code, ignoreCase) == 0)
-					{
-						lOutput = Enum.Parse(type, fieldInfo.Name);
-						break;
-					}
-				}
-			}
-			return lOutput;
+			return (from name in Enum.GetNames(type)
+					  where enumName.Equals(name, StringComparison.OrdinalIgnoreCase)
+					  select Enum.Parse(type, name)).FirstOrDefault();
 		}
 
 		/// <summary>

@@ -54,11 +54,11 @@ namespace Singularity
 		}
 
 		/// <summary>
-		/// Gets a Name for a particular enum value.
+		/// Gets the Humanised Name for a particular enum value.
 		/// </summary>
 		/// <param name="enumValue">Enum value</param>
 		/// <returns>String Value associated via a <see cref="EnumAdditionalAttribute"/> attribute, or null if not found.</returns>
-		public static String GetName(this Enum enumValue)
+		public static String GetHumanisedName(this Enum enumValue)
 		{
 			Contract.Requires(enumValue != null);
 
