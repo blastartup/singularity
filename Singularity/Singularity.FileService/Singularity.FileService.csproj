@@ -44,6 +44,7 @@
     <Compile Include="Enums\EFileTypes.cs" />
     <Compile Include="Enums\ParserState.cs" />
     <Compile Include="Extensions\FileInfoExtension.cs" />
+    <Compile Include="Extensions\StringExtension.cs" />
     <Compile Include="Interfaces\IAsset.cs" />
     <Compile Include="Interfaces\IFileContent.cs" />
     <Compile Include="Interfaces\IFileContentType.cs" />

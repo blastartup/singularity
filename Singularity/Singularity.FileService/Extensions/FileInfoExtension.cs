@@ -120,7 +120,7 @@ namespace Singularity.FileService
 
 		public static Boolean IsValidFilename(this FileInfo fileInfo)
 		{
-			return fileInfo.Name.IndexOfAny(Path.GetInvalidFileNameChars()) == -1;
+			return fileInfo.Name.IsValidFilename();
 		}
 	}
 }

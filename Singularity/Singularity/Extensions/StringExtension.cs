@@ -248,7 +248,7 @@ namespace Singularity
 
 		public static IList<String> Split(this String input, String delimiter)
 		{
-			return new List<String>(input.Split(new [] {delimiter}, StringSplitOptions.None));
+			return new List<String>(input.Split(new[] { delimiter }, StringSplitOptions.None));
 		}
 
 		/// <summary>
@@ -320,7 +320,7 @@ namespace Singularity
 		{
 			if (value.IsEmpty()) return value;
 			var truncationPoint = fromLeft ? value.IndexOf(firstOccuranceOf) : value.LastIndexOf(firstOccuranceOf);
-			return truncationPoint == -1 ? String.Empty : 
+			return truncationPoint == -1 ? String.Empty :
 				fromLeft ? value.Substring(truncationPoint + 1) : value.Substring(0, truncationPoint);
 		}
 
@@ -444,7 +444,7 @@ namespace Singularity
 			return nullableValue != null ? nullableValue : replacementValue;
 		}
 
-#region ToDateTime
+		#region ToDateTime
 
 		/// <summary>
 		/// Exception protected String to DateTime conversion.
@@ -511,7 +511,7 @@ namespace Singularity
 				{
 					supportedDateTimeFormats = new[] { dateTimeFormat };
 				}
-				
+
 				result = DateTime.ParseExact(sourceDateTime, supportedDateTimeFormats, null, DateTimeStyles.None);
 				isParsed = true;
 			}
@@ -520,9 +520,9 @@ namespace Singularity
 			return isParsed;
 		}
 
-#endregion
+		#endregion
 
-#region Padding
+		#region Padding
 
 		/// <summary>
 		/// Left pads the passed String using the passed pad String for the total number of spaces. 
@@ -552,7 +552,7 @@ namespace Singularity
 		public static String PadCentre(this String value, Int32 totalWidth, Char pad = ' ')
 		{
 			value = value.Left(totalWidth);  // Ensure total length of value doesn't extend beyond totalWidth.
-			var leftPadding = Math.Round((Decimal)(totalWidth/2)).ToInt() - Math.Round((Decimal)(value.Length / 2)).ToInt();
+			var leftPadding = Math.Round((Decimal)(totalWidth / 2)).ToInt() - Math.Round((Decimal)(value.Length / 2)).ToInt();
 			return new String(pad, leftPadding) + value;
 		}
 
@@ -721,7 +721,7 @@ namespace Singularity
 			return (result += value);
 		}
 
-#endregion
+		#endregion
 
 		public static Boolean Contains(this String value, Char searchValue)
 		{
@@ -1062,7 +1062,7 @@ namespace Singularity
 		public static readonly String AlphabeticCharacters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
 		public static readonly String AlphanumericCharacters = AlphabeticCharacters + NumericCharacters;
 
-#region Words
+		#region Words
 
 		/// <summary>
 		/// Extrapolate the first word in current string.
@@ -1200,7 +1200,7 @@ namespace Singularity
 			return result;
 		}
 
-#endregion
+		#endregion
 
 		/// <summary>
 		/// Divide a very long string by a given length and return a given sized list.
@@ -1223,7 +1223,7 @@ namespace Singularity
 			return result;
 		}
 
-#region Surrounding
+		#region Surrounding
 
 		public static Boolean IsSurroundedBy(this String value, params ESurroundType[] surroundTypes)
 		{
@@ -1298,9 +1298,9 @@ namespace Singularity
 			return value.Substring(1, value.Length - 2);
 		}
 
-#endregion
+		#endregion
 
-#region Replace
+		#region Replace
 
 		/// <summary>
 		/// Replaces a given character with another character in a string. 
@@ -1400,7 +1400,7 @@ namespace Singularity
 					haystack = haystack.ReplaceAll(needle.ToString(), String.Empty);
 				}
 			}
-			return haystack;			
+			return haystack;
 		}
 
 		/// <summary>
@@ -1515,7 +1515,7 @@ namespace Singularity
 			return String.Join(separator, src.Split(chars, StringSplitOptions.RemoveEmptyEntries));
 		}
 
-#endregion
+		#endregion
 
 		/// <summary>
 		/// Removes new line characters from a String
@@ -1910,18 +1910,29 @@ namespace Singularity
 			return 0 == comparer.Compare(hashOfInput, hash) ? true : false;
 		}
 
-		public static String Encrypt(this String input, String key)
+		public static String Encrypt(this String plainText, String passPhrase)
 		{
-			var inputArray = UTF8Encoding.UTF8.GetBytes(input);
-			var tripleDes = new TripleDESCryptoServiceProvider();
-			tripleDes.Key = UTF8Encoding.UTF8.GetBytes(key);
-			tripleDes.Mode = CipherMode.ECB;
-			tripleDes.Padding = PaddingMode.PKCS7;
-			var cTransform = tripleDes.CreateEncryptor();
-			var resultArray = cTransform.TransformFinalBlock(inputArray, 0, inputArray.Length);
-			tripleDes.Clear();
-			return Convert.ToBase64String(resultArray, 0, resultArray.Length);
+			byte[] initVectorBytes = Encoding.UTF8.GetBytes(initVector);
+			byte[] plainTextBytes = Encoding.UTF8.GetBytes(plainText);
+			PasswordDeriveBytes password = new PasswordDeriveBytes(passPhrase, null);
+			byte[] keyBytes = password.GetBytes(keysize / 8);
+			RijndaelManaged symmetricKey = new RijndaelManaged();
+			symmetricKey.Mode = CipherMode.CBC;
+			ICryptoTransform encryptor = symmetricKey.CreateEncryptor(keyBytes, initVectorBytes);
+			MemoryStream memoryStream = new MemoryStream();
+			CryptoStream cryptoStream = new CryptoStream(memoryStream, encryptor, CryptoStreamMode.Write);
+			cryptoStream.Write(plainTextBytes, 0, plainTextBytes.Length);
+			cryptoStream.FlushFinalBlock();
+			byte[] cipherTextBytes = memoryStream.ToArray();
+			memoryStream.Close();
+			cryptoStream.Close();
+			return Convert.ToBase64String(cipherTextBytes);
 		}
+		// This size of the IV (in bytes) must = (keysize / 8).  Default keysize is 256, so the IV must be
+		// 32 bytes long.  Using a 16 character string here gives us 32 bytes when converted to a byte array.
+		private const string initVector = "pemgail9uzpgzl88";
+		// This constant is used to determine the keysize of the encryption algorithm
+		private const int keysize = 256;
 
 		public static String EncryptSha1(this String password)
 		{
@@ -1932,17 +1943,22 @@ namespace Singularity
 			}
 		}
 
-		public static String Decrypt(this String input, String key)
+		public static String Decrypt(this String cipherText, String passPhrase)
 		{
-			var inputArray = Convert.FromBase64String(input);
-			var tripleDes = new TripleDESCryptoServiceProvider();
-			tripleDes.Key = UTF8Encoding.UTF8.GetBytes(key);
-			tripleDes.Mode = CipherMode.ECB;
-			tripleDes.Padding = PaddingMode.PKCS7;
-			var cTransform = tripleDes.CreateDecryptor();
-			var resultArray = cTransform.TransformFinalBlock(inputArray, 0, inputArray.Length);
-			tripleDes.Clear();
-			return UTF8Encoding.UTF8.GetString(resultArray);
+			byte[] initVectorBytes = Encoding.ASCII.GetBytes(initVector);
+			byte[] cipherTextBytes = Convert.FromBase64String(cipherText);
+			PasswordDeriveBytes password = new PasswordDeriveBytes(passPhrase, null);
+			byte[] keyBytes = password.GetBytes(keysize / 8);
+			RijndaelManaged symmetricKey = new RijndaelManaged();
+			symmetricKey.Mode = CipherMode.CBC;
+			ICryptoTransform decryptor = symmetricKey.CreateDecryptor(keyBytes, initVectorBytes);
+			MemoryStream memoryStream = new MemoryStream(cipherTextBytes);
+			CryptoStream cryptoStream = new CryptoStream(memoryStream, decryptor, CryptoStreamMode.Read);
+			byte[] plainTextBytes = new byte[cipherTextBytes.Length];
+			int decryptedByteCount = cryptoStream.Read(plainTextBytes, 0, plainTextBytes.Length);
+			memoryStream.Close();
+			cryptoStream.Close();
+			return Encoding.UTF8.GetString(plainTextBytes, 0, decryptedByteCount);
 		}
 
 		/// <summary>
