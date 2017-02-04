@@ -9,13 +9,9 @@ namespace Singularity.DataService
 {
 	public abstract class EfRepository<TEntity> where TEntity : class
 	{
-		protected DbContext Context;
-		protected DbSet<TEntity> DbSet;
-
 		protected EfRepository(DbContext context)
 		{
 			Context = context;
-			DbSet = context.Set<TEntity>();
 		}
 
 		public virtual List<TEntity> GetList(Expression<Func<TEntity, Boolean>> filter = null,
@@ -177,7 +173,13 @@ namespace Singularity.DataService
 			return dbQuery.Count();
 		}
 
+		protected DbSet<TEntity> DbSet => _dbSet ?? (_dbSet = NewDbSet(Context.Set<TEntity>()));
+		private DbSet<TEntity> _dbSet;
+
 		protected abstract DateTime NowDateTime { get; }
+		protected abstract DbSet<TEntity> NewDbSet(DbSet<TEntity> contextualDbSet);
+
+		protected DbContext Context;
 		private Expression<Func<TEntity, Boolean>> _filter;
 	}
 }
