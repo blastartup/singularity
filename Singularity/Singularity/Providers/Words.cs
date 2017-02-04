@@ -13,7 +13,7 @@ namespace Singularity
 	/// <summary>
 	/// A special class to handle worded text.
 	/// </summary>
-	[DebuggerStepThrough]
+	//[DebuggerStepThrough]
 	public class Words : IEnumerable<String>, ICloneable<Words>, IStateEmpty
 	{
 		/// <summary>
@@ -110,8 +110,8 @@ namespace Singularity
 			}
 			_delimiter = delimiter;
 
-			// todo - fix delimiter when it is a pipe character...
-			var lWordCollection = new List<String>(Regex.Split(value, delimiter.Replace(@"\", @"\\")));
+			// Originally had Regex.Split but it doesn't work with fullstops, commas or pipes.
+			var lWordCollection = new List<String>(value.Split(delimiter));
 			if (wordCount.Equals(-1))
 			{
 				wordCount = lWordCollection.Count;
