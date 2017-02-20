@@ -117,6 +117,30 @@ namespace Singularity.DataService.SqlFramework
 			return Context.ExecuteNonQuery(query, filterParameters);
 		}
 
+		public Boolean Any(String filter = "", SqlParameter[] filterParameters = null)
+		{
+			if (filterParameters != null && filter == null)
+			{
+				throw new ArgumentException("FilterParameters can only be applied to a filtered result.");
+			}
+
+			String query = null;
+
+			if (!String.IsNullOrEmpty(filter))
+			{
+				filter = " where " + filter;
+			}
+
+			if (filterParameters == null)
+			{
+				filterParameters = new SqlParameter[] { };
+			}
+
+			query = "If Exists (Select * from {0}{1}) Then Print 1 Else Print 0".FormatX(FromTables(), filter);
+			return Context.ExecuteNonQuery(query, filterParameters) == 1;
+		}
+
+
 		//public virtual void Deactivate(Object id)
 		//{
 		//	TEntity entityToDeactivate = DbSet.Find(id);
