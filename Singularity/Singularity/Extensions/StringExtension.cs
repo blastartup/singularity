@@ -1283,6 +1283,36 @@ namespace Singularity
 			return Surround(ValueLib.SingleQuotes.StringValue, ValueLib.SingleQuotes.StringValue);
 		}
 
+		public static String SurroundBy(this String value, ESurroundType surroundType)
+		{
+			switch (surroundType)
+			{
+				case ESurroundType.SingleQuote:
+					return Surround(value, "\'", "\'");
+
+				case ESurroundType.DoubleQuote:
+					return Surround(value, "\"", "\"");
+
+				case ESurroundType.Braces:
+					return Surround(value, "{", "}");
+
+				case ESurroundType.SquareBrackets:
+					return Surround(value, "[", "]");
+
+				case ESurroundType.RoundBrackets:
+					return Surround(value, "(", ")");
+
+				case ESurroundType.AngleBrackets:
+					return Surround(value, "<", ">");
+
+				case ESurroundType.DoubleAngleBrackets:
+					return Surround(value, "«", "»");
+
+				default:
+					return value;
+			}
+		}
+
 		public static String Surround(this String value, String surroundValue)
 		{
 			return Surround(value, surroundValue, surroundValue);
