@@ -17,7 +17,7 @@ namespace Singularity.Api
 		where TIn : class
 		where TOut : class, new()
 	{
-		public TOut Assemble(TIn input)
+		protected TOut Assemble(TIn input)
 		{
 			if (input == null)
 			{

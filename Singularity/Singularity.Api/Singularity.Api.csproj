@@ -42,14 +42,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Attributes\ControllerAdditionalAttribute.cs" />
-    <Compile Include="EntityAssembler.cs" />
+    <Compile Include="Types\ApiAssembler.cs" />
     <Compile Include="Enums\EControllerAccess.cs" />
     <Compile Include="Enums\EControllerSearchable.cs" />
     <Compile Include="Enums\EControllerStringTypeAndFormat.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ReferenceTypes\ConciseAssembler.cs" />
-    <Compile Include="ReferenceTypes\DtoBase.cs" />
-    <Compile Include="ReferenceTypes\Response.cs" />
+    <Compile Include="Types\ConciseAssembler.cs" />
+    <Compile Include="Types\DtoBase.cs" />
+    <Compile Include="Types\Response.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

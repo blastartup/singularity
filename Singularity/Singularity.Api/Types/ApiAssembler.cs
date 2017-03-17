@@ -3,11 +3,11 @@ using System.Collections.Generic;
 
 namespace Singularity.Api
 {
-	public abstract class EntityAssembler
+	public abstract class ApiAssembler
 	{
 	}
 
-	public abstract class EntityAssembler<TEntity, TDto, TRequestDto> : EntityAssembler
+	public abstract class EntityAssembler<TEntity, TDto, TRequestDto> : ApiAssembler
 		where TDto : DtoBase, new()
 		where TRequestDto : DtoBase, new()
 		where TEntity : class, new()
@@ -17,7 +17,7 @@ namespace Singularity.Api
 		/// </summary>
 		/// <param name="entity">Domain entity (database object)</param>
 		/// <returns>Data Transfer Object injected with values from the given entity.</returns>
-		public TDto PopulateDto(TEntity entity)
+		protected TDto PopulateDto(TEntity entity)
 		{
 			return EntityToDto(entity);
 		}
@@ -27,7 +27,7 @@ namespace Singularity.Api
 		/// </summary>
 		/// <param name="entity">Collection of domain entities (database objects)</param>
 		/// <returns>List of Data Transfer Object injected with values from the given entity collection.</returns>
-		public List<TDto> PopulateDtos(IEnumerable<TEntity> entityList)
+		protected List<TDto> PopulateDtos(IEnumerable<TEntity> entityList)
 		{
 			return EntitiesToDtos(entityList);
 		}
@@ -37,7 +37,7 @@ namespace Singularity.Api
 		/// </summary>
 		/// <param name="requestDto">Data Transfer Object</param>
 		/// <returns>Domain entity (database object) injected with values from the given DTO.</returns>
-		public TEntity CreateEntity(TRequestDto requestDto = null)
+		protected TEntity CreateEntity(TRequestDto requestDto = null)
 		{
 			return DtoToNewEntity(requestDto);
 		}
@@ -47,7 +47,7 @@ namespace Singularity.Api
 		/// </summary>
 		/// <param name="requestDto">Data Transfer Object</param>
 		/// <returns>Domain entity (database object) injected with values from the given DTO.</returns>
-		public void UpdateEntity(TEntity entity, TRequestDto requestDto)
+		protected void UpdateEntity(TEntity entity, TRequestDto requestDto)
 		{
 			DtoToExistingEntity(requestDto, entity);
 		}
@@ -110,7 +110,7 @@ namespace Singularity.Api
 			return dtoList;
 		}
 
-		//public Action<TEntity> PreAssemble { get; set; }
+		//protected Action<TEntity> PreAssemble { get; set; }
 
 		//public void AddPostAssembly(Action<TDto, TEntity> postAssembly)
 		//{
