@@ -35,11 +35,7 @@ namespace Singularity.DataService
 			IQueryable<TEntity> dbQuery = DbSet;
 			_filter = filter;
 
-			//Apply eager loading
-			foreach (Expression<Func<TEntity, Object>> navigationProperty in navigationProperties)
-			{
-				dbQuery = dbQuery.Include(navigationProperty).AsNoTracking();
-			}
+			IncludeNavigation(navigationProperties, dbQuery);
 
 			if (orderBy != null)
 			{
@@ -57,6 +53,14 @@ namespace Singularity.DataService
 			}
 
 			return dbQuery;
+		}
+
+		protected virtual void IncludeNavigation(Expression<Func<TEntity, Object>>[] navigationProperties, IQueryable<TEntity> dbQuery)
+		{
+			foreach (Expression<Func<TEntity, Object>> navigationProperty in navigationProperties)
+			{
+				dbQuery = dbQuery.Include(navigationProperty).AsNoTracking();
+			}
 		}
 
 		public virtual TEntity GetById(Object id)

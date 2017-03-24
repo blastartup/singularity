@@ -37,6 +37,24 @@ namespace Singularity.WinForm
 			return "";
 		}
 
+		public static IEnumerable<T> GetControlsOfType<T>(Control root)
+			 where T : Control
+		{
+			var t = root as T;
+			if (t != null)
+			{
+				yield return t;
+			}
+
+			foreach (Control c in root.Controls)
+			{
+				foreach (var i in GetControlsOfType<T>(c))
+				{
+					yield return i;
+				}
+			}
+		}
+
 		protected IWin32Window Owner => _owner;
 		private readonly IWin32Window _owner;
 	}
