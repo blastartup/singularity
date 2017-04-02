@@ -2068,25 +2068,6 @@ namespace Singularity
 			return Regex.Replace(value, @"[^\w\s]", "", RegexOptions.Compiled).TrimIntra();
 		}
 
-		public static String CleanPunctuation(this String value)
-		{
-			var result = new StringBuilder();
-			foreach (var c in value.ToCharArray())
-			{
-				if (!Char.IsPunctuation(c))
-				{
-					result.Append(c);
-				}
-			}
-			return result.ToString();
-		}
-
-		public static Boolean IsGuid(this String value)
-		{
-			Guid dummy;
-			return Guid.TryParse(value, out dummy);
-		}
-
 		public static String Annul(this String value, IEnumerable<String> annulWords)
 		{
 			if (value.IsEmpty() || annulWords.IsEmpty())
@@ -2098,6 +2079,19 @@ namespace Singularity
 				annulWords.ForEach(w => value = value.Replace(w, ValueLib.Space.StringValue));
 			}
 			return value;
+		}
+
+		public static String CleanPunctuation(this String value)
+		{
+			var result = new StringBuilder();
+			foreach (var c in value.ToCharArray())
+			{
+				if (!Char.IsPunctuation(c))
+				{
+					result.Append(c);
+				}
+			}
+			return result.ToString();
 		}
 
 		public static String GetChecksum(this String value, Int16 length = 2)
@@ -2115,6 +2109,33 @@ namespace Singularity
 				result = checksum.ToString("X2").Left(length);
 			}
 			return result;
+		}
+
+		/// <summary>
+		/// Method checks if passed string is datetime
+		/// </summary>
+		/// <param name="text">string text for checking</param>
+		/// <returns>bool - if text is datetime return true, else return false</returns>
+		public static Boolean IsDateTime(this String text)
+		{
+			DateTime dateTime;
+			Boolean isDateTime = false;
+
+			// Check for empty string.
+			if (String.IsNullOrEmpty(text))
+			{
+				return false;
+			}
+
+			isDateTime = TryParse(text, out dateTime);
+
+			return isDateTime;
+		}
+
+		public static Boolean IsGuid(this String value)
+		{
+			Guid dummy;
+			return Guid.TryParse(value, out dummy);
 		}
 
 		/// <summary>
