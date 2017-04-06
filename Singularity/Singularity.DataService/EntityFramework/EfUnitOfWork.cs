@@ -1,16 +1,72 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.Entity;
+using System.Data.Entity.Core;
 using System.Data.Entity.Core.Objects;
+using System.Data.Entity.Infrastructure;
+using System.Data.Entity.Validation;
+using System.Data.SqlClient;
+using System.Linq;
 
+// ReSharper disable once CheckNamespace
 namespace Singularity.DataService
 {
 	public abstract class EfUnitOfWork<TDbContext> : IDisposable
 		where TDbContext : DbContext, new()
 	{
+		protected EfUnitOfWork()
+		{
+			_efValidationResults = new List<EfValidationResult>();
+		}
+
 		public Boolean Save(Boolean clearContext = false)
 		{
-			var result = Context.SaveChanges() > 0;
+			Boolean result;
+			try
+			{
+				result = Context.SaveChanges() > 0;
+			}
+			catch (DbUpdateException ex)
+			{
+				result = false;
+				_efValidationResults.Clear();
+				if (!(ex.InnerException is UpdateException) || !(ex.InnerException.InnerException is SqlException))
+				{
+					_efValidationResults.Add(new EfValidationResult(ex.Message));
+				}
+				else
+				{
+					var sqlException = (SqlException)ex.InnerException.InnerException;
+					foreach (SqlError sqlExceptionError in sqlException.Errors)
+					{
+						var errorNumber = sqlExceptionError.Number;
+						String errorText;
+						if (_sqlErrorTextDict.TryGetValue(errorNumber, out errorText))
+						{
+							errorText = $"{errorText} ({errorNumber})";
+						}
+						else
+						{
+							errorText = $"Unknown SQL error. ({errorNumber}).";
+						}
+
+						_efValidationResults.Add(new EfValidationResult(errorText, ex.Entries.Select(f => f.Entity.GetType().Name)));
+					}
+				}
+			}
+			catch (DbEntityValidationException ex)
+			{
+				result = false;
+				_efValidationResults.Clear();
+				foreach (var validationErrors in ex.EntityValidationErrors)
+				{
+					foreach (var validationError in validationErrors.ValidationErrors)
+					{
+						_efValidationResults.Add(new EfValidationResult(validationError.ErrorMessage, validationErrors.Entry.Entity.GetType().Name, validationError.PropertyName));
+					}
+				}
+			}
+
 			if (clearContext)
 			{
 				Context.Dispose();
@@ -56,6 +112,16 @@ namespace Singularity.DataService
 			}
 			_disposed = true;
 		}
+
+		private static readonly Dictionary<int, string> _sqlErrorTextDict =
+			 new Dictionary<int, string>
+		{
+		 {547, "This operation failed because another data entry uses this entry."},
+		 {2601, "One of the properties is marked as Unique index and there is already an entry with that value."}
+		};
+
+		public List<EfValidationResult> EfValidationResults => _efValidationResults;
+		private readonly List<EfValidationResult> _efValidationResults;
 
 		protected abstract void ResetRepositories();
 		private Boolean _disposed = false;

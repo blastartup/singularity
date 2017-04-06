@@ -56,6 +56,7 @@
     <Compile Include="EntityFramework\EfUnitOfWork.cs" />
     <Compile Include="CsvWriter.cs" />
     <Compile Include="DalException.cs" />
+    <Compile Include="EntityFramework\EfValidationResult.cs" />
     <Compile Include="Extensions\CsvWriterExtension.cs" />
     <Compile Include="Extensions\DataRowExtension.cs" />
     <Compile Include="Extensions\DataTableExtension.cs" />
