@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Data;
 
+// ReSharper disable once CheckNamespace
+
 namespace Singularity.DataService
 {
 	public static class DataRowExtension

@@ -6,7 +6,9 @@ using System.Text;
 using System.Threading.Tasks;
 using Singularity.DataService.ReferenceType;
 
-namespace Singularity.DataService.Extensions
+// ReSharper disable once CheckNamespace
+
+namespace Singularity.DataService
 {
 	public static class DbTypeExtension
 	{

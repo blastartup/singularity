@@ -2,6 +2,8 @@
 using System.Linq;
 using System.Reflection;
 
+// ReSharper disable once CheckNamespace
+
 namespace Singularity.DataService
 {
 	public static class EntityObjectExtension

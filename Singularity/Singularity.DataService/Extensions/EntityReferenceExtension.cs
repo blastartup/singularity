@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Data.Entity.Core.Objects.DataClasses;
 
+// ReSharper disable once CheckNamespace
+
 namespace Singularity.DataService
 {
 	public static class EntityReferenceExtension
