@@ -33,6 +33,7 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -47,6 +48,7 @@
     <Compile Include="Coworker.cs" />
     <Compile Include="DisposableFactory\DisposableFactory.cs" />
     <Compile Include="DisposableFactory\ThreadContextProvider.cs" />
+    <Compile Include="FlexibleMessageBox.cs" />
     <Compile Include="FormController.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
