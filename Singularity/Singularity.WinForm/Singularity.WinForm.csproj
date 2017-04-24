@@ -44,8 +44,9 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Async\AsyncWorker.cs" />
     <Compile Include="Clock.cs" />
-    <Compile Include="Coworker.cs" />
+    <Compile Include="Async\Coworker.cs" />
     <Compile Include="DisposableFactory\DisposableFactory.cs" />
     <Compile Include="DisposableFactory\ThreadContextProvider.cs" />
     <Compile Include="FlexibleMessageBox.cs" />
