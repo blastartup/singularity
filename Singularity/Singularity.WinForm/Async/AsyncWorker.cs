@@ -10,14 +10,6 @@ namespace Singularity.WinForm.Async
 	/// </summary>
 	public class AsyncWorker
 	{
-		private Boolean m_cancelationPending;
-		private static Object s_countProtector = new Object();
-		private Int32 m_count;
-		private Int32 m_maxCount;
-		AsyncCallback workerCallback;
-
-		DoWorkEventHandler eventHandler;
-
 		/// <summary>
 		/// Occurs when [do work].
 		/// </summary>
@@ -36,9 +28,9 @@ namespace Singularity.WinForm.Async
 		/// </summary>
 		public AsyncWorker(Int32 maximumCount)
 		{
-			m_maxCount = maximumCount;
-			workerCallback = new AsyncCallback(OnRunWorkerCompleted);
-			eventHandler = new DoWorkEventHandler(OnDoWork);
+			_maxCount = maximumCount;
+			_workerCallback = new AsyncCallback(OnRunWorkerCompleted);
+			_eventHandler = new DoWorkEventHandler(OnDoWork);
 		}
 
 		/// <summary>
@@ -49,9 +41,9 @@ namespace Singularity.WinForm.Async
 		{
 			get
 			{
-				lock (s_countProtector)
+				lock (CountProtector)
 				{
-					return (m_count >= m_maxCount);
+					return (_count >= _maxCount);
 				}
 			}
 		}
@@ -60,7 +52,7 @@ namespace Singularity.WinForm.Async
 		/// Gets a value indicating whether [cancellation pending].
 		/// </summary>
 		/// <value><c>true</c> if [cancellation pending]; otherwise, <c>false</c>.</value>
-		public Boolean CancellationPending => m_cancelationPending;
+		public Boolean CancellationPending => _cancelationPending;
 
 		/// <summary>
 		/// Runs the worker async.
@@ -83,9 +75,9 @@ namespace Singularity.WinForm.Async
 			{
 				return false;
 			}
-			m_count++;
+			_count++;
 
-			eventHandler.BeginInvoke(this, new DoWorkEventArgs(argument), workerCallback, eventHandler);
+			_eventHandler.BeginInvoke(this, new DoWorkEventArgs(argument), _workerCallback, _eventHandler);
 			return true;
 		}
 
@@ -94,7 +86,7 @@ namespace Singularity.WinForm.Async
 		/// </summary>
 		public void CancelAsync()
 		{
-			m_cancelationPending = true;
+			_cancelationPending = true;
 		}
 
 		/// <summary>
@@ -146,11 +138,17 @@ namespace Singularity.WinForm.Async
 		protected virtual void OnRunWorkerCompleted(IAsyncResult ar)
 		{
 			DoWorkEventHandler doWorkDelegate = (DoWorkEventHandler)((AsyncResult)ar).AsyncDelegate;
-			RunWorkerCompleted?.Invoke(this, new RunWorkerCompletedEventArgs(ar, null, m_cancelationPending));
+			RunWorkerCompleted?.Invoke(this, new RunWorkerCompletedEventArgs(ar, null, _cancelationPending));
 
 			Console.WriteLine("Async ended " + DateTime.UtcNow.ToString());
-			m_count--;
+			_count--;
 		}
-	}
 
+		private Boolean _cancelationPending;
+		private static readonly Object CountProtector = new Object();
+		private Int32 _count;
+		private readonly Int32 _maxCount;
+		private readonly AsyncCallback _workerCallback;
+		private readonly DoWorkEventHandler _eventHandler;
+	}
 }
