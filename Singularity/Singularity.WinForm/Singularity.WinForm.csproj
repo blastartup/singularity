@@ -44,6 +44,7 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Async\AsyncActor.cs" />
     <Compile Include="Async\AsyncWorker.cs" />
     <Compile Include="Clock.cs" />
     <Compile Include="Async\Coworker.cs" />
