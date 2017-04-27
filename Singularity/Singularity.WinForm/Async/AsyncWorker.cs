@@ -6,8 +6,12 @@ namespace Singularity.WinForm.Async
 {
 	// https://www.codeproject.com/Articles/42912/A-Simple-Way-To-Use-Asynchronous-Call-in-Your-Mult
 	/// <summary>
-	/// AsyncWorker does a bettor job than BackgroundWorker for running asynchronous tasks. 
+	/// Asynchronously execute a single, cancelable, long running task, and be notified of progress change, busy status and completion.
 	/// </summary>
+	/// <remarks>AsyncWorker does a bettor job than BackgroundWorker for running asynchronous tasks.</remarks>
+	/// <seealso cref="SingleExecutionAsyncActor{TSender,TResult}"/>
+	/// <seealso cref="Coworker"/>
+	/// <seealso cref="RepetitiveExecutionAsyncActor{TSender,TResult}"/>
 	public class AsyncWorker
 	{
 		/// <summary>
@@ -26,9 +30,8 @@ namespace Singularity.WinForm.Async
 		/// <summary>
 		/// Initializes a new instance of the <see cref="AsyncWorker"/> class.
 		/// </summary>
-		public AsyncWorker(Int32 maximumCount)
+		public AsyncWorker()
 		{
-			_maxCount = maximumCount;
 			_workerCallback = new AsyncCallback(OnRunWorkerCompleted);
 			_eventHandler = new DoWorkEventHandler(OnDoWork);
 		}
@@ -43,7 +46,7 @@ namespace Singularity.WinForm.Async
 			{
 				lock (CountProtector)
 				{
-					return (_count >= _maxCount);
+					return (_isBusy);
 				}
 			}
 		}
@@ -75,7 +78,7 @@ namespace Singularity.WinForm.Async
 			{
 				return false;
 			}
-			_count++;
+			_isBusy = true;
 
 			_eventHandler.BeginInvoke(this, new DoWorkEventArgs(argument), _workerCallback, _eventHandler);
 			return true;
@@ -140,14 +143,12 @@ namespace Singularity.WinForm.Async
 			DoWorkEventHandler doWorkDelegate = (DoWorkEventHandler)((AsyncResult)ar).AsyncDelegate;
 			RunWorkerCompleted?.Invoke(this, new RunWorkerCompletedEventArgs(ar, null, _cancelationPending));
 
-			Console.WriteLine("Async ended " + DateTime.UtcNow.ToString());
-			_count--;
+			_isBusy = false;
 		}
 
 		private Boolean _cancelationPending;
+		private Boolean _isBusy;
 		private static readonly Object CountProtector = new Object();
-		private Int32 _count;
-		private readonly Int32 _maxCount;
 		private readonly AsyncCallback _workerCallback;
 		private readonly DoWorkEventHandler _eventHandler;
 	}

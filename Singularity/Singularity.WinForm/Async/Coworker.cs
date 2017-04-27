@@ -1,14 +1,18 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using System.Reflection;
 using System.Threading;
 using System.Windows.Threading;
-using System.Reflection;
 
-namespace AsyncModel
+namespace Singularity.WinForm.Async
 {
 	// http://www.codeproject.com/Articles/378124/Keep-Your-User-Interface-Responsive-Easily-Using-a
+	/// <summary>
+	/// Quickly and easily switch between UI and non-UI tasks, to keep the UI responsive.
+	/// </summary>
+	/// <remarks>Good for executing short running, sub second, processing off the UI thread.</remarks>
+	/// <seealso cref="SingleExecutionAsyncActor{TSender,TResult}"/>
+	/// <seealso cref="AsyncWorker"/>
+	/// <seealso cref="RepetitiveExecutionAsyncActor{TSender,TResult}"/>
 	public class Coworker
 	{
 		public class AsyncBlockManager : IDisposable
@@ -74,12 +78,12 @@ namespace AsyncModel
 		{
 			public SyncBlockManager()
 			{
-				runner = _currentRunner;
-				if (runner != null && !runner.Resume())
+				_runner = _currentRunner;
+				if (_runner != null && !_runner.Resume())
 				{
 					// If already in synchronous mode reset runner so that ending/disposing this block
 					// will not have any effect.
-					runner = null;
+					_runner = null;
 				}
 			}
 
@@ -92,16 +96,16 @@ namespace AsyncModel
 
 			public void Dispose()
 			{
-				if (runner != null)
+				if (_runner != null)
 				{
-					runner.Yield();
+					_runner.Yield();
 				}
-				runner = null;
+				_runner = null;
 			}
 
 			#endregion
 
-			TaskRunner runner;
+			TaskRunner _runner;
 		}
 
 		/// <summary>
