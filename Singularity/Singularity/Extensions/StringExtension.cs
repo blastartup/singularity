@@ -953,12 +953,30 @@ namespace Singularity
 			{
 				return false;
 			}
+			var idx = 0;
+			var decimalPointCounter = 0;
 			foreach (var c in value)
 			{
 				if (!Char.IsDigit(c))
 				{
-					return false;
+					if (c == '.')
+					{
+						decimalPointCounter++;
+						if (decimalPointCounter > 1)
+						{
+							return false;
+						}
+					}
+					if (idx == 0 && c != '-' && c != '.')
+					{
+						return false;
+					}
+					if (idx > 0 && c != '.')
+					{
+						return false;
+					}
 				}
+				idx++;
 			}
 			return true;
 		}
