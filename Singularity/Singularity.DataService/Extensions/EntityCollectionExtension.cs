@@ -16,7 +16,7 @@ namespace Singularity.DataService
 		/// <returns>An IQueryable list of only those entities that are Active.</returns>
 		public static IEnumerable<TEntity> Actives<TEntity>(this EntityCollection<TEntity> collection) where TEntity : class, IDeletable
 		{
-			return collection.Where(o => !o.IsDeleted);
+			return collection.Where(o => o.DeletedDate == null);
 		}
 	}
 }

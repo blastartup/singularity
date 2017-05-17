@@ -6,6 +6,6 @@ namespace Singularity.DataService
 {
 	public interface IDeletable
 	{
-		Boolean IsDeleted { get; set; }
+		DateTime? DeletedDate { get; set; }
 	}
 }

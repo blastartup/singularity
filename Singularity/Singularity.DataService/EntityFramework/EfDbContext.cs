@@ -339,7 +339,7 @@ namespace Singularity.DataService
 			type.InvokeMember(property, BindingFlags.SetProperty | BindingFlags.Public | BindingFlags.Instance, Type.DefaultBinder, instance, new[] { value });
 		}
 
-		class IdentityEqualityComparer<T> : IEqualityComparer<T> where T : class
+		private class IdentityEqualityComparer<T> : IEqualityComparer<T> where T : class
 		{
 			public Int32 GetHashCode(T value)
 			{
@@ -352,20 +352,20 @@ namespace Singularity.DataService
 			}
 		}
 
-		class Mappings
+		private class Mappings
 		{
 			public Dictionary<String, CLR2ColumnMapping> ColumnMappings { get; set; }
 			public ForeignKeyMapping[] ToForeignKeyMappings { get; set; }
 			public ForeignKeyMapping[] FromForeignKeyMappings { get; set; }
 		}
 
-		class CLR2ColumnMapping
+		private class CLR2ColumnMapping
 		{
 			public EdmProperty CLRProperty { get; set; }
 			public EdmProperty ColumnProperty { get; set; }
 		}
 
-		class ForeignKeyMapping
+		private class ForeignKeyMapping
 		{
 			public BuiltInTypeKind BuiltInTypeKind { get; set; }
 			public String NavigationPropertyName { get; set; }
@@ -379,5 +379,7 @@ namespace Singularity.DataService
 		#endregion
 
 		public Func<DbEntityEntry, IDictionary<Object, Object>, DbEntityValidationResult> ValidateEntryFunc { get; set; }
+
+		protected internal abstract DateTime Now { get; }
 	}
 }

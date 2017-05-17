@@ -71,6 +71,7 @@
     <Compile Include="Extensions\LinqExtentions.cs" />
     <Compile Include="Extensions\ObjectQueryExtenstion.cs" />
     <Compile Include="Extensions\DbTypeExtension.cs" />
+    <Compile Include="Extensions\SqlConnectionStringBuilderExtension.cs" />
     <Compile Include="Extensions\StringExtension.cs" />
     <Compile Include="Extensions\TypeExtension.cs" />
     <Compile Include="Extensions\SqlDbTypeExtension.cs" />

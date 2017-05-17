@@ -9,7 +9,7 @@ namespace Singularity.DataService
 {
 	public abstract class EfRepository<TEntity> where TEntity : class
 	{
-		protected EfRepository(DbContext context)
+		protected EfRepository(EfDbContext context)
 		{
 			Context = context;
 		}
@@ -18,6 +18,7 @@ namespace Singularity.DataService
 			Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null, Paging paging = null,
 			params Expression<Func<TEntity, Object>>[] navigationProperties)
 		{
+			// As we don't know whether TEntity is IDeletable, it is up to the concrete class to override the the line below with this: return Get(filter, orderBy, paging, navigationProperties).Actives().ToList();
 			return Get(filter, orderBy, paging, navigationProperties).ToList();
 		}
 
@@ -25,7 +26,12 @@ namespace Singularity.DataService
 			Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null,
 			params Expression<Func<TEntity, Object>>[] navigationProperties)
 		{
-			return Get(filter, orderBy, null, navigationProperties).FirstOrDefault();
+			TEntity entity = Get(filter, orderBy, null, navigationProperties).FirstOrDefault();
+			if (entity is IDeletable && ((IDeletable)entity).DeletedDate.HasValue)
+			{
+				return null;
+			}
+			return entity;
 		}
 
 		protected IQueryable<TEntity> Get(Expression<Func<TEntity, Boolean>> filter = null,
@@ -68,7 +74,7 @@ namespace Singularity.DataService
 			if (id is Guid || id is Int32)
 			{
 				TEntity entity = DbSet.Find(id);
-				if (entity is IDeletable && ((IDeletable)entity).IsDeleted)
+				if (entity is IDeletable && ((IDeletable)entity).DeletedDate.HasValue)
 				{
 					return null;
 				}
@@ -109,7 +115,7 @@ namespace Singularity.DataService
 			var deletable = entityToDeactivate as IDeletable;
 			if (deletable != null)
 			{
-				deletable.IsDeleted = true;
+				deletable.DeletedDate = Context.Now;
 			}
 
 			var modifiable = entityToDeactivate as IModifiable;
@@ -183,7 +189,7 @@ namespace Singularity.DataService
 		protected abstract DateTime NowDateTime { get; }
 		protected abstract DbSet<TEntity> NewDbSet(DbSet<TEntity> contextualDbSet);
 
-		protected DbContext Context;
+		protected EfDbContext Context;
 		private Expression<Func<TEntity, Boolean>> _filter;
 	}
 }
