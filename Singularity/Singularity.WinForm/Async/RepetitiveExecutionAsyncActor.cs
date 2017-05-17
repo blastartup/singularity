@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace Singularity.WinForm.Async
 {
 	/// <summary>
-	/// Repetitively execute a long running task asynchronously returing a response.
+	/// Repetitively execute a long running task asynchronously returning a response.
 	/// </summary>
 	/// <remarks>
 	/// This Actor class can be used to call a function which has one parameter, object (TSender) and returns the result, object (TResult). The 

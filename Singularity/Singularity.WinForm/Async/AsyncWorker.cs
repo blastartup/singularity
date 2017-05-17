@@ -6,7 +6,7 @@ namespace Singularity.WinForm.Async
 {
 	// https://www.codeproject.com/Articles/42912/A-Simple-Way-To-Use-Asynchronous-Call-in-Your-Mult
 	/// <summary>
-	/// Asynchronously execute a single, cancelable, long running task, and be notified of progress change, busy status and completion.
+	/// Asynchronously execute a single, cancellable, long running task, and be notified of progress change, busy status and completion.
 	/// </summary>
 	/// <remarks>AsyncWorker does a bettor job than BackgroundWorker for running asynchronous tasks.</remarks>
 	/// <seealso cref="SingleExecutionAsyncActor{TSender,TResult}"/>

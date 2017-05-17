@@ -9,7 +9,7 @@ namespace Singularity.WinForm.Async
 {
 	// https://www.codeproject.com/Tips/1168027/Helper-Class-for-Calling-Asynchronous-Methods-usin
 	/// <summary>
-	/// Execute a long running task asynchronously returing a response.
+	/// Execute a long running task asynchronously returning a response.
 	/// </summary>
 	/// <remarks>Do not use this when executing the same long running task repetitively in succession.  nDuration = (nSeconds * nOccurrence)</remarks>
 	/// <typeparam name="TSender">Owner or input argument type.</typeparam>

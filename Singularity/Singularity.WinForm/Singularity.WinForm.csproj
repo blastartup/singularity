@@ -51,6 +51,7 @@
     <Compile Include="Async\Coworker.cs" />
     <Compile Include="DisposableFactory\DisposableFactory.cs" />
     <Compile Include="DisposableFactory\ThreadContextProvider.cs" />
+    <Compile Include="Extensions\FormCollectionExtension.cs" />
     <Compile Include="FlexibleMessageBox.cs" />
     <Compile Include="FormController.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
