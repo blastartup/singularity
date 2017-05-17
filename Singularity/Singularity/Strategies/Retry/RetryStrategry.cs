@@ -10,24 +10,24 @@ namespace Singularity
 
 		public DateTime Started
 		{
-			get { return started; }
-			set { started = value; }
+			get { return InternalStarted; }
+			set { InternalStarted = value; }
 		}
-		protected DateTime started;
+		protected DateTime InternalStarted;
 
 		public Int32 Attempts
 		{
-			get { return attempts; }
-			set { attempts = value; }
+			get { return InternalAttempts; }
+			set { InternalAttempts = value; }
 		}
-		protected Int32 attempts;
+		protected Int32 InternalAttempts;
 
 		public Int32 Delay
 		{
-			get { return delay; }
-			set { delay = value; }
+			get { return InternalDelay; }
+			set { InternalDelay = value; }
 		}
-		protected Int32 delay;
+		protected Int32 InternalDelay;
 
 		public abstract Boolean CanContinue();
 		public abstract Boolean ShouldWait();

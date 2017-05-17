@@ -9,17 +9,17 @@ namespace Singularity
 		public RetryCountedStrategy(Int32 maxRetries, Int32 delay)
 		{
 			this.MaxRetries = maxRetries.LimitInRange(1, 5);
-			this.delay = delay.LimitInRange(1, 120);
+			this.InternalDelay = delay.LimitInRange(1, 120);
 		}
 
 		public override Boolean CanContinue()
 		{
-			return (MaxRetries > 0 && attempts < MaxRetries);
+			return (MaxRetries > 0 && InternalAttempts < MaxRetries);
 		}
 
 		public override Boolean ShouldWait()
 		{
-			return (MaxRetries > 0 && attempts < MaxRetries);
+			return (MaxRetries > 0 && InternalAttempts < MaxRetries);
 		}
 
 	}

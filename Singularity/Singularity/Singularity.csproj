@@ -144,7 +144,7 @@
     <Compile Include="Strategies\Stray\StrayPrefixedCodeStrategy.cs" />
     <Compile Include="Strategies\Stray\StrayStrategy.cs" />
     <Compile Include="Strategies\Stray\StrayTransactionNumberStrategy.cs" />
-    <Compile Include="StringAdditional\DelimitedStringBuilder.cs" />
+    <Compile Include="Providers\DelimitedStringBuilder.cs" />
     <Compile Include="TimeSpanArticulator.cs" />
     <Compile Include="ValueLib.cs" />
     <Compile Include="ValueTypes\BaseN.cs" />
@@ -179,6 +179,7 @@
   <ItemGroup>
     <None Include="_CreateNewNuGetPackage\DoNotModify\NuGet.exe" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>REM Create a NuGet package for this project and place the .nupkg file in the project's output directory.

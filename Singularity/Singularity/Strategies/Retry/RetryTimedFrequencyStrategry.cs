@@ -10,7 +10,7 @@ namespace Singularity
 		{
 			this.TimeoutInSeconds = timeoutInSeconds.LimitInRange(10, 120);
 			this.Frequency = frequency.LimitInRange(2, 120);
-			delay = (timeoutInSeconds / frequency) * 1000;
+			InternalDelay = (timeoutInSeconds / frequency) * 1000;
 		}
 
 		public override Boolean CanContinue()
@@ -25,12 +25,12 @@ namespace Singularity
 
 		private Boolean IsTimedOut()
 		{
-			return (DateTime.UtcNow - started).TotalSeconds > TimeoutInSeconds;
+			return (DateTime.UtcNow - InternalStarted).TotalSeconds > TimeoutInSeconds;
 		}
 
 		private Boolean WillTimeOut()
 		{
-			return (DateTime.UtcNow - started).TotalSeconds > TimeoutInSeconds + delay;
+			return (DateTime.UtcNow - InternalStarted).TotalSeconds > TimeoutInSeconds + InternalDelay;
 		}
 
 	}
