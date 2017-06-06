@@ -35,8 +35,8 @@ namespace Singularity.FileService
     {
         #region Constants
 
-        private const string SERIALIZATION_COLUMN_NUMBER = "ColumnNumber";
-        private const string SERIALIZATION_FILE_ROW_NUMBER = "FileRowNumber";
+        private const String SERIALIZATION_COLUMN_NUMBER = "ColumnNumber";
+        private const String SERIALIZATION_FILE_ROW_NUMBER = "FileRowNumber";
 
         #endregion Constants
 
@@ -58,7 +58,7 @@ namespace Singularity.FileService
         /// </param>
         /// <param name="intFileRowNumber">The file line number the error occured on.</param>
         /// <param name="intColumnNumber">The column number the error occured on.</param>
-        public ParsingException(string strMessage, int intFileRowNumber, int intColumnNumber)
+        public ParsingException(String strMessage, Int32 intFileRowNumber, Int32 intColumnNumber)
             : base(strMessage)
         {
             this.m_intFileRowNumber = intFileRowNumber;
@@ -89,7 +89,7 @@ namespace Singularity.FileService
         /// <summary>
         ///   The line number in the file that the exception was thrown at.
         /// </summary>
-        public int FileRowNumber
+        public Int32 FileRowNumber
         {
             get
             {
@@ -99,7 +99,7 @@ namespace Singularity.FileService
         /// <summary>
         ///   The column number in the file that the exception was thrown at.
         /// </summary>
-        public int ColumnNumber
+        public Int32 ColumnNumber
         {
             get
             {
@@ -111,8 +111,8 @@ namespace Singularity.FileService
 
         #region Private Members
 
-        private int m_intFileRowNumber;
-        private int m_intColumnNumber;
+        private Int32 m_intFileRowNumber;
+        private Int32 m_intColumnNumber;
 
         #endregion Private Members
 

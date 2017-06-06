@@ -18,17 +18,17 @@ namespace Singularity.DataService
 			dt.TableName = alist[0].GetType().Name;
 			DataRow dr;
 			System.Reflection.PropertyInfo[] propInfo = alist[0].GetType().GetProperties();
-			for (int i = 0; i < propInfo.Length; i++)
+			for (Int32 i = 0; i < propInfo.Length; i++)
 			{
 				dt.Columns.Add(propInfo[i].Name, propInfo[i].PropertyType);
 			}
-			for (int row = 0; row < alist.Count; row++)
+			for (Int32 row = 0; row < alist.Count; row++)
 			{
 				dr = dt.NewRow();
-				for (int i = 0; i < propInfo.Length; i++)
+				for (Int32 i = 0; i < propInfo.Length; i++)
 				{
-					object tempObject = alist[row];
-					object t = propInfo[i].GetValue(tempObject, null);
+					Object tempObject = alist[row];
+					Object t = propInfo[i].GetValue(tempObject, null);
 					/*object t =tempObject.GetType().InvokeMember(propInfo[i].Name,    
 					 * R.BindingFlags.GetProperty , null,tempObject , new object [] {});*/
 					if (t != null)
@@ -47,9 +47,9 @@ namespace Singularity.DataService
 			dt.TableName = alist[0].GetType().Name;
 			DataRow dr;
 			System.Reflection.PropertyInfo[] propInfo = alist[0].GetType().GetProperties();
-			for (int i = 0; i < propInfo.Length; i++)
+			for (Int32 i = 0; i < propInfo.Length; i++)
 			{
-				for (int j = 0; j < alColNames.Count; j++)
+				for (Int32 j = 0; j < alColNames.Count; j++)
 				{
 					if (alColNames[j].ToString() == propInfo[i].Name)
 					{
@@ -58,13 +58,13 @@ namespace Singularity.DataService
 					}
 				}
 			}
-			for (int row = 0; row < alist.Count; row++)
+			for (Int32 row = 0; row < alist.Count; row++)
 			{
 				dr = dt.NewRow();
-				for (int i = 0; i < dt.Columns.Count; i++)
+				for (Int32 i = 0; i < dt.Columns.Count; i++)
 				{
-					object tempObject = alist[row];
-					object t = propInfo[i].GetValue(tempObject, null);
+					Object tempObject = alist[row];
+					Object t = propInfo[i].GetValue(tempObject, null);
 					/*object t =tempObject.GetType().InvokeMember(propInfo[i].Name,   
 					 * R.BindingFlags.GetProperty , null,tempObject , new object [] {});*/
 					if (t != null)

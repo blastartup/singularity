@@ -93,10 +93,8 @@ namespace Singularity
 			return timeSpan == TimeSpan.MinValue;
 		}
 
-		public static TimeSpan Midday
-		{
-			get { return !_midday.IsEmpty() ? _midday : (_midday = new TimeSpan(12, 0, 0)); }
-		}
+		public static TimeSpan Midday => !_midday.IsEmpty() ? _midday : (_midday = new TimeSpan(12, 0, 0));
+
 		[ThreadStatic]
 		private static TimeSpan _midday;
 	}

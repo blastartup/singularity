@@ -21,7 +21,7 @@ namespace Singularity.DataService
 	{
 		public T Entity { get; set; }
 		public IEnumerable<HierarchyNode<T>> ChildNodes { get; set; }
-		public int Depth { get; set; }
+		public Int32 Depth { get; set; }
 	}
 
 	public static class LinqExtensions
@@ -43,7 +43,7 @@ namespace Singularity.DataService
 		}
 
 		static IEnumerable<HierarchyNode<TEntity>> CreateHierarchy<TEntity, TProperty>(IEnumerable<TEntity> allItems, TEntity parentItem,
-		  Func<TEntity, TProperty> idProperty, Func<TEntity, TProperty> parentIdProperty, int depth) where TEntity : class
+		  Func<TEntity, TProperty> idProperty, Func<TEntity, TProperty> parentIdProperty, Int32 depth) where TEntity : class
 		{
 			IEnumerable<TEntity> childs;
 

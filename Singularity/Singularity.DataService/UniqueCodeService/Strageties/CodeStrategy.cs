@@ -86,8 +86,8 @@ namespace Singularity.DataService.UniqueCodeService
 
 		#endregion
 
-		public delegate int CurrentCountQuery();
-		public delegate bool IsCodeUniqueQuery(String code);
+		public delegate Int32 CurrentCountQuery();
+		public delegate Boolean IsCodeUniqueQuery(String code);
 
 		//ICodeServiceStrategy CodeServiceStrategy
 		//{
@@ -101,8 +101,8 @@ namespace Singularity.DataService.UniqueCodeService
 		}
 		RandomProvider fastRandom;
 
-		const string alphabet = "ACDEFGHJKMNPQRTUVWXY34679";
-		readonly protected int alphabetLength;
+		const String alphabet = "ACDEFGHJKMNPQRTUVWXY34679";
+		readonly protected Int32 alphabetLength;
 
 		public IReply Execute()
 		{

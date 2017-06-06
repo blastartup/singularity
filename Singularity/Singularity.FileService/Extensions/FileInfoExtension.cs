@@ -26,7 +26,7 @@ namespace Singularity.FileService
 
 		public static async Task WriteAllTextAsync(this FileInfo fileInfo, String text)
 		{
-			byte[] plainText = text.ToByteArray();
+			Byte[] plainText = text.ToByteArray();
 
 			using (var sourceStream = new FileStream(fileInfo.FullName, FileMode.Create, FileAccess.Write, FileShare.None,
 				 4096, true))
@@ -37,7 +37,7 @@ namespace Singularity.FileService
 
 		public static Task WriteAllTextTaskAsync(this FileInfo fileInfo, String text, out FileStream sourceStream)
 		{
-			byte[] plainText = text.ToByteArray();
+			Byte[] plainText = text.ToByteArray();
 
 			sourceStream = new FileStream(fileInfo.FullName, FileMode.Create, FileAccess.Write, FileShare.None,
 				4096, true);
@@ -51,11 +51,11 @@ namespace Singularity.FileService
 			{
 				StringBuilder sb = new StringBuilder();
 
-				byte[] buffer = new byte[0x1000];
-				int numRead;
+				Byte[] buffer = new Byte[0x1000];
+				Int32 numRead;
 				while ((numRead = await sourceStream.ReadAsync(buffer, 0, buffer.Length)) != 0)
 				{
-					string text = Encoding.Unicode.GetString(buffer, 0, numRead);
+					String text = Encoding.Unicode.GetString(buffer, 0, numRead);
 					sb.Append(text);
 				}
 

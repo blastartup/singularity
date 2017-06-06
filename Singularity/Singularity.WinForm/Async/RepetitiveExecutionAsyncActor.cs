@@ -21,7 +21,7 @@ namespace Singularity.WinForm.Async
 	/// <seealso cref="SingleExecutionAsyncActor{TSender,TResult}"/>
 	public class RepetitiveExecutionAsyncActor<TSender, TResult>
 	{
-		public delegate void WhenComplete(object sender, State e);
+		public delegate void WhenComplete(Object sender, State e);
 
 		public virtual void Perform(Func<TSender, TResult> job, TSender parameter, WhenComplete done)
 		{

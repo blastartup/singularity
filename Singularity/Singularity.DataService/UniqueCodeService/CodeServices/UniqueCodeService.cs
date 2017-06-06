@@ -15,7 +15,7 @@ namespace Singularity.DataService.UniqueCodeService
 		public IReply Execute()
 		{
 			ReplyMessage result = null;
-			int cntr = 0;
+			Int32 cntr = 0;
 			do
 			{
 				result = IsValid(Stray.Execute());
@@ -54,7 +54,7 @@ namespace Singularity.DataService.UniqueCodeService
 		//   return 0;
 		//}
 
-		protected virtual bool IsCodeUnique(String code)
+		protected virtual Boolean IsCodeUnique(String code)
 		{
 			return true;
 		}

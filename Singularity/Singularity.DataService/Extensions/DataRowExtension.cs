@@ -7,7 +7,7 @@ namespace Singularity.DataService
 {
 	public static class DataRowExtension
 	{
-		public static Object GetValue(this DataRow row, int? fieldIdx)
+		public static Object GetValue(this DataRow row, Int32? fieldIdx)
 		{
 			Object result = null;
 			if (fieldIdx != null)

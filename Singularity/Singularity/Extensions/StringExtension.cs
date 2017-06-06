@@ -14,14 +14,15 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
 
+// ReSharper disable once CheckNamespace
 namespace Singularity
 {
 	/// <summary>
 	/// Foundation default extension methods to the standard String object.
 	/// </summary>
-#if !DEBUG
-	[DebuggerStepThrough]
-#endif
+//#if !DEBUG
+//	[DebuggerStepThrough]
+//#endif
 	public static class StringExtension
 	{
 		/// <summary>
@@ -1221,6 +1222,71 @@ namespace Singularity
 		#endregion
 
 		/// <summary>
+		/// Ensure any original upper case characters are retained.
+		/// </summary>
+		/// <param name="translatedVersion"></param>
+		/// <param name="originalVersion"></param>
+		/// <returns></returns>
+		public static String MatchCase(this String translatedVersion, String originalVersion)
+		{
+			if (translatedVersion.Equals(originalVersion))
+			{
+				return translatedVersion;
+			}
+
+			var tvLength = translatedVersion.Length;
+			var ovLength = originalVersion.Length;
+			var matchVersionBuilder = new StringBuilder(tvLength);
+			var oIdx = 0;
+			for (var idx = 0; idx < tvLength; idx++)
+			{
+				var transalatedVersionCharacter = translatedVersion[idx];
+				var originalVersionCharacter = ' ';  // Just a default buffer value - not actually used.
+				while (oIdx < ovLength)
+				{
+					originalVersionCharacter = originalVersion[oIdx];
+
+					if (originalVersionCharacter.In(' ', '_'))
+					{
+						oIdx++;
+						continue;
+					}
+
+					var ovAsString = originalVersionCharacter.ToString();
+					var tvAsString = transalatedVersionCharacter.ToString();
+					if (!ovAsString.Equals(tvAsString, StringComparison.OrdinalIgnoreCase))
+					{
+						if (oIdx + 1 < ovLength - 1 && originalVersion[oIdx + 1].ToString().Equals(tvAsString, StringComparison.OrdinalIgnoreCase))
+						{
+							oIdx++;
+							continue;
+						}
+
+						if (oIdx + 2 < ovLength - 2 && originalVersion[oIdx + 2].ToString().Equals(tvAsString, StringComparison.OrdinalIgnoreCase))
+						{
+							oIdx += 2;
+							continue;
+						}
+
+						idx = tvLength;
+					}
+					break;
+				};
+
+				if (Char.IsLower(transalatedVersionCharacter) && Char.IsUpper(originalVersionCharacter))
+				{
+					matchVersionBuilder.Append(originalVersionCharacter.ToString().ToUpper());
+				}
+				else
+				{
+					matchVersionBuilder.Append(transalatedVersionCharacter);
+				}
+				oIdx++;
+			}
+			return matchVersionBuilder.ToString();
+		}
+
+		/// <summary>
 		/// Divide a very long string by a given length and return a given sized list.
 		/// </summary>
 		/// <param name="value">The very long string.</param>
@@ -1664,7 +1730,7 @@ namespace Singularity
 		public static String ToTitleCase(this String value)
 		{
 			if (value.IsEmpty()) return value;
-			return ToTitleCaseCore(value, false);
+			return ToTitleCaseCore(value, true);
 		}
 
 		/// <summary>
@@ -1960,10 +2026,10 @@ namespace Singularity
 
 		public static String Encrypt(this String plainText, String passPhrase)
 		{
-			byte[] initVectorBytes = Encoding.UTF8.GetBytes(initVector);
-			byte[] plainTextBytes = Encoding.UTF8.GetBytes(plainText);
+			Byte[] initVectorBytes = Encoding.UTF8.GetBytes(initVector);
+			Byte[] plainTextBytes = Encoding.UTF8.GetBytes(plainText);
 			PasswordDeriveBytes password = new PasswordDeriveBytes(passPhrase, null);
-			byte[] keyBytes = password.GetBytes(keysize / 8);
+			Byte[] keyBytes = password.GetBytes(keysize / 8);
 			RijndaelManaged symmetricKey = new RijndaelManaged();
 			symmetricKey.Mode = CipherMode.CBC;
 			ICryptoTransform encryptor = symmetricKey.CreateEncryptor(keyBytes, initVectorBytes);
@@ -1971,16 +2037,16 @@ namespace Singularity
 			CryptoStream cryptoStream = new CryptoStream(memoryStream, encryptor, CryptoStreamMode.Write);
 			cryptoStream.Write(plainTextBytes, 0, plainTextBytes.Length);
 			cryptoStream.FlushFinalBlock();
-			byte[] cipherTextBytes = memoryStream.ToArray();
+			Byte[] cipherTextBytes = memoryStream.ToArray();
 			memoryStream.Close();
 			cryptoStream.Close();
 			return Convert.ToBase64String(cipherTextBytes);
 		}
 		// This size of the IV (in bytes) must = (keysize / 8).  Default keysize is 256, so the IV must be
 		// 32 bytes long.  Using a 16 character string here gives us 32 bytes when converted to a byte array.
-		private const string initVector = "pemgail9uzpgzl88";
+		private const String initVector = "pemgail9uzpgzl88";
 		// This constant is used to determine the keysize of the encryption algorithm
-		private const int keysize = 256;
+		private const Int32 keysize = 256;
 
 		public static String EncryptSha1(this String password)
 		{
@@ -1993,17 +2059,17 @@ namespace Singularity
 
 		public static String Decrypt(this String cipherText, String passPhrase)
 		{
-			byte[] initVectorBytes = Encoding.ASCII.GetBytes(initVector);
-			byte[] cipherTextBytes = Convert.FromBase64String(cipherText);
+			Byte[] initVectorBytes = Encoding.ASCII.GetBytes(initVector);
+			Byte[] cipherTextBytes = Convert.FromBase64String(cipherText);
 			PasswordDeriveBytes password = new PasswordDeriveBytes(passPhrase, null);
-			byte[] keyBytes = password.GetBytes(keysize / 8);
+			Byte[] keyBytes = password.GetBytes(keysize / 8);
 			RijndaelManaged symmetricKey = new RijndaelManaged();
 			symmetricKey.Mode = CipherMode.CBC;
 			ICryptoTransform decryptor = symmetricKey.CreateDecryptor(keyBytes, initVectorBytes);
 			MemoryStream memoryStream = new MemoryStream(cipherTextBytes);
 			CryptoStream cryptoStream = new CryptoStream(memoryStream, decryptor, CryptoStreamMode.Read);
-			byte[] plainTextBytes = new byte[cipherTextBytes.Length];
-			int decryptedByteCount = cryptoStream.Read(plainTextBytes, 0, plainTextBytes.Length);
+			Byte[] plainTextBytes = new Byte[cipherTextBytes.Length];
+			Int32 decryptedByteCount = cryptoStream.Read(plainTextBytes, 0, plainTextBytes.Length);
 			memoryStream.Close();
 			cryptoStream.Close();
 			return Encoding.UTF8.GetString(plainTextBytes, 0, decryptedByteCount);

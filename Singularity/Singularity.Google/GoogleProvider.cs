@@ -21,7 +21,7 @@ namespace Singularity.Google
 			};
 		}
 
-		private string scope
+		private String scope
 		{
 			get { return "https://spreadsheets.google.com/feeds https://docs.google.com/feeds"; }
 		}

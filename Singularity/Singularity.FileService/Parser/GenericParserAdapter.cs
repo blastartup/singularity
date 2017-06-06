@@ -39,15 +39,15 @@ namespace Singularity.FileService
 		/// <summary>
 		///   Defines the default value for including the file line number (false).
 		/// </summary>
-		public const bool DefaultIncludeFileLineNumber = false;
+		public const Boolean DefaultIncludeFileLineNumber = false;
 		/// <summary>
 		///   Defines the number of skip ending data rows (0).
 		/// </summary>
-		public const int DefaultSkipEndingDataRows = 0;
+		public const Int32 DefaultSkipEndingDataRows = 0;
 
-		private const string XML_INCLUDE_FILE_LINE_NUMBER = "IncludeFileLineNumber";
-		private const string XML_SKIP_ENDING_DATA_ROWS = "SkipEndingDataRows";
-		private const string FILE_LINE_NUMBER = "FileLineNumber";
+		private const String XML_INCLUDE_FILE_LINE_NUMBER = "IncludeFileLineNumber";
+		private const String XML_SKIP_ENDING_DATA_ROWS = "SkipEndingDataRows";
+		private const String FILE_LINE_NUMBER = "FileLineNumber";
 
 		#endregion Constants
 
@@ -59,7 +59,7 @@ namespace Singularity.FileService
 		/// </summary>
 		/// <param name="dtData">The <see cref="DataTable"/> to add the column to.</param>
 		/// <param name="strColumnName">The desired column name to add.</param>
-		private static void AddColumnToTable(DataTable dtData, string strColumnName)
+		private static void AddColumnToTable(DataTable dtData, String strColumnName)
 		{
 			if (strColumnName != null)
 			{
@@ -67,13 +67,13 @@ namespace Singularity.FileService
 					dtData.Columns.Add(strColumnName);
 				else
 				{
-					string strNewColumnName;
-					int intCount = 0;
+					String strNewColumnName;
+					Int32 intCount = 0;
 
 					// Looks like we need to generate a new column name.
 					do
 					{
-						strNewColumnName = string.Format("{0}{1}", strColumnName, ++intCount);
+						strNewColumnName = String.Format("{0}{1}", strColumnName, ++intCount);
 					}
 					while (dtData.Columns[strNewColumnName] != null);
 
@@ -107,7 +107,7 @@ namespace Singularity.FileService
 		///   the initial datasource as the file referenced by the string passed in.
 		/// </summary>
 		/// <param name="strFileName">The file name to set as the initial datasource.</param>
-		public GenericParserAdapter(string strFileName)
+		public GenericParserAdapter(String strFileName)
 			 : this()
 		{
 			this.SetDataSource(strFileName);
@@ -119,7 +119,7 @@ namespace Singularity.FileService
 		/// </summary>
 		/// <param name="strFileName">The file name to set as the initial datasource.</param>
 		/// <param name="encoding">The <see cref="Encoding"/> of the file being referenced.</param>
-		public GenericParserAdapter(string strFileName, Encoding encoding)
+		public GenericParserAdapter(String strFileName, Encoding encoding)
 			 : this()
 		{
 			this.SetDataSource(strFileName, encoding);
@@ -154,7 +154,7 @@ namespace Singularity.FileService
 		///   </para>
 		/// </remarks>
 		/// <exception cref="InvalidOperationException">Attempting to modify the configuration, while parsing.</exception>
-		public bool IncludeFileLineNumber
+		public Boolean IncludeFileLineNumber
 		{
 			get
 			{
@@ -184,7 +184,7 @@ namespace Singularity.FileService
 		///   </para>
 		/// </remarks>
 		/// <exception cref="InvalidOperationException">Attempting to modify the configuration, while parsing.</exception>
-		public int SkipEndingDataRows
+		public Int32 SkipEndingDataRows
 		{
 			get
 			{
@@ -299,7 +299,7 @@ namespace Singularity.FileService
 		{
 			DataRow drRow;
 			DataTable dtData;
-			int intCreatedColumns, intSkipRowsAtEnd;
+			Int32 intCreatedColumns, intSkipRowsAtEnd;
 
 			dtData = new DataTable();
 			dtData.BeginLoadData();
@@ -315,7 +315,7 @@ namespace Singularity.FileService
 					if (this.m_blnIncludeFileLineNumber && (intCreatedColumns < 1))
 						dtData.Columns.Add(GenericParserAdapter.FILE_LINE_NUMBER);
 
-					for (int intColumnIndex = intCreatedColumns; intColumnIndex < this.m_lstColumnNames.Count; ++intColumnIndex, ++intCreatedColumns)
+					for (Int32 intColumnIndex = intCreatedColumns; intColumnIndex < this.m_lstColumnNames.Count; ++intColumnIndex, ++intCreatedColumns)
 						GenericParserAdapter.AddColumnToTable(dtData, this.m_lstColumnNames[intColumnIndex]);
 				}
 
@@ -328,7 +328,7 @@ namespace Singularity.FileService
 						drRow[0] = this.FileRowNumber;
 
 						// Now, add in the data retrieved from the current row.
-						for (int intColumnIndex = 0; intColumnIndex < this.m_lstData.Count; ++intColumnIndex)
+						for (Int32 intColumnIndex = 0; intColumnIndex < this.m_lstData.Count; ++intColumnIndex)
 							drRow[intColumnIndex + 1] = this.m_lstData[intColumnIndex];
 					}
 					else
@@ -430,8 +430,8 @@ namespace Singularity.FileService
 
 		#region Private Code
 
-		private bool m_blnIncludeFileLineNumber;
-		private int m_intSkipEndingDataRows;
+		private Boolean m_blnIncludeFileLineNumber;
+		private Int32 m_intSkipEndingDataRows;
 
 		#endregion Private Code
 	}

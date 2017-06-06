@@ -9,7 +9,7 @@ namespace Singularity.DataService
 	/// </summary>
 	public class WriteToTextFile : ICommand
 	{
-		public WriteToTextFile(DataTable dataSource, FileInfo outputFilePath, bool isFirstRowHeadings = false, String seperator = ",")
+		public WriteToTextFile(DataTable dataSource, FileInfo outputFilePath, Boolean isFirstRowHeadings = false, String seperator = ",")
 		{
 			_dataSource = dataSource;
 			_outputFilePath = outputFilePath;

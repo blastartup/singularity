@@ -29,7 +29,7 @@ namespace Singularity.Google
 			var affiliateSheet = workSheetFeed.Entries.First(s => s.Title.Text.Equals(sheetTitle, StringComparison.InvariantCultureIgnoreCase));
 
 			// Get the cells...
-			uint startRow = 2;
+			UInt32 startRow = 2;
 			var cellLink = affiliateSheet.Links.FindService(GDataSpreadsheetsNameTable.CellRel, null);
 			var cellQuery = new CellQuery(cellLink.HRef.ToString())
 			{

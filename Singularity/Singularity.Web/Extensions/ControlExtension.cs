@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Text;
 using System.Web.UI;
 
@@ -8,7 +9,7 @@ namespace Singularity.Web
 {
 	public static class ControlExtension
 	{
-		public static string ToHtml(this Control selectedControl)
+		public static String ToHtml(this Control selectedControl)
 		{
 			var sb = new StringBuilder();
 			using (var sw = new StringWriter(sb))

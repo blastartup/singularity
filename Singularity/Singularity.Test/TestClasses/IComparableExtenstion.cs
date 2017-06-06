@@ -13,7 +13,7 @@ namespace Singularity.Test
 		[TestMethod]
 		public void TestExtensionElse()
 		{
-			int y = 1;
+			Int32 y = 1;
 			Assert.IsTrue(y.ElseIf(v => v > 0, 10) == 1, "Else condition not triggered.");
 
 			y = 0;

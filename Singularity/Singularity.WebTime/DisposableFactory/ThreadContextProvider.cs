@@ -14,14 +14,14 @@ namespace Singularity.WebTime
 	internal class ThreadContextProvider : IContextProvider
 	{
 		[DebuggerHidden]
-		public T GetItem<T>(string key) where T : class
+		public T GetItem<T>(String key) where T : class
 		{
 			var lds = Thread.GetNamedDataSlot(key);
 			return (T)Thread.GetData(lds);
 		}
 
 		[DebuggerHidden]
-		public void SetItem<T>(string key, T value) where T : class
+		public void SetItem<T>(String key, T value) where T : class
 		{
 			var lds = Thread.GetNamedDataSlot(key);
 			Thread.SetData(lds, value);

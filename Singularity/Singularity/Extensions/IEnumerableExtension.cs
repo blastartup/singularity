@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
@@ -252,6 +253,21 @@ namespace Singularity
 			return Math.Sqrt(sumOfSqrs / (counter - 1));
 		}
 
+		public static String ToCsv(this IEnumerable<String> items)
+		{
+			if (items.IsEmpty())
+			{
+				return String.Empty;
+			}
+
+			var csvBuilder = new DelimitedStringBuilder();
+			foreach (var item in items)
+			{
+				csvBuilder.Add(ToCsvValue(item));
+			}
+			return csvBuilder.ToDelimitedString(ValueLib.Comma.CharValue);
+		}
+
 		/// <summary>
 		/// Reduce the set of items into a single delimited string.
 		/// </summary>
@@ -261,13 +277,26 @@ namespace Singularity
 		public static String ToCsv<T>(this IEnumerable<T> items)
 			where T : class
 		{
+			if (items.IsEmpty())
+			{
+				return String.Empty;
+			}
+
 			var csvBuilder = new StringBuilder();
-			var properties = typeof(T).GetProperties();
+			var properties = typeof(T).GetProperties().Where(p => !typeof(IEnumerable).IsAssignableFrom(p.ReflectedType)).ToArray();
 			var header = String.Join(",", properties.Select(p => p.Name));
 			csvBuilder.AppendLine(header);
 			foreach (var item in items)
 			{
-				String line = String.Join(",", properties.Select(p => p.GetValue(item, null).ToCsvValue()).ToArray());
+				var idx = 0;
+				var array = new String[properties.Length];
+				foreach (var property in properties)
+				{
+					array[idx] = ToCsvValue(property.GetValue(item, null));
+					idx++;
+				}
+
+				var line = String.Join(",", array);
 				csvBuilder.AppendLine(line);
 			}
 			return csvBuilder.ToString();
@@ -280,6 +309,11 @@ namespace Singularity
 		/// <returns>A comma delimited string.</returns>
 		public static String ToCsv(this IEnumerable<Object> items)
 		{
+			if (items.IsEmpty())
+			{
+				return String.Empty;
+			}
+
 			var csvBuilder = new StringBuilder();
 			var first = true;
 			PropertyInfo[] properties = null;
@@ -305,6 +339,11 @@ namespace Singularity
 		/// <returns>A comma delimited string.</returns>
 		public static String ToCsv(this IEnumerable<IDictionary<String, Object>> items)
 		{
+			if (items.IsEmpty())
+			{
+				return String.Empty;
+			}
+
 			var csvBuilder = new StringBuilder();
 
 			List<String> properties = null;
@@ -342,6 +381,11 @@ namespace Singularity
 		/// <returns>A comma delimited string.</returns>
 		public static String ToCsv(this IEnumerable<ExpandoObject> items)
 		{
+			if (items.IsEmpty())
+			{
+				return String.Empty;
+			}
+
 			var csvBuilder = new StringBuilder();
 
 			List<String> properties = null;
@@ -378,7 +422,7 @@ namespace Singularity
 
 			if (item is String)
 			{
-				return $"\"{item.ToString().Replace("\"", "\\\"")}\"";
+				return $"\"{item.ToString().Replace("\"", "\\\"").Replace(",", "")}\"";
 			}
 			Double dummy;
 			if (Double.TryParse(item.ToString(), out dummy))

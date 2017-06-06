@@ -41,35 +41,35 @@ namespace Singularity.FileService
         /// <summary>
         ///   Defines the default max buffer size (4096).
         /// </summary>
-        public const int DefaultMaxBufferSize = 4096;
+        public const Int32 DefaultMaxBufferSize = 4096;
         /// <summary>
         ///   Defines the max rows value (0 = no limit).
         /// </summary>
-        public const int DefaultMaxRows = 0;
+        public const Int32 DefaultMaxRows = 0;
         /// <summary>
         ///   Defines the number of skip starting data rows (0).
         /// </summary>
-        public const int DefaultSkipStartingDataRows = 0;
+        public const Int32 DefaultSkipStartingDataRows = 0;
         /// <summary>
         ///   Defines the number of expected columns (0 = no limit).
         /// </summary>
-        public const int DefaultExpectedColumnCount = 0;
+        public const Int32 DefaultExpectedColumnCount = 0;
         /// <summary>
         ///   Defines the default first row has a header (false).
         /// </summary>
-        public const bool DefaultFirstRowHasHeader = false;
+        public const Boolean DefaultFirstRowHasHeader = false;
         /// <summary>
         ///   Defines the default value for trim results (false).
         /// </summary>
-        public const bool DefaultTrimResults = false;
+        public const Boolean DefaultTrimResults = false;
         /// <summary>
         ///   Defines the default value for stripping control characters (false).
         /// </summary>
-        public const bool DefaulStripControlCharacters = false;
+        public const Boolean DefaulStripControlCharacters = false;
         /// <summary>
         ///   Defines the default value for skipping empty rows (true).
         /// </summary>
-        public const bool DefaulSkipEmptyRows = true;
+        public const Boolean DefaulSkipEmptyRows = true;
         /// <summary>
         ///   Defines the default value for text field type (Delimited).
         /// </summary>
@@ -77,19 +77,19 @@ namespace Singularity.FileService
         /// <summary>
         ///   Defines the default for first row sets the expected column count (false).
         /// </summary>
-        public const bool DefaultFirstRowSetsExpectedColumnCount = false;
+        public const Boolean DefaultFirstRowSetsExpectedColumnCount = false;
         /// <summary>
         ///   Defines the default column delimiter (',').
         /// </summary>
-        public const char DefaultColumnDelimiter = ',';
+        public const Char DefaultColumnDelimiter = ',';
         /// <summary>
         ///   Defines the default text qualifier ('\"').
         /// </summary>
-        public const char DefaultTextQualifier = '\"';
+        public const Char DefaultTextQualifier = '\"';
         /// <summary>
         ///   Defines the default comment row character ('#').
         /// </summary>
-        public const char DefaultCommentCharacter = '#';
+        public const Char DefaultCommentCharacter = '#';
 
         #endregion Default Values
 
@@ -122,25 +122,25 @@ namespace Singularity.FileService
 
         #region XmlConfig Constants
 
-        private const string XML_ROOT_NODE = "GenericParser";
-        private const string XML_COLUMN_WIDTH = "ColumnWidth";
-        private const string XML_COLUMN_WIDTHS = "ColumnWidths";
-        private const string XML_MAX_BUFFER_SIZE = "MaxBufferSize";
-        private const string XML_MAX_ROWS = "MaxRows";
-        private const string XML_SKIP_STARTING_DATA_ROWS = "SkipStartingDataRows";
-        private const string XML_EXPECTED_COLUMN_COUNT = "ExpectedColumnCount";
-        private const string XML_FIRST_ROW_HAS_HEADER = "FirstRowHasHeader";
-        private const string XML_TRIM_RESULTS = "TrimResults";
-        private const string XML_STRIP_CONTROL_CHARS = "StripControlChars";
-        private const string XML_SKIP_EMPTY_ROWS = "SkipEmptyRows";
-        private const string XML_TEXT_FIELD_TYPE = "TextFieldType";
-        private const string XML_FIRST_ROW_SETS_EXPECTED_COLUMN_COUNT = "FirstRowSetsExpectedColumnCount";
-        private const string XML_COLUMN_DELIMITER = "ColumnDelimiter";
-        private const string XML_TEXT_QUALIFIER = "TextQualifier";
-        private const string XML_ESCAPE_CHARACTER = "EscapeCharacter";
-        private const string XML_COMMENT_CHARACTER = "CommentCharacter";
+        private const String XML_ROOT_NODE = "GenericParser";
+        private const String XML_COLUMN_WIDTH = "ColumnWidth";
+        private const String XML_COLUMN_WIDTHS = "ColumnWidths";
+        private const String XML_MAX_BUFFER_SIZE = "MaxBufferSize";
+        private const String XML_MAX_ROWS = "MaxRows";
+        private const String XML_SKIP_STARTING_DATA_ROWS = "SkipStartingDataRows";
+        private const String XML_EXPECTED_COLUMN_COUNT = "ExpectedColumnCount";
+        private const String XML_FIRST_ROW_HAS_HEADER = "FirstRowHasHeader";
+        private const String XML_TRIM_RESULTS = "TrimResults";
+        private const String XML_STRIP_CONTROL_CHARS = "StripControlChars";
+        private const String XML_SKIP_EMPTY_ROWS = "SkipEmptyRows";
+        private const String XML_TEXT_FIELD_TYPE = "TextFieldType";
+        private const String XML_FIRST_ROW_SETS_EXPECTED_COLUMN_COUNT = "FirstRowSetsExpectedColumnCount";
+        private const String XML_COLUMN_DELIMITER = "ColumnDelimiter";
+        private const String XML_TEXT_QUALIFIER = "TextQualifier";
+        private const String XML_ESCAPE_CHARACTER = "EscapeCharacter";
+        private const String XML_COMMENT_CHARACTER = "CommentCharacter";
 
-        private const string XML_SAFE_STRING_DELIMITER = ",";
+        private const String XML_SAFE_STRING_DELIMITER = ",";
 
         #endregion XmlConfig Constants
 
@@ -162,7 +162,7 @@ namespace Singularity.FileService
             {
                 clone = new T[array.Length];
 
-                for (int i = 0; i < array.Length; ++i)
+                for (Int32 i = 0; i < array.Length; ++i)
                     clone[i] = array[i];
             }
             else
@@ -189,7 +189,7 @@ namespace Singularity.FileService
             this.m_ParserState = ParserState.NoDataSource;
             this.m_txtReader = null;
             this.m_blnDisposed = false;
-            this.m_objLock = new object();
+            this.m_objLock = new Object();
 
             this._InitializeConfigurationVariables();
         }
@@ -201,7 +201,7 @@ namespace Singularity.FileService
         /// <exception cref="ArgumentNullException">Supplying <see langword="null"/>.</exception>
         /// <exception cref="ArgumentException">Supplying a filename to a file that does not exist.</exception>
         /// <exception cref="InvalidOperationException">Attempting to modify the configuration, while parsing.</exception>
-        public GenericParser(string strFileName)
+        public GenericParser(String strFileName)
             : this()
         {
             this.SetDataSource(strFileName);
@@ -215,7 +215,7 @@ namespace Singularity.FileService
         /// <exception cref="ArgumentNullException">Supplying <see langword="null"/>.</exception>
         /// <exception cref="ArgumentException">Supplying a filename to a file that does not exist.</exception>
         /// <exception cref="InvalidOperationException">Attempting to modify the configuration, while parsing.</exception>
-        public GenericParser(string strFileName, Encoding encoding)
+        public GenericParser(String strFileName, Encoding encoding)
             : this()
         {
             this.SetDataSource(strFileName, encoding);
@@ -248,7 +248,7 @@ namespace Singularity.FileService
         ///     <see langword="false"/> - Indicates the instance has not be disposed of.
         ///   </para>
         /// </value>
-        public bool IsDisposed
+        public Boolean IsDisposed
         {
             get
             {
@@ -270,7 +270,7 @@ namespace Singularity.FileService
         /// <exception cref="ArgumentOutOfRangeException">Passing in an empty array or an
         /// array of values that have a number less than one.</exception>
         /// <exception cref="InvalidOperationException">Attempting to modify the configuration, while parsing.</exception>
-        public int[] ColumnWidths
+        public Int32[] ColumnWidths
         {
             get
             {
@@ -294,7 +294,7 @@ namespace Singularity.FileService
                         throw new ArgumentOutOfRangeException("value", "ColumnWidths cannot be an empty array.");
 
                     // Make sure all of the ColumnWidths are valid.
-                    for (int intColumnIndex = 0; intColumnIndex < this.m_iaColumnWidths.Length; ++intColumnIndex)
+                    for (Int32 intColumnIndex = 0; intColumnIndex < this.m_iaColumnWidths.Length; ++intColumnIndex)
                     {
                         if (this.m_iaColumnWidths[intColumnIndex] < 1)
                             throw new ArgumentOutOfRangeException("value", "ColumnWidths cannot contain a number less than one.");
@@ -325,7 +325,7 @@ namespace Singularity.FileService
         /// </remarks>
         /// <exception cref="ArgumentOutOfRangeException">Setting the value to something less than one.</exception>
         /// <exception cref="InvalidOperationException">Attempting to modify the configuration, while parsing.</exception>
-        public int MaxBufferSize
+        public Int32 MaxBufferSize
         {
             get
             {
@@ -358,7 +358,7 @@ namespace Singularity.FileService
         ///   </para>
         /// </remarks>
         /// <exception cref="InvalidOperationException">Attempting to modify the configuration, while parsing.</exception>
-        public int MaxRows
+        public Int32 MaxRows
         {
             get
             {
@@ -393,7 +393,7 @@ namespace Singularity.FileService
         ///   </para>
         /// </remarks>
         /// <exception cref="InvalidOperationException">Attempting to modify the configuration, while parsing.</exception>
-        public int SkipStartingDataRows
+        public Int32 SkipStartingDataRows
         {
             get
             {
@@ -415,7 +415,7 @@ namespace Singularity.FileService
         /// </summary>
         /// <value>The number of rows of data that have been parsed.</value>
         /// <remarks>The DataRowNumber property is read-only.</remarks>
-        public int DataRowNumber
+        public Int32 DataRowNumber
         {
             get
             {
@@ -428,7 +428,7 @@ namespace Singularity.FileService
         /// <value>The number of rows in the file that have been parsed.</value>
         /// <remarks>The <see cref="FileRowNumber"/> property is read-only and includes all
         /// rows possible (header, comment, and data).</remarks>
-        public int FileRowNumber
+        public Int32 FileRowNumber
         {
             get
             {
@@ -457,7 +457,7 @@ namespace Singularity.FileService
         ///   </para>
         /// </remarks>
         /// <exception cref="InvalidOperationException">Attempting to modify the configuration, while parsing.</exception>
-        public int ExpectedColumnCount
+        public Int32 ExpectedColumnCount
         {
             get
             {
@@ -506,7 +506,7 @@ namespace Singularity.FileService
         ///   </para>
         /// </remarks>
         /// <exception cref="InvalidOperationException">Attempting to modify the configuration, while parsing.</exception>
-        public bool FirstRowHasHeader
+        public Boolean FirstRowHasHeader
         {
             get
             {
@@ -545,7 +545,7 @@ namespace Singularity.FileService
         ///   </para>
         /// </remarks>
         /// <exception cref="InvalidOperationException">Attempting to modify the configuration, while parsing.</exception>
-        public bool TrimResults
+        public Boolean TrimResults
         {
             get
             {
@@ -582,7 +582,7 @@ namespace Singularity.FileService
         ///   </para>
         /// </remarks>
         /// <exception cref="InvalidOperationException">Attempting to modify the configuration, while parsing.</exception>
-        public bool StripControlChars
+        public Boolean StripControlChars
         {
             get
             {
@@ -616,7 +616,7 @@ namespace Singularity.FileService
         ///   </para>
         /// </remarks>
         /// <exception cref="InvalidOperationException">Attempting to modify the configuration, while parsing.</exception>
-        public bool SkipEmptyRows
+        public Boolean SkipEmptyRows
         {
             get
             {
@@ -633,7 +633,7 @@ namespace Singularity.FileService
         /// <summary>
         ///   Gets whether or not the current row is an empty row.
         /// </summary>
-        public bool IsCurrentRowEmpty
+        public Boolean IsCurrentRowEmpty
         {
             get
             {
@@ -703,7 +703,7 @@ namespace Singularity.FileService
         ///   </para>
         /// </remarks>
         /// <exception cref="InvalidOperationException">Attempting to modify the configuration, while parsing.</exception>
-        public bool FirstRowSetsExpectedColumnCount
+        public Boolean FirstRowSetsExpectedColumnCount
         {
             get
             {
@@ -751,7 +751,7 @@ namespace Singularity.FileService
         ///   </para>
         /// </remarks>
         /// <exception cref="InvalidOperationException">Attempting to modify the configuration, while parsing.</exception>
-        public char? ColumnDelimiter
+        public Char? ColumnDelimiter
         {
             get
             {
@@ -797,7 +797,7 @@ namespace Singularity.FileService
         ///   </para>
         /// </remarks>
         /// <exception cref="InvalidOperationException">Attempting to modify the configuration, while parsing.</exception>
-        public char? TextQualifier
+        public Char? TextQualifier
         {
             get
             {
@@ -834,7 +834,7 @@ namespace Singularity.FileService
         ///   </para>
         /// </remarks>
         /// <exception cref="InvalidOperationException">Attempting to modify the configuration, while parsing.</exception>
-        public char? EscapeCharacter
+        public Char? EscapeCharacter
         {
             get
             {
@@ -864,7 +864,7 @@ namespace Singularity.FileService
         ///   </para>
         /// </remarks>
         /// <exception cref="InvalidOperationException">Attempting to modify the configuration, while parsing.</exception>
-        public char? CommentCharacter
+        public Char? CommentCharacter
         {
             get
             {
@@ -887,7 +887,7 @@ namespace Singularity.FileService
         ///   If the column is outside the bounds of the columns found or the column
         ///   does not possess a name, it will return <see langword="null"/>.
         /// </remarks>
-        public string this[int intColumnIndex]
+        public String this[Int32 intColumnIndex]
         {
             get
             {
@@ -906,7 +906,7 @@ namespace Singularity.FileService
         ///   If the header has yet to be parsed (or no header exists), the property will
         ///   return <see langword="null"/>.
         /// </remarks>
-        public string this[string strColumnName]
+        public String this[String strColumnName]
         {
             get
             {
@@ -918,7 +918,7 @@ namespace Singularity.FileService
         /// </summary>
         /// <value>The number of data columns found in the current row.</value>
         /// <remarks>The <see cref="ColumnCount"/> property is read-only.  The number of columns per row can differ, if allowed.</remarks>
-        public int ColumnCount
+        public Int32 ColumnCount
         {
             get
             {
@@ -930,7 +930,7 @@ namespace Singularity.FileService
         /// </summary>
         /// <value>The largest column count found thusfar from parsing.</value>
         /// <remarks>The <see cref="LargestColumnCount"/> property is read-only. The LargestColumnCount can increase due to rows with additional data.</remarks>
-        public int LargestColumnCount
+        public Int32 LargestColumnCount
         {
             get
             {
@@ -957,7 +957,7 @@ namespace Singularity.FileService
         /// <exception cref="ArgumentNullException">Supplying <see langword="null"/>.</exception>
         /// <exception cref="ArgumentException">Supplying a filename to a file that does not exist.</exception>
         /// <exception cref="InvalidOperationException">Attempting to modify the configuration, while parsing.</exception>
-        public void SetDataSource(string strFileName)
+        public void SetDataSource(String strFileName)
         {
             this.SetDataSource(strFileName, Encoding.UTF8);
         }
@@ -981,14 +981,14 @@ namespace Singularity.FileService
         /// <exception cref="ArgumentNullException">Supplying <see langword="null"/>.</exception>
         /// <exception cref="ArgumentException">Supplying a filename to a file that does not exist.</exception>
         /// <exception cref="InvalidOperationException">Attempting to modify the configuration, while parsing.</exception>
-        public void SetDataSource(string strFileName, Encoding encoding)
+        public void SetDataSource(String strFileName, Encoding encoding)
         {
             if (this.m_ParserState == ParserState.Parsing)
                 throw new InvalidOperationException("Parsing has already begun, close the existing parse first.");
             if (strFileName == null)
                 throw new ArgumentNullException("strFileName", "The filename cannot be a null value.");
             if (!System.IO.File.Exists(strFileName))
-                throw new ArgumentException(string.Format("File, {0}, does not exist.", strFileName), "strFileName");
+                throw new ArgumentException(String.Format("File, {0}, does not exist.", strFileName), "strFileName");
             if (encoding == null)
                 throw new ArgumentNullException("encoding", "The encoding cannot be a null value.");
 
@@ -1072,7 +1072,7 @@ namespace Singularity.FileService
         ///     }
         ///   </code>
         /// </example>
-        public bool Read()
+        public Boolean Read()
         {
             // Setup some internal variables for the parsing.
             this._InitializeParse();
@@ -1275,7 +1275,7 @@ namespace Singularity.FileService
         ///       p.Load(@"C:\MyData.txt");
         ///   </code>
         /// </example>
-        public void Load(string strConfigXmlFile)
+        public void Load(String strConfigXmlFile)
         {
             if (this.m_ParserState == ParserState.Parsing)
                 throw new InvalidOperationException("Parsing has already begun, close the existing parse first.");
@@ -1325,7 +1325,7 @@ namespace Singularity.FileService
 
             if ((xmlElement != null) && (xmlElement.ChildNodes.Count > 0))
             {
-                List<int> lstColumnWidths = new List<int>(xmlElement.ChildNodes.Count);
+                List<Int32> lstColumnWidths = new List<Int32>(xmlElement.ChildNodes.Count);
 
                 foreach (XmlElement xmlColumnWidth in xmlElement.ChildNodes)
                     if (xmlColumnWidth.Name == XML_COLUMN_WIDTH)
@@ -1503,7 +1503,7 @@ namespace Singularity.FileService
         ///       p.Load(@"C:\MyData.txt");
         ///   </code>
         /// </example>
-        public void Save(string strConfigXmlFile)
+        public void Save(String strConfigXmlFile)
         {
             XmlDocument xmlConfig = this.Save();
 
@@ -1544,7 +1544,7 @@ namespace Singularity.FileService
                 xmlRoot.AppendChild(xmlElement);
 
                 // Create the column width elements underneath the column widths node.
-                foreach (int intColumnWidth in this.m_iaColumnWidths)
+                foreach (Int32 intColumnWidth in this.m_iaColumnWidths)
                 {
                     xmlSubElement = xmlConfig.CreateElement(XML_COLUMN_WIDTH);
                     xmlSubElement.InnerText = intColumnWidth.ToString();
@@ -1708,7 +1708,7 @@ namespace Singularity.FileService
         ///     }
         ///   </code>
         /// </example>
-        public int GetColumnIndex(string strColumnName)
+        public Int32 GetColumnIndex(String strColumnName)
         {
             return this._GetColumnIndex(strColumnName);
         }
@@ -1745,7 +1745,7 @@ namespace Singularity.FileService
         ///     }
         ///   </code>
         /// </example>
-        public string GetColumnName(int intColumnIndex)
+        public String GetColumnName(Int32 intColumnIndex)
         {
             return this._GetColumnName(intColumnIndex);
         }
@@ -1779,11 +1779,11 @@ namespace Singularity.FileService
         /// <summary>
         ///   The current values of all the parsed columns within the row.
         /// </summary>
-        protected List<string> m_lstData;
+        protected List<String> m_lstData;
         /// <summary>
         ///   The current values of all the parsed column headers within the row.
         /// </summary>
-        protected List<string> m_lstColumnNames;
+        protected List<String> m_lstColumnNames;
 
         /// <summary>
         /// Raises the <see cref="Disposed"/> Event.
@@ -1799,7 +1799,7 @@ namespace Singularity.FileService
         /// <param name="blnDisposing">
         ///   <see langword="true"/> to release both managed and unmanaged resources; <see langword="false"/> to release only unmanaged resources.
         /// </param>
-        protected virtual void Dispose(bool blnDisposing)
+        protected virtual void Dispose(Boolean blnDisposing)
         {
             lock (this.m_objLock)
             {
@@ -1827,20 +1827,20 @@ namespace Singularity.FileService
         #region Configuration Data
 
         private FieldType m_textFieldType;
-        private int[] m_iaColumnWidths;
-        private int m_intMaxBufferSize;
-        private int m_intMaxRows;
-        private int m_intSkipStartingDataRows;
-        private int m_intExpectedColumnCount;
-        private bool m_blnFirstRowHasHeader;
-        private bool m_blnTrimResults;
-        private bool m_blnStripControlChars;
-        private bool m_blnSkipEmptyRows;
-        private bool m_blnFirstRowSetsExpectedColumnCount;
-        private char? m_chColumnDelimiter;
-        private char? m_chTextQualifier;
-        private char? m_chEscapeCharacter;
-        private char? m_chCommentCharacter;
+        private Int32[] m_iaColumnWidths;
+        private Int32 m_intMaxBufferSize;
+        private Int32 m_intMaxRows;
+        private Int32 m_intSkipStartingDataRows;
+        private Int32 m_intExpectedColumnCount;
+        private Boolean m_blnFirstRowHasHeader;
+        private Boolean m_blnTrimResults;
+        private Boolean m_blnStripControlChars;
+        private Boolean m_blnSkipEmptyRows;
+        private Boolean m_blnFirstRowSetsExpectedColumnCount;
+        private Char? m_chColumnDelimiter;
+        private Char? m_chTextQualifier;
+        private Char? m_chEscapeCharacter;
+        private Char? m_chCommentCharacter;
 
         #endregion Configuration Data
 
@@ -1848,27 +1848,27 @@ namespace Singularity.FileService
 
         private TextReader m_txtReader;
 
-        private bool m_blnIsCurrentRowEmpty;
-        private bool m_blnHeaderRowFound;
-        private bool m_blnFoundTextQualifierAtStart;
-        private bool m_blnContainsEscapedCharacters;
+        private Boolean m_blnIsCurrentRowEmpty;
+        private Boolean m_blnHeaderRowFound;
+        private Boolean m_blnFoundTextQualifierAtStart;
+        private Boolean m_blnContainsEscapedCharacters;
 
-        private int m_intStartIndexOfNewData;
-        private int m_intNumberOfCharactersInBuffer;
-        private int m_intDataRowNumber;
-        private int m_intFileRowNumber;
-        private int m_intReadIndex;
-        private int m_intStartOfCurrentColumnIndex;
+        private Int32 m_intStartIndexOfNewData;
+        private Int32 m_intNumberOfCharactersInBuffer;
+        private Int32 m_intDataRowNumber;
+        private Int32 m_intFileRowNumber;
+        private Int32 m_intReadIndex;
+        private Int32 m_intStartOfCurrentColumnIndex;
 
-        private char m_chCurrentChar;
-        private char[] m_caBuffer;
+        private Char m_chCurrentChar;
+        private Char[] m_caBuffer;
 
         private RowType m_RowType;
 
         #endregion Parsing Variables
 
-        private object m_objLock;
-        private bool m_blnDisposed;
+        private Object m_objLock;
+        private Boolean m_blnDisposed;
 
         /// <summary>
         ///   Initializes internal variables that are maintained for internal tracking
@@ -1908,18 +1908,18 @@ namespace Singularity.FileService
                     this.m_intStartOfCurrentColumnIndex = -1;
 
                     if (this.m_lstData == null)
-                        this.m_lstData = new List<string>();
+                        this.m_lstData = new List<String>();
                     else
                         this.m_lstData.Clear();
 
                     if (this.m_lstColumnNames == null)
-                        this.m_lstColumnNames = new List<string>();
+                        this.m_lstColumnNames = new List<String>();
                     else
                         this.m_lstColumnNames.Clear();
 
                     // Only allocate the buffers if they are null or improperly sized.
                     if ((this.m_caBuffer == null) || (this.m_caBuffer.Length != this.m_intMaxBufferSize))
-                        this.m_caBuffer = new char[this.m_intMaxBufferSize];
+                        this.m_caBuffer = new Char[this.m_intMaxBufferSize];
 
                     break;
 
@@ -1962,9 +1962,9 @@ namespace Singularity.FileService
         ///     <see langword="false"/> - No more characters are available in the data source.
         ///   </para>
         /// </returns>
-        private bool _GetNextCharacter()
+        private Boolean _GetNextCharacter()
         {
-            int intCharactersRead;
+            Int32 intCharactersRead;
 
             // See if we have any more characters left in the input buffer.
             if (this.m_intReadIndex >= this.m_intNumberOfCharactersInBuffer)
@@ -2082,7 +2082,7 @@ namespace Singularity.FileService
         ///     <see langword="false"/> - Clean-up the parser to all it to be reused later.
         ///   </para>
         /// </param>
-        private void _CleanUpParser(bool blnCompletely)
+        private void _CleanUpParser(Boolean blnCompletely)
         {
             this.m_ParserState = ParserState.Finished;
 
@@ -2149,9 +2149,9 @@ namespace Singularity.FileService
         ///   If parsing a fixed width format and the number of columns found differs
         ///   what was expected, this exception will be thrown.
         /// </exception>
-        private void _HandleEndOfRow(int intEndOfDataIndex)
+        private void _HandleEndOfRow(Int32 intEndOfDataIndex)
         {
-            bool blnIsColumnEmpty;
+            Boolean blnIsColumnEmpty;
 
             blnIsColumnEmpty = (intEndOfDataIndex < this.m_intStartOfCurrentColumnIndex);
 
@@ -2183,7 +2183,7 @@ namespace Singularity.FileService
             {
                 // Have we got a row that meets our expected number of columns.
                 if ((this.m_intExpectedColumnCount > 0) && (this.m_lstData.Count != this.m_intExpectedColumnCount))
-                    throw this._CreateParsingException(string.Format("Expected column count of {0} not found.", this.m_intExpectedColumnCount));
+                    throw this._CreateParsingException(String.Format("Expected column count of {0} not found.", this.m_intExpectedColumnCount));
 
                 // If we have a valid row, update the expected column count if we have the flag set.
                 // This only makes sense when using delimiters, as fixed width would have already set this value.
@@ -2206,14 +2206,14 @@ namespace Singularity.FileService
         ///   than zero (which is by default for a fixed width format) and the number of columns
         ///   found differs from what's expected, this exception will be thrown.
         /// </exception>
-        private void _ExtractColumn(int intEndOfDataIndex)
+        private void _ExtractColumn(Int32 intEndOfDataIndex)
         {
-            int intStartOfDataIndex, intRemovedCharacters;
-            bool blnTrimResults, blnInText;
+            Int32 intStartOfDataIndex, intRemovedCharacters;
+            Boolean blnTrimResults, blnInText;
 
             // Make sure we haven't exceeded our expected column count.
             if ((this.m_intExpectedColumnCount > 0) && (this.m_lstData.Count >= this.m_intExpectedColumnCount))
-                throw this._CreateParsingException(string.Format("Current column {0} exceeds ExpectedColumnCount of {1}.",
+                throw this._CreateParsingException(String.Format("Current column {0} exceeds ExpectedColumnCount of {1}.",
                   this.m_lstData.Count + 1,
                   this.m_intExpectedColumnCount));
 
@@ -2244,10 +2244,10 @@ namespace Singularity.FileService
                     intRemovedCharacters = 0;
 
                     // Escape out all of the control characters by sliding down the subsequent characters over them.
-                    for (int intSource = intStartOfDataIndex, intDestination = intStartOfDataIndex; intSource <= intEndOfDataIndex; ++intSource)
+                    for (Int32 intSource = intStartOfDataIndex, intDestination = intStartOfDataIndex; intSource <= intEndOfDataIndex; ++intSource)
                     {
                         // For every control character found, we must move up the source indice and increment the stripped counter.
-                        if (this.m_blnStripControlChars && char.IsControl(this.m_caBuffer[intSource]))
+                        if (this.m_blnStripControlChars && Char.IsControl(this.m_caBuffer[intSource]))
                         {
                             ++intRemovedCharacters;
                             continue;
@@ -2277,20 +2277,20 @@ namespace Singularity.FileService
                 if (blnTrimResults)
                 {
                     // Move up the beginning indice if we have white-space.
-                    while ((intStartOfDataIndex <= intEndOfDataIndex) && char.IsWhiteSpace(this.m_caBuffer[intStartOfDataIndex]))
+                    while ((intStartOfDataIndex <= intEndOfDataIndex) && Char.IsWhiteSpace(this.m_caBuffer[intStartOfDataIndex]))
                         ++intStartOfDataIndex;
 
                     // Move up the ending indice if we have white-space.
-                    while ((intStartOfDataIndex <= intEndOfDataIndex) && char.IsWhiteSpace(this.m_caBuffer[intEndOfDataIndex]))
+                    while ((intStartOfDataIndex <= intEndOfDataIndex) && Char.IsWhiteSpace(this.m_caBuffer[intEndOfDataIndex]))
                         --intEndOfDataIndex;
                 }
 
                 // Add the results to the string collection of data.
-                this.m_lstData.Add(new string(this.m_caBuffer, intStartOfDataIndex, intEndOfDataIndex - intStartOfDataIndex + 1));
+                this.m_lstData.Add(new String(this.m_caBuffer, intStartOfDataIndex, intEndOfDataIndex - intStartOfDataIndex + 1));
             }
             else
             {
-                this.m_lstData.Add(string.Empty);
+                this.m_lstData.Add(String.Empty);
             }
 
             // If we're extending beyond the supplied column headings, add a new column.
@@ -2306,7 +2306,7 @@ namespace Singularity.FileService
         /// <param name="intStartIndex">The index that starts the beginning of the data to be moved.</param>
         /// <exception cref="ParsingException">In the event that the entire buffer is full and a single
         /// column cannot be parsed from it, parsing can no longer continue.</exception>
-        private void _CopyRemainingDataToFront(int intStartIndex)
+        private void _CopyRemainingDataToFront(Int32 intStartIndex)
         {
             // Make sure we haven't exceeded our buffer size.
             if ((intStartIndex == 0) && (this.m_intNumberOfCharactersInBuffer == this.m_intMaxBufferSize))
@@ -2315,7 +2315,7 @@ namespace Singularity.FileService
             }
             else if (this.m_RowType != RowType.CommentRow)
             {
-                int intLength = (this.m_intNumberOfCharactersInBuffer - intStartIndex);
+                Int32 intLength = (this.m_intNumberOfCharactersInBuffer - intStartIndex);
 
                 // Shift the value from the end of the buffer to the beginning.
                 if (intStartIndex > 0)
@@ -2344,7 +2344,7 @@ namespace Singularity.FileService
         /// </remarks>
         /// <returns>The name of the column at the given ColumnIndex, if
         /// none exists <see langword="null"/> is returned.</returns>
-        private string _GetColumnName(int intColumnIndex)
+        private String _GetColumnName(Int32 intColumnIndex)
         {
             if (this.m_blnHeaderRowFound && ((intColumnIndex > -1) && (intColumnIndex < this.m_lstColumnNames.Count)))
                 return this.m_lstColumnNames[intColumnIndex];
@@ -2365,7 +2365,7 @@ namespace Singularity.FileService
         /// <param name="strColumnName">The name of the column to find the index for.</param>
         /// <returns>The index of the column with the name strColumnName.
         /// If none exists, -1 will be returned.</returns>
-        private int _GetColumnIndex(string strColumnName)
+        private Int32 _GetColumnIndex(String strColumnName)
         {
             if (this.m_blnHeaderRowFound && (strColumnName != null))
                 return this.m_lstColumnNames.IndexOf(strColumnName);
@@ -2377,14 +2377,14 @@ namespace Singularity.FileService
         /// </summary>
         /// <param name="strMessage">The exception specific information to go into the <see cref="ParsingException"/>.</param>
         /// <returns>The <see cref="ParsingException"/> with the provided message.</returns>
-        private ParsingException _CreateParsingException(string strMessage)
+        private ParsingException _CreateParsingException(String strMessage)
         {
-            int intColumnNumber;
+            Int32 intColumnNumber;
 
             intColumnNumber = (this.m_lstData != null) ? this.m_lstData.Count : -1;
 
             return new ParsingException(
-                string.Format("{0} [Row: {1}, Column: {2}]",
+                String.Format("{0} [Row: {1}, Column: {2}]",
                     strMessage,
                     this.m_intFileRowNumber,
                     intColumnNumber),

@@ -113,8 +113,8 @@ namespace Singularity.DataService
 			_disposed = true;
 		}
 
-		private static readonly Dictionary<int, string> _sqlErrorTextDict =
-			 new Dictionary<int, string>
+		private static readonly Dictionary<Int32, String> _sqlErrorTextDict =
+			 new Dictionary<Int32, String>
 		{
 		 {547, "This operation failed because another data entry uses this entry."},
 		 {2601, "One of the properties is marked as Unique index and there is already an entry with that value."}

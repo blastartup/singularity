@@ -100,7 +100,7 @@ namespace Singularity
 		/// The zero-based index of the first occurrence of an element that matches the conditions defined by 
 		/// <paramref name="match"/>, if found; otherwise, –1.
 		/// </returns>
-		/// <param name="match">The <see cref="T:System.Predicate`1"/> delegate that defines the conditions of the element to search for.</param><exception cref="T:System.ArgumentNullException"><paramref name="match"/> is null.</exception><exception cref="T:System.ArgumentOutOfRangeException"><paramref name="startIndex"/> is outside the range of valid indexes for the <see cref="T:System.Collections.Generic.List`1"/>.-or-<paramref name="count"/> is less than 0.-or-<paramref name="startIndex"/> and <paramref name="count"/> do not specify a valid section in the <see cref="T:System.Collections.Generic.List`1"/>.</exception>
+		/// <param name="match">The <see cref="T:System.Predicate`1"/> delegate that defines the conditions of the element to search for.</param><exception cref="T:System.ArgumentNullException"><paramref name="match"/> is null.</exception>
 		public static Int32 FindIndex<T>(this List<T> list, Predicate<T> match)
 		{
 			Contract.Requires(match != null);

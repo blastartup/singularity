@@ -6,10 +6,10 @@ namespace Singularity.DataService
 {
 	public class CsvWriter
 	{
-		readonly bool _isFirstRowHeadings;
+		readonly Boolean _isFirstRowHeadings;
 		readonly String _seperator;
 		
-		public CsvWriter(bool isFirstRowHeadings = false, String seperator = ",")
+		public CsvWriter(Boolean isFirstRowHeadings = false, String seperator = ",")
 		{
 			_isFirstRowHeadings = isFirstRowHeadings;
 			_seperator = seperator;
@@ -17,8 +17,8 @@ namespace Singularity.DataService
 
 		private void OutputToStreamWriter(DataTable dataSource, StreamWriter sw)
 		{
-			int columnCount = dataSource.Columns.Count;
-			int lastColumn = GetLastColumn(columnCount - 1);
+			Int32 columnCount = dataSource.Columns.Count;
+			Int32 lastColumn = GetLastColumn(columnCount - 1);
 
 			if (_isFirstRowHeadings)
 			{
@@ -66,7 +66,7 @@ namespace Singularity.DataService
 		/// </summary>
 		/// <param name="dataSource"></param>
 		/// <param name="stream"></param>
-		public bool WriteToStream(DataTable dataSource, Stream stream)
+		public Boolean WriteToStream(DataTable dataSource, Stream stream)
 		{
 			var sw = new StreamWriter(stream);
 			OutputToStreamWriter(dataSource, sw);
@@ -75,7 +75,7 @@ namespace Singularity.DataService
 			return true;
 		}
 
-		public bool WriteToFile(DataTable dataSource, string fileName)
+		public Boolean WriteToFile(DataTable dataSource, String fileName)
 		{
 			using (var fs = new FileStream(fileName, FileMode.Create))
 			{
@@ -83,12 +83,12 @@ namespace Singularity.DataService
 			}
 		}
 
-		protected virtual int GetLastColumn(int defaultValue)
+		protected virtual Int32 GetLastColumn(Int32 defaultValue)
 		{
 			return defaultValue;
 		}
 
-		protected virtual bool IsRequiredColumn(int idx)
+		protected virtual Boolean IsRequiredColumn(Int32 idx)
 		{
 			return true;
 		}

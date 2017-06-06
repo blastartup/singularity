@@ -23,7 +23,7 @@ namespace Singularity.WebTime
 
 
 		// Protected implementation of Dispose pattern. 
-		void Dispose(bool disposing)
+		void Dispose(Boolean disposing)
 		{
 			if (_disposed)
 			{
@@ -39,6 +39,6 @@ namespace Singularity.WebTime
 		}
 
 		// Flag: Has Dispose already been called? 
-		bool _disposed = false;
+		Boolean _disposed = false;
 	}
 }

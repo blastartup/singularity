@@ -9,9 +9,9 @@ namespace Singularity.Test
 		[TestMethod]
 		public void TestKeepNumericCharacters()
 		{
-			const string validChars = "0123456789";
+			const String validChars = "0123456789";
 
-			const string invalidChars = " \r\n !@#$%^&*()_+ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+			const String invalidChars = " \r\n !@#$%^&*()_+ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
 
 			TestPermutations(StringExtension.KeepNumericCharacters, validChars, invalidChars);
 
@@ -20,14 +20,14 @@ namespace Singularity.Test
 		[TestMethod]
 		public void TestKeepAlphanumericCharacters()
 		{
-			const string validChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ abcdefghijklmnopqrstuvwxyz 0123456789";
+			const String validChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ abcdefghijklmnopqrstuvwxyz 0123456789";
 
-			const string invalidChars = "\r\n!@#$%^&*()_+";
+			const String invalidChars = "\r\n!@#$%^&*()_+";
 
 			TestPermutations(StringExtension.KeepAlphanumericCharacters, validChars, invalidChars);
 		}
 
-		void TestPermutations(Func<String,string> func, string validChars, string invalidChars)
+		void TestPermutations(Func<String,String> func, String validChars, String invalidChars)
 		{
 
 			Assert.AreEqual(validChars, func(validChars)); //as is

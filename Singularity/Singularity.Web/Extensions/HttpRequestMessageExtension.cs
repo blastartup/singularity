@@ -15,15 +15,15 @@ namespace Singularity.Web
 		/// <param name="request"></param>
 		/// <param name="uriMask">A string format mask with parameter value placeholders. E.g. "{0}/OtherEntities/{1}"</param>
 		/// <param name="values"></param>
-		public static Uri GetApiUri(this HttpRequestMessage request, string uriMask, params string[] values)
+		public static Uri GetApiUri(this HttpRequestMessage request, String uriMask, params String[] values)
 		{
-			string scheme = request.RequestUri.Scheme;
-			string authority = request.RequestUri.Authority;
-			string fullHost = _mask.FormatX(scheme, authority);
+			String scheme = request.RequestUri.Scheme;
+			String authority = request.RequestUri.Authority;
+			String fullHost = _mask.FormatX(scheme, authority);
 
 			return new Uri(fullHost + uriMask.FormatX(values));
 		}
 
-		private static string _mask = "{0}://{1}/api/";
+		private static String _mask = "{0}://{1}/api/";
 	}
 }

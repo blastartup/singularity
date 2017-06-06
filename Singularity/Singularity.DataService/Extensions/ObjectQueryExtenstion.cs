@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Data.Entity.Core.Objects;
 using System.Linq;
 
@@ -16,7 +17,7 @@ namespace Singularity.DataService
 		/// <param name="includes">comma separated list of related objects to inclde in the query results</param>
 		/// <param name="allowedIncludes">allowed related object names</param>
 		/// <returns>a new query with includes applied</returns>
-		public static ObjectQuery<T> ApplyIncludes<T>(this ObjectQuery<T> query, IEnumerable<string> includes, IEnumerable<string> allowedIncludes = null)
+		public static ObjectQuery<T> ApplyIncludes<T>(this ObjectQuery<T> query, IEnumerable<String> includes, IEnumerable<String> allowedIncludes = null)
 		{
 			if (includes.IsEmpty())
 			{

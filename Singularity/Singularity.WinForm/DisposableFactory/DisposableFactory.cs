@@ -48,6 +48,6 @@ namespace Singularity.WinForm
 		static IContextProvider ContextProvider => _contextProvider ?? (_contextProvider = new ThreadContextProvider());
 		private static IContextProvider _contextProvider;
 
-		private static readonly object AccessLock = new object();
+		private static readonly Object AccessLock = new Object();
 	}
 }

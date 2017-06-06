@@ -89,7 +89,7 @@ namespace Singularity
 		{
 			unchecked // Overflow is fine, just wrap
 			{
-				int hash = (int)2166136261;
+				Int32 hash = (Int32)2166136261;
 				// Suitable nullity checks etc, of course :)
 				hash = hash * 16777619 ^ _alternateValue.GetHashCode();
 				hash = hash * 16777619 ^ _code.GetHashCode();

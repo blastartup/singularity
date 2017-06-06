@@ -91,7 +91,7 @@ namespace Singularity.WinForm
         /// 
         /// Default is: 70% of the working area width.
         /// </summary>
-        public static double MAX_WIDTH_FACTOR = 0.7;
+        public static Double MAX_WIDTH_FACTOR = 0.7;
 
         /// <summary>
         /// Defines the maximum height for all FlexibleMessageBox instances in percent of the working area.
@@ -102,7 +102,7 @@ namespace Singularity.WinForm
         /// 
         /// Default is: 90% of the working area height.
         /// </summary>
-        public static double MAX_HEIGHT_FACTOR = 0.9;
+        public static Double MAX_HEIGHT_FACTOR = 0.9;
 
         /// <summary>
         /// Defines the font for all FlexibleMessageBox instances.
@@ -120,9 +120,9 @@ namespace Singularity.WinForm
         /// </summary>
         /// <param name="text">The text.</param>
         /// <returns>The dialog result.</returns>
-        public static DialogResult Show(string text)
+        public static DialogResult Show(String text)
         {
-            return FlexibleMessageBoxForm.Show(null, text, string.Empty, MessageBoxButtons.OK, MessageBoxIcon.None, MessageBoxDefaultButton.Button1);
+            return FlexibleMessageBoxForm.Show(null, text, String.Empty, MessageBoxButtons.OK, MessageBoxIcon.None, MessageBoxDefaultButton.Button1);
         }
 
         /// <summary>
@@ -131,9 +131,9 @@ namespace Singularity.WinForm
         /// <param name="owner">The owner.</param>
         /// <param name="text">The text.</param>
         /// <returns>The dialog result.</returns>
-        public static DialogResult Show(IWin32Window owner, string text)
+        public static DialogResult Show(IWin32Window owner, String text)
         {
-            return FlexibleMessageBoxForm.Show(owner, text, string.Empty, MessageBoxButtons.OK, MessageBoxIcon.None, MessageBoxDefaultButton.Button1);
+            return FlexibleMessageBoxForm.Show(owner, text, String.Empty, MessageBoxButtons.OK, MessageBoxIcon.None, MessageBoxDefaultButton.Button1);
         }
 
         /// <summary>
@@ -142,7 +142,7 @@ namespace Singularity.WinForm
         /// <param name="text">The text.</param>
         /// <param name="caption">The caption.</param>
         /// <returns>The dialog result.</returns>
-        public static DialogResult Show(string text, string caption)
+        public static DialogResult Show(String text, String caption)
         {
             return FlexibleMessageBoxForm.Show(null, text, caption, MessageBoxButtons.OK, MessageBoxIcon.None, MessageBoxDefaultButton.Button1);
         }
@@ -154,7 +154,7 @@ namespace Singularity.WinForm
         /// <param name="text">The text.</param>
         /// <param name="caption">The caption.</param>
         /// <returns>The dialog result.</returns>
-        public static DialogResult Show(IWin32Window owner, string text, string caption)
+        public static DialogResult Show(IWin32Window owner, String text, String caption)
         {
             return FlexibleMessageBoxForm.Show(owner, text, caption, MessageBoxButtons.OK, MessageBoxIcon.None, MessageBoxDefaultButton.Button1);
         }
@@ -166,7 +166,7 @@ namespace Singularity.WinForm
         /// <param name="caption">The caption.</param>
         /// <param name="buttons">The buttons.</param>
         /// <returns>The dialog result.</returns>
-        public static DialogResult Show(string text, string caption, MessageBoxButtons buttons)
+        public static DialogResult Show(String text, String caption, MessageBoxButtons buttons)
         {
             return FlexibleMessageBoxForm.Show(null, text, caption, buttons, MessageBoxIcon.None, MessageBoxDefaultButton.Button1);
         }
@@ -179,7 +179,7 @@ namespace Singularity.WinForm
         /// <param name="caption">The caption.</param>
         /// <param name="buttons">The buttons.</param>
         /// <returns>The dialog result.</returns>
-        public static DialogResult Show(IWin32Window owner, string text, string caption, MessageBoxButtons buttons)
+        public static DialogResult Show(IWin32Window owner, String text, String caption, MessageBoxButtons buttons)
         {
             return FlexibleMessageBoxForm.Show(owner, text, caption, buttons, MessageBoxIcon.None, MessageBoxDefaultButton.Button1);
         }
@@ -192,7 +192,7 @@ namespace Singularity.WinForm
         /// <param name="buttons">The buttons.</param>
         /// <param name="icon">The icon.</param>
         /// <returns></returns>
-        public static DialogResult Show(string text, string caption, MessageBoxButtons buttons, MessageBoxIcon icon)
+        public static DialogResult Show(String text, String caption, MessageBoxButtons buttons, MessageBoxIcon icon)
         {
             return FlexibleMessageBoxForm.Show(null, text, caption, buttons, icon, MessageBoxDefaultButton.Button1);
         }
@@ -206,7 +206,7 @@ namespace Singularity.WinForm
         /// <param name="buttons">The buttons.</param>
         /// <param name="icon">The icon.</param>
         /// <returns>The dialog result.</returns>
-        public static DialogResult Show(IWin32Window owner, string text, string caption, MessageBoxButtons buttons, MessageBoxIcon icon)
+        public static DialogResult Show(IWin32Window owner, String text, String caption, MessageBoxButtons buttons, MessageBoxIcon icon)
         {
             return FlexibleMessageBoxForm.Show(owner, text, caption, buttons, icon, MessageBoxDefaultButton.Button1);
         }
@@ -220,7 +220,7 @@ namespace Singularity.WinForm
         /// <param name="icon">The icon.</param>
         /// <param name="defaultButton">The default button.</param>
         /// <returns>The dialog result.</returns>
-        public static DialogResult Show(string text, string caption, MessageBoxButtons buttons, MessageBoxIcon icon, MessageBoxDefaultButton defaultButton)
+        public static DialogResult Show(String text, String caption, MessageBoxButtons buttons, MessageBoxIcon icon, MessageBoxDefaultButton defaultButton)
         {
             return FlexibleMessageBoxForm.Show(null, text, caption, buttons, icon, defaultButton);
         }
@@ -235,7 +235,7 @@ namespace Singularity.WinForm
         /// <param name="icon">The icon.</param>
         /// <param name="defaultButton">The default button.</param>
         /// <returns>The dialog result.</returns>
-        public static DialogResult Show(IWin32Window owner, string text, string caption, MessageBoxButtons buttons, MessageBoxIcon icon, MessageBoxDefaultButton defaultButton)
+        public static DialogResult Show(IWin32Window owner, String text, String caption, MessageBoxButtons buttons, MessageBoxIcon icon, MessageBoxDefaultButton defaultButton)
         {
             return FlexibleMessageBoxForm.Show(owner, text, caption, buttons, icon, defaultButton);
         }
@@ -261,7 +261,7 @@ namespace Singularity.WinForm
             /// Verwendete Ressourcen bereinigen.
             /// </summary>
             /// <param name="disposing">True, wenn verwaltete Ressourcen gelöscht werden sollen; andernfalls False.</param>
-            protected override void Dispose(bool disposing)
+            protected override void Dispose(Boolean disposing)
             {
                 if (disposing && (components != null))
                 {
@@ -311,7 +311,7 @@ namespace Singularity.WinForm
                 this.richTextBoxMessage.BackColor = System.Drawing.Color.White;
                 this.richTextBoxMessage.BorderStyle = System.Windows.Forms.BorderStyle.None;
                 this.richTextBoxMessage.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.FlexibleMessageBoxFormBindingSource, "MessageText", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-                this.richTextBoxMessage.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+                this.richTextBoxMessage.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((Byte)(0)));
                 this.richTextBoxMessage.Location = new System.Drawing.Point(50, 26);
                 this.richTextBoxMessage.Margin = new System.Windows.Forms.Padding(0);
                 this.richTextBoxMessage.Name = "richTextBoxMessage";
@@ -430,7 +430,7 @@ namespace Singularity.WinForm
             #region Private members
 
             private MessageBoxDefaultButton defaultButton;
-            private int visibleButtonsCount;
+            private Int32 visibleButtonsCount;
             private TwoLetterISOLanguageID languageID = TwoLetterISOLanguageID.en;
 
             #endregion
@@ -460,11 +460,11 @@ namespace Singularity.WinForm
             /// </summary>
             /// <param name="message">The message.</param>
             /// <returns>The string rows as 1-dimensional array</returns>
-            private static string[] GetStringRows(string message)
+            private static String[] GetStringRows(String message)
             {
-                if (string.IsNullOrEmpty(message)) return null;
+                if (String.IsNullOrEmpty(message)) return null;
 
-                var messageRows = message.Split(new char[] { '\n' }, StringSplitOptions.None);
+                var messageRows = message.Split(new Char[] { '\n' }, StringSplitOptions.None);
                 return messageRows;
             }
 
@@ -474,7 +474,7 @@ namespace Singularity.WinForm
             /// </summary>
             /// <param name="buttonID">The ID of the button.</param>
             /// <returns>The button text</returns>
-            private string GetButtonText(ButtonID buttonID)
+            private String GetButtonText(ButtonID buttonID)
             {
                 var buttonTextArrayIndex = Convert.ToInt32(buttonID);
                 
@@ -496,10 +496,10 @@ namespace Singularity.WinForm
             /// </summary>
             /// <param name="workingAreaFactor">The given working area factor.</param>
             /// <returns>The corrected given working area factor.</returns>
-            private static double GetCorrectedWorkingAreaFactor(double workingAreaFactor)
+            private static Double GetCorrectedWorkingAreaFactor(Double workingAreaFactor)
             {
-                const double MIN_FACTOR = 0.2;
-                const double MAX_FACTOR = 1.0;
+                const Double MIN_FACTOR = 0.2;
+                const Double MAX_FACTOR = 1.0;
 
                 if (workingAreaFactor < MIN_FACTOR) return MIN_FACTOR;
                 if (workingAreaFactor > MAX_FACTOR) return MAX_FACTOR;
@@ -532,7 +532,7 @@ namespace Singularity.WinForm
             /// <param name="flexibleMessageBoxForm">The FlexibleMessageBox dialog.</param>
             /// <param name="text">The text (the longest text row is used to calculate the dialog width).</param>
             /// <param name="text">The caption (this can also affect the dialog width).</param>
-            private static void SetDialogSizes(FlexibleMessageBoxForm flexibleMessageBoxForm, string text, string caption)
+            private static void SetDialogSizes(FlexibleMessageBoxForm flexibleMessageBoxForm, String text, String caption)
             {
                 //First set the bounds for the maximum dialog size
                 flexibleMessageBoxForm.MaximumSize = new Size(Convert.ToInt32(SystemInformation.WorkingArea.Width * FlexibleMessageBoxForm.GetCorrectedWorkingAreaFactor(MAX_WIDTH_FACTOR)),
@@ -546,7 +546,7 @@ namespace Singularity.WinForm
                 var textHeight = TextRenderer.MeasureText(text, FONT).Height;
                     
                 //Calculate width for longest text line
-                const int SCROLLBAR_WIDTH_OFFSET = 15;
+                const Int32 SCROLLBAR_WIDTH_OFFSET = 15;
                 var longestTextRowWidth = stringRows.Max(textForRow => TextRenderer.MeasureText(textForRow, FONT).Width);
                 var captionWidth = TextRenderer.MeasureText(caption, SystemFonts.CaptionFont).Width;
                 var textWidth = Math.Max(longestTextRowWidth + SCROLLBAR_WIDTH_OFFSET, captionWidth);
@@ -705,9 +705,9 @@ namespace Singularity.WinForm
             /// </summary>
             /// <param name="sender">The source of the event.</param>
             /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
-            private void FlexibleMessageBoxForm_Shown(object sender, EventArgs e)
+            private void FlexibleMessageBoxForm_Shown(Object sender, EventArgs e)
             {
-                int buttonIndexToFocus = 1;
+                Int32 buttonIndexToFocus = 1;
                 Button buttonToFocus;
 
                 //Set the default button...
@@ -748,7 +748,7 @@ namespace Singularity.WinForm
             /// </summary>
             /// <param name="sender">The source of the event.</param>
             /// <param name="e">The <see cref="System.Windows.Forms.LinkClickedEventArgs"/> instance containing the event data.</param>
-            private void richTextBoxMessage_LinkClicked(object sender, LinkClickedEventArgs e)
+            private void richTextBoxMessage_LinkClicked(Object sender, LinkClickedEventArgs e)
             {
                 try
                 {
@@ -772,14 +772,14 @@ namespace Singularity.WinForm
             /// </summary>
             /// <param name="sender">The source of the event.</param>
             /// <param name="e">The <see cref="System.Windows.Forms.KeyEventArgs"/> instance containing the event data.</param>
-            void FlexibleMessageBoxForm_KeyUp(object sender, KeyEventArgs e)
+            void FlexibleMessageBoxForm_KeyUp(Object sender, KeyEventArgs e)
             {
                 //Handle standard key strikes for clipboard copy: "Ctrl + C" and "Ctrl + Insert"
                 if (e.Control && (e.KeyCode == Keys.C || e.KeyCode == Keys.Insert))
                 {
-                    var buttonsTextLine = (this.button1.Visible ? this.button1.Text + STANDARD_MESSAGEBOX_SEPARATOR_SPACES : string.Empty)
-                                        + (this.button2.Visible ? this.button2.Text + STANDARD_MESSAGEBOX_SEPARATOR_SPACES : string.Empty)
-                                        + (this.button3.Visible ? this.button3.Text + STANDARD_MESSAGEBOX_SEPARATOR_SPACES : string.Empty);
+                    var buttonsTextLine = (this.button1.Visible ? this.button1.Text + STANDARD_MESSAGEBOX_SEPARATOR_SPACES : String.Empty)
+                                        + (this.button2.Visible ? this.button2.Text + STANDARD_MESSAGEBOX_SEPARATOR_SPACES : String.Empty)
+                                        + (this.button3.Visible ? this.button3.Text + STANDARD_MESSAGEBOX_SEPARATOR_SPACES : String.Empty);
 
                     //Build same clipboard text like the standard .Net MessageBox
                     var textForClipboard = STANDARD_MESSAGEBOX_SEPARATOR_LINES
@@ -787,7 +787,7 @@ namespace Singularity.WinForm
                                          + STANDARD_MESSAGEBOX_SEPARATOR_LINES
                                          + this.richTextBoxMessage.Text + Environment.NewLine
                                          + STANDARD_MESSAGEBOX_SEPARATOR_LINES
-                                         + buttonsTextLine.Replace("&", string.Empty) + Environment.NewLine
+                                         + buttonsTextLine.Replace("&", String.Empty) + Environment.NewLine
                                          + STANDARD_MESSAGEBOX_SEPARATOR_LINES;
 
                     //Set text in clipboard
@@ -802,12 +802,12 @@ namespace Singularity.WinForm
             /// <summary>
             /// The text that is been used for the heading.
             /// </summary>
-            public string CaptionText { get; set; }
+            public String CaptionText { get; set; }
 
             /// <summary>
             /// The text that is been used in the FlexibleMessageBoxForm.
             /// </summary>
-            public string MessageText { get; set; }
+            public String MessageText { get; set; }
 
             #endregion
 
@@ -823,7 +823,7 @@ namespace Singularity.WinForm
             /// <param name="icon">The icon.</param>
             /// <param name="defaultButton">The default button.</param>
             /// <returns>The dialog result.</returns>
-            public static DialogResult Show(IWin32Window owner, string text, string caption, MessageBoxButtons buttons, MessageBoxIcon icon, MessageBoxDefaultButton defaultButton)
+            public static DialogResult Show(IWin32Window owner, String text, String caption, MessageBoxButtons buttons, MessageBoxIcon icon, MessageBoxDefaultButton defaultButton)
             {
                 //Create a new instance of the FlexibleMessageBox form
                 var flexibleMessageBoxForm = new FlexibleMessageBoxForm();

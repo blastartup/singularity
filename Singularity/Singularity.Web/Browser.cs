@@ -1,4 +1,5 @@
-﻿using System.Net;
+﻿using System;
+using System.Net;
 using System.Text;
 using System.Web.UI;
 
@@ -11,9 +12,9 @@ namespace Singularity.Web
         /// </summary>
         /// <param name="url"></param>
         /// <returns>HTML to open a new window</returns>
-        static public string LaunchWindow(string url)
+        static public String LaunchWindow(String url)
         {
-            string output = "<script language=\"JavaScript\">";
+            String output = "<script language=\"JavaScript\">";
             output += "window.open(\"" + url + "\")";
             output += "</script>";
             return output;
@@ -23,10 +24,10 @@ namespace Singularity.Web
         /// <summary>
         /// Scrapes the specified URL and returns a string containing the page html
         /// </summary>
-        static public string ScrapeURL(string url)
+        static public String ScrapeURL(String url)
         {
             WebClient webClient = new WebClient();
-            byte[] reqHTML = webClient.DownloadData(url);
+            Byte[] reqHTML = webClient.DownloadData(url);
             UTF8Encoding objUTF8 = new UTF8Encoding();
             return objUTF8.GetString(reqHTML);
         }

@@ -11,7 +11,7 @@ namespace Singularity.WebTime
 {
 	internal class HttpContextProvider : IContextProvider
 	{
-		public T GetItem<T>(string key) where T : class
+		public T GetItem<T>(String key) where T : class
 		{
 			if (key == null || HttpContext.Current == null || HttpContext.Current.Items.IsEmpty())
 			{
@@ -20,7 +20,7 @@ namespace Singularity.WebTime
 			return (T)HttpContext.Current.Items[key];
 		}
 
-		public void SetItem<T>(string key, T value) where T : class
+		public void SetItem<T>(String key, T value) where T : class
 		{
 			if (HttpContext.Current != null)
 			{
