@@ -18,6 +18,7 @@ namespace Singularity.DataService.OleDbFramework
 		{
 			using (OleDbCommand cmd = CreateCommand(query, CommandType.Text, filterParameters))
 			{
+				cmd.Prepare();
 				return cmd.ExecuteReader();
 			}
 		}
@@ -100,14 +101,17 @@ namespace Singularity.DataService.OleDbFramework
 			}
 		}
 
-		private OleDbCommand CreateCommand(String query, CommandType commandType, OleDbParameter[] filterParameters)
+		protected virtual OleDbCommand CreateCommand(String query, CommandType commandType, OleDbParameter[] filterParameters)
 		{
 			var oleDbCommand = new OleDbCommand(query, _oleDbConnection)
 			{
 				CommandType = commandType,
 				Transaction = _oleDbTransaction
 			};
-			oleDbCommand.Parameters.AddRange(filterParameters);
+			if (filterParameters != null)
+			{
+				oleDbCommand.Parameters.AddRange(filterParameters);
+			}
 			return oleDbCommand;
 		}
 

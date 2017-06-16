@@ -5,7 +5,46 @@ using System.Linq;
 
 namespace Singularity.DataService.OleDbFramework
 {
-	public abstract class OleDbRepository<TOleDbEntity> : IDisposable
+	public abstract class OleDbRepository
+	{
+		public static String ObtainValue<T>(T nativeValue)
+		{
+			String result = null;
+			if (nativeValue == null || Convert.IsDBNull(nativeValue))
+			{
+				result = "Null";
+			}
+			else if (nativeValue is String)
+			{
+				result = String.Format(StringValuePattern, nativeValue.ToString().Replace("'", "''"));
+			}
+			else if (nativeValue is DateTime)
+			{
+				result = String.Format(StringValuePattern, ((DateTime)(Object)nativeValue).ToString(DateTimeFormat));
+			}
+			else if (nativeValue is TimeSpan)
+			{
+				result = String.Format(StringValuePattern, new DateTime(((TimeSpan)(Object)nativeValue).Ticks).ToShortTimeString());
+			}
+			else if (nativeValue is Boolean)
+			{
+				result = Convert.ToInt32((Boolean)(Object)nativeValue).ToString();
+			}
+			else if (nativeValue is Guid)
+			{
+				result = String.Format(StringValuePattern, nativeValue.ToString());
+			}
+			else
+			{
+				result = nativeValue.ToString();
+			}
+			return result;
+		}
+		private static String StringValuePattern = "'{0}'";
+		private static String DateTimeFormat = "yyyy/MM/dd HH:mm:ss.fff";
+	}
+
+	public abstract class OleDbRepository<TOleDbEntity> : OleDbRepository, IDisposable
 		where TOleDbEntity : class
 	{
 		protected OleDbEntityContext Context;
@@ -264,46 +303,13 @@ namespace Singularity.DataService.OleDbFramework
 
 		protected virtual OleDbParameter[] Parameters(Object primaryKeyValue)
 		{
-			return new OleDbParameter[] { new OleDbParameter("@pk", primaryKeyValue) };
+			var primaryKeyParameter = new OleDbParameter("@pk", primaryKeyValue);
+			return new OleDbParameter[] { primaryKeyParameter };
 		}
 
 		private String FilterIn<T>(IEnumerable<T> ids)
 		{
 			return "{0} In ({1})".FormatX(PrimaryKeyName, String.Join(",", (from idItem in ids select ObtainValue<Object>(idItem)).ToArray()));
-		}
-
-		protected String ObtainValue<T>(T nativeValue)
-		{
-			String result = null;
-			if (nativeValue == null || Convert.IsDBNull(nativeValue))
-			{
-				result = "Null";
-			}
-			else if (nativeValue is String)
-			{
-				result = String.Format(StringValuePattern, nativeValue.ToString().Replace("'", "''"));
-			}
-			else if (nativeValue is DateTime)
-			{
-				result = String.Format(StringValuePattern, ((DateTime)(Object)nativeValue).ToString(DateTimeFormat));
-			}
-			else if (nativeValue is TimeSpan)
-			{
-				result = String.Format(StringValuePattern, new DateTime(((TimeSpan)(Object)nativeValue).Ticks).ToShortTimeString());
-			}
-			else if (nativeValue is Boolean)
-			{
-				result = Convert.ToInt32((Boolean)(Object)nativeValue).ToString();
-			}
-			else if (nativeValue is Guid)
-			{
-				result = String.Format(StringValuePattern, nativeValue.ToString());
-			}
-			else
-			{
-				result = nativeValue.ToString();
-			}
-			return result;
 		}
 
 		public Boolean SaveChangesTransactionally { get; set; }
@@ -343,9 +349,7 @@ namespace Singularity.DataService.OleDbFramework
 		#endregion
 
 		protected const String UpdateColumnValuePattern = "{0} = {1}";
-		private const String InsertColumnsPattern = "Insert [{0}] ({1}) Values({2}) SELECT @@IDENTITY";
-		private const String UpdateColumnsPattern = "Update [{0}] Set {1} Where {2}";
-		private const String StringValuePattern = "'{0}'";
-		private const String DateTimeFormat = "yyyy/MM/dd HH:mm:ss.fff";
+		private const String InsertColumnsPattern = "Insert {0} ({1}) Values({2})";
+		private const String UpdateColumnsPattern = "Update {0} Set {1} Where {2}";
 	}
 }
