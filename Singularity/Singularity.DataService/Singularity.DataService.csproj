@@ -95,6 +95,8 @@
     <Compile Include="OleDbFramework\OleDbAssembler.cs" />
     <Compile Include="OleDbFramework\OleDbRepository.cs" />
     <Compile Include="OleDbFramework\OleDbUnitOfWork.cs" />
+    <Compile Include="OleDbFramework\SelectStrategy\VfpSelectStrategy.cs" />
+    <Compile Include="OleDbFramework\SelectStrategy\CommonSelectStrategy.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Providers\ConfigValueHelper.cs" />
     <Compile Include="QueryExtractraction.cs" />

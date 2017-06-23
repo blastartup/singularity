@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.Common;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Singularity.DataService.SqlFramework
@@ -15,13 +17,14 @@ namespace Singularity.DataService.SqlFramework
 			_sqlConnectionStringBuilder = sqlConnectionStringBuilder;
 			_sqlConnection = new SqlConnection(sqlConnectionStringBuilder.ConnectionString);
 			_sqlConnection.Open();
+			_transactionCounter = 0;
 		}
 
 		public SqlDataReader ExecDataReader(String query, SqlParameter[] filterParameters)
 		{
 			using (SqlCommand cmd = CreateCommand(query, CommandType.Text, filterParameters))
 			{
-				return cmd.ExecuteReader();
+				return ExecuteWithRetry(cmd, cmd.ExecuteReader);
 			}
 		}
 
@@ -29,7 +32,7 @@ namespace Singularity.DataService.SqlFramework
 		{
 			using (SqlCommand cmd = CreateCommand(query, CommandType.Text, filterParameters))
 			{
-				return cmd.ExecuteScalar();
+				return ExecuteWithRetry(cmd, cmd.ExecuteScalar);
 			}
 		}
 
@@ -37,7 +40,7 @@ namespace Singularity.DataService.SqlFramework
 		{
 			using (SqlCommand cmd = CreateCommand(query, CommandType.Text, filterParameters))
 			{
-				return cmd.ExecuteNonQuery();
+				return ExecuteWithRetry(cmd, cmd.ExecuteNonQuery);
 			}
 		}
 
@@ -114,14 +117,59 @@ namespace Singularity.DataService.SqlFramework
 			return sqlCommand;
 		}
 
+		private T ExecuteWithRetry<T>(SqlCommand cmd, Func<T> executeSql)
+		{
+			var reconnect = false;
+			for (var idx = 0; idx < MaximumRetries; idx++)
+			{
+				try
+				{
+					if (reconnect)
+					{
+						if (cmd.Connection != null)
+						{
+							cmd.Connection.Dispose();
+
+							cmd.Connection = new SqlConnection(_sqlConnectionStringBuilder.ConnectionString);
+							cmd.Connection.Open();
+							_transactionCounter = 0;
+						}
+					}
+					return executeSql();
+				}
+				catch (SqlException ex)
+				{
+					if (ex.Errors.Cast<SqlError>().All(CanRetry))
+					{
+						Thread.Sleep(DelayOnError);
+						reconnect = ex.Errors.Cast<SqlError>().Any(f => f.Class >= 20);
+						continue;
+					}
+					break;
+				}
+			}
+
+			return default(T);
+		}
+
+		private static Boolean CanRetry(SqlError error)
+		{
+			return true;
+		}
+
 		public Boolean AutomaticTransactions { get; set; }
 		public String Name => _sqlConnectionStringBuilder.InitialCatalog;
 
 		public SqlConnection SqlConnection => _sqlConnection;
 		private readonly SqlConnection _sqlConnection;
 
+		private const Int32 MaximumRetries = 3;
+		private const Int32 DelayOnError = 500;
+		private Int32 _transactionCounter;
+		private const Int32 MaximumTransactionsBeforeReconnect = 10000;
 		private SqlTransaction _sqlTransaction;
 		private Boolean _disposed;
 		private readonly SqlConnectionStringBuilder _sqlConnectionStringBuilder;
+
 	}
 }

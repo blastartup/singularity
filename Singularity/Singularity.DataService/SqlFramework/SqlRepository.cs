@@ -301,6 +301,10 @@ namespace Singularity.DataService.SqlFramework
 			{
 				result = String.Format(StringValuePattern, nativeValue.ToString());
 			}
+			else if (nativeValue.GetType().IsEnum)
+			{
+				result = Convert.ToInt32(nativeValue).ToString();
+			}
 			else
 			{
 				result = nativeValue.ToString();
@@ -348,6 +352,6 @@ namespace Singularity.DataService.SqlFramework
 		private const String InsertColumnsPattern = "Insert [{0}] ({1}) Values({2}) SELECT @@IDENTITY";
 		private const String UpdateColumnsPattern = "Update [{0}] Set {1} Where {2}";
 		private const String StringValuePattern = "'{0}'";
-		private const String DateTimeFormat = "yyyy/MM/dd HH:mm:ss.fff";
+		private const String DateTimeFormat = "yyyy-MM-dd HH:mm:ss.fff";
 	}
 }

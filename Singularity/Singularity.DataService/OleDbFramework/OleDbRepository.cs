@@ -2,11 +2,17 @@
 using System.Collections.Generic;
 using System.Data.OleDb;
 using System.Linq;
+using Singularity.DataService.OleDbFramework.SelectStrategy;
 
 namespace Singularity.DataService.OleDbFramework
 {
 	public abstract class OleDbRepository
 	{
+		protected OleDbRepository(OleDbEntityContext context)
+		{
+			Context = context;
+		}
+
 		public static String ObtainValue<T>(T nativeValue)
 		{
 			String result = null;
@@ -34,12 +40,36 @@ namespace Singularity.DataService.OleDbFramework
 			{
 				result = String.Format(StringValuePattern, nativeValue.ToString());
 			}
+			else if (nativeValue.GetType().IsEnum)
+			{
+				result = Convert.ToInt32(nativeValue).ToString();
+			}
 			else
 			{
 				result = nativeValue.ToString();
 			}
 			return result;
 		}
+
+		protected virtual OleDbDataReader SelectQuery(String selectColumns, String fromTables, String join = "", String filter = "", OleDbParameter[] filterParameters = null, String orderBy = null,
+			Paging paging = null)
+		{
+			Paging = paging;
+			return SelectStrategy.SelectQuery(selectColumns, fromTables, join, filter, filterParameters, orderBy, paging);
+		}
+
+		protected virtual CommonSelectStrategy NewCommonSelectStrategy()
+		{
+			return new CommonSelectStrategy(Context);
+		}
+
+		private CommonSelectStrategy SelectStrategy
+			=> _selectStrategy ?? (_selectStrategy = NewCommonSelectStrategy());
+		private CommonSelectStrategy _selectStrategy;
+
+		protected OleDbEntityContext Context;
+		protected Paging Paging;
+
 		private static String StringValuePattern = "'{0}'";
 		private static String DateTimeFormat = "yyyy/MM/dd HH:mm:ss.fff";
 	}
@@ -47,11 +77,9 @@ namespace Singularity.DataService.OleDbFramework
 	public abstract class OleDbRepository<TOleDbEntity> : OleDbRepository, IDisposable
 		where TOleDbEntity : class
 	{
-		protected OleDbEntityContext Context;
 
-		protected OleDbRepository(OleDbEntityContext context)
+		protected OleDbRepository(OleDbEntityContext context) : base(context)
 		{
-			Context = context;
 		}
 
 		public virtual List<TOleDbEntity> GetList(String filter = "", OleDbParameter[] filterParameters = null, String selectColumns = null, 
@@ -233,45 +261,6 @@ namespace Singularity.DataService.OleDbFramework
 		}
 
 		public abstract void Delete(TOleDbEntity entityToDelete);
-
-		protected OleDbDataReader SelectQuery(String selectColumns, String fromTables, String join = "", String filter = "", OleDbParameter[] filterParameters = null, String orderBy = null, 
-			Paging paging = null)
-		{
-			String query = null;
-
-			if (!join.IsEmpty())
-			{
-				join = join.Surround(ValueLib.Space.StringValue);
-			}
-
-			if (!String.IsNullOrEmpty(filter))
-			{
-				filter = " where " + filter;
-			}
-
-			if (filterParameters == null)
-			{
-				filterParameters = new OleDbParameter[] {};
-			}
-
-			if (!String.IsNullOrEmpty(orderBy))
-			{
-				orderBy = " Order By " + orderBy;
-			}
-			else
-			{
-				orderBy = "";
-			}
-
-			String takeFilter = "";
-			if (paging != null)
-			{
-				takeFilter = $"Top {paging.Take} ";
-			}
-
-			query = $"select {takeFilter}{selectColumns} from {fromTables}{join}{filter}{orderBy}";
-			return Context.ExecDataReader(query, filterParameters);
-		}
 
 		protected void InsertCore(TOleDbEntity sqlEntity, String insertColumns, String insertValues)
 		{
