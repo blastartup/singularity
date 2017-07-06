@@ -729,6 +729,11 @@ namespace Singularity
 			return value.IndexOf(searchValue) != -1;
 		}
 
+		public static Boolean Contains(this String value, String searchValue, StringComparison stringComparison)
+		{
+			return value.IndexOf(searchValue, stringComparison) >= 0;
+		}
+
 		public static Boolean ContainsAny(this String value, params String[] searchValues)
 		{
 			var result = false;

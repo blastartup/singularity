@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Data;
 using System.Data.Common;
 using System.Data.SqlClient;
@@ -126,16 +127,30 @@ namespace Singularity.DataService.SqlFramework
 				{
 					if (reconnect)
 					{
-						if (cmd.Connection != null)
+						if (_sqlConnection != null)
 						{
-							cmd.Connection.Dispose();
-
-							cmd.Connection = new SqlConnection(_sqlConnectionStringBuilder.ConnectionString);
-							cmd.Connection.Open();
+							_sqlConnection.Close();
+							_sqlConnection = new SqlConnection(_sqlConnectionStringBuilder.ConnectionString);
+							_sqlConnection.Open();
+							cmd.Connection = _sqlConnection;
 							_transactionCounter = 0;
 						}
 					}
+					else if (_sqlConnection.State == ConnectionState.Closed)
+					{
+						if (_sqlConnection.ConnectionString.IsEmpty())
+						{
+							_sqlConnection = new SqlConnection(_sqlConnectionStringBuilder.ConnectionString);
+						}
+						_sqlConnection.Open();
+						_transactionCounter = 0;
+					}
+					_transactionCounter++;
 					return executeSql();
+				}
+				catch (InvalidOperationException)
+				{
+					reconnect = true;
 				}
 				catch (SqlException ex)
 				{
@@ -161,7 +176,7 @@ namespace Singularity.DataService.SqlFramework
 		public String Name => _sqlConnectionStringBuilder.InitialCatalog;
 
 		public SqlConnection SqlConnection => _sqlConnection;
-		private readonly SqlConnection _sqlConnection;
+		private SqlConnection _sqlConnection;
 
 		private const Int32 MaximumRetries = 3;
 		private const Int32 DelayOnError = 500;
