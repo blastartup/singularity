@@ -61,6 +61,8 @@
     <Compile Include="Extensions\CsvWriterExtension.cs" />
     <Compile Include="Extensions\DataRowExtension.cs" />
     <Compile Include="Extensions\DataTableExtension.cs" />
+    <Compile Include="Extensions\DbReferenceEntryExtension.cs" />
+    <Compile Include="Extensions\DbCollectionEntryExtension.cs" />
     <Compile Include="Extensions\EntityCollectionExtension.cs" />
     <Compile Include="Extensions\EntityCollectionReferenceExtension.cs" />
     <Compile Include="Extensions\EntityICollectionExtension.cs" />
