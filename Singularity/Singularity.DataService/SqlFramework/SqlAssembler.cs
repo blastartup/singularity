@@ -78,6 +78,11 @@ namespace Singularity.DataService.SqlFramework
 		public List<TClass> AssembleClassList()
 		{
 			var classList = new List<TClass>();
+			if (DataReader == null)
+			{
+				return classList;
+			}
+
 			while (DataReader.Read())
 			{
 				TClass newClass = new TClass();
@@ -95,6 +100,11 @@ namespace Singularity.DataService.SqlFramework
 		public TClass ReadAndAssembleClass()
 		{
 			TClass newClass = null;
+			if (DataReader == null)
+			{
+				return newClass;
+			}
+
 			if (DataReader.Read())
 			{
 				newClass = new TClass();

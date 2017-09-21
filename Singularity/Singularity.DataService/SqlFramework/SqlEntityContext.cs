@@ -120,6 +120,7 @@ namespace Singularity.DataService.SqlFramework
 
 		private T ExecuteWithRetry<T>(SqlCommand cmd, Func<T> executeSql)
 		{
+			_errorMessage = String.Empty;
 			var reconnect = false;
 			for (var idx = 0; idx < MaximumRetries; idx++)
 			{
@@ -167,13 +168,20 @@ namespace Singularity.DataService.SqlFramework
 			return default(T);
 		}
 
-		private static Boolean CanRetry(SqlError error)
+		private Boolean CanRetry(SqlError error)
 		{
+			if (error.Class == 16)
+			{
+				// Invalid object name 'InvalidObjectName'.
+				_errorMessage = error.Message;
+				return false;
+			}
 			return true;
 		}
 
 		public Boolean AutomaticTransactions { get; set; }
 		public String Name => _sqlConnectionStringBuilder.InitialCatalog;
+		public String ErrorMessage => _errorMessage;
 
 		public SqlConnection SqlConnection => _sqlConnection;
 		private SqlConnection _sqlConnection;
@@ -184,6 +192,7 @@ namespace Singularity.DataService.SqlFramework
 		private const Int32 MaximumTransactionsBeforeReconnect = 10000;
 		private SqlTransaction _sqlTransaction;
 		private Boolean _disposed;
+		private String _errorMessage;
 		private readonly SqlConnectionStringBuilder _sqlConnectionStringBuilder;
 
 	}
