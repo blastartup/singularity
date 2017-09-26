@@ -782,9 +782,12 @@ namespace Singularity
 
 		public static TValue ReplaceUsing<TValue>(this TValue value, IEnumerable<Tuple<TValue, TValue>> replacementValueMaps)
 		{
-			if (replacementValueMaps.Any(f => f.Item1.Equals(value)))
+			foreach (var replacementValueMap in replacementValueMaps)
 			{
-				return replacementValueMaps.First(f => f.Item1.Equals(value)).Item2;
+				if (replacementValueMap.Item1.Equals(value))
+				{
+					return replacementValueMap.Item2;
+				}
 			}
 			return value;
 		}
