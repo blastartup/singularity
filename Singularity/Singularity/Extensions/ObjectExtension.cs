@@ -869,14 +869,6 @@ namespace Singularity
 			return null;
 		}
 
-		public static TValue ReplaceUsing<TValue>(this TValue value, Tuple<TValue, TValue>[] replacementValueMaps)
-		{
-			if (replacementValueMaps.Any(f => f.Item1.Equals(value)))
-			{
-				return replacementValueMaps.First(f => f.Item1.Equals(value)).Item2;
-			}
-			return value;
-		}
 	}
 }
 
