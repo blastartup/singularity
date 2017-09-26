@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.Remoting.Messaging;
+using System.Windows.Forms;
 
 namespace Singularity.WinForm.Async
 {
@@ -27,13 +29,24 @@ namespace Singularity.WinForm.Async
 		/// </summary>
 		public event ProgressChangedEventHandler ProgressChanged;
 
+		public event CompletingEventHandler CompletingEventHandler;
+		public event MilestoneAchievedEventHandler MilestoneAchievedEventHandler;
+
 		/// <summary>
 		/// Initializes a new instance of the <see cref="AsyncWorker"/> class.
 		/// </summary>
 		public AsyncWorker()
 		{
-			_workerCallback = new AsyncCallback(OnRunWorkerCompleted);
-			_eventHandler = new DoWorkEventHandler(OnDoWork);
+			_workerCallback = OnRunWorkerCompleted;
+			_eventHandler = OnDoWork;
+		}
+
+		public AsyncWorker(AsyncJob asyncJob) : this()
+		{
+			_asyncJobs = new List<AsyncJob>
+			{
+				asyncJob
+			};
 		}
 
 		/// <summary>
@@ -74,6 +87,7 @@ namespace Singularity.WinForm.Async
 		/// <param name="argument">The argument.</param>
 		public Boolean RunWorkerAsync(Boolean abortIfBusy, Object argument)
 		{
+
 			if (abortIfBusy && IsBusy)
 			{
 				return false;
@@ -134,6 +148,16 @@ namespace Singularity.WinForm.Async
 			ProgressChanged?.Invoke(this, e);
 		}
 
+		protected virtual void OnMilestoneAchieved(MilestoneAchievedEventArgs eventArgs)
+		{
+			MilestoneAchievedEventHandler?.Invoke(this, eventArgs);
+		}
+
+		protected virtual void OnCompleting(CompletingEventArgs eventArgs)
+		{
+			CompletingEventHandler?.Invoke(this, eventArgs);
+		}
+
 		/// <summary>
 		/// Called when [run worker completed].
 		/// </summary>
@@ -146,10 +170,53 @@ namespace Singularity.WinForm.Async
 			_isBusy = false;
 		}
 
+		public void AddAsyncJob(AsyncJob asyncJob)
+		{
+			_asyncJobs.Add(asyncJob);
+		}
+		private readonly List<AsyncJob> _asyncJobs;
+
+		public void NextJob()
+		{
+			_currentJob++;
+		}
+
+		public void StartAsyncJob(Object sender, DoWorkEventArgs eventArgs)
+		{
+			CurrentJob.AsyncService.DoWork(sender, eventArgs);
+		}
+
+		public Control CurrentControl => CurrentJob.Control;
+		protected AsyncJob CurrentJob => _asyncJobs[_currentJob];
+
 		private Boolean _cancelationPending;
 		private Boolean _isBusy;
 		private static readonly Object CountProtector = new Object();
 		private readonly AsyncCallback _workerCallback;
 		private readonly DoWorkEventHandler _eventHandler;
+		private Int32 _currentJob;
 	}
+
+	public class CompletingEventArgs : EventArgs
+	{
+		public CompletingEventArgs(Object userState)
+		{
+			UserState = userState;
+		}
+
+		public Object UserState { get; }
+	}
+
+	public class MilestoneAchievedEventArgs : EventArgs
+	{
+		public MilestoneAchievedEventArgs(Object userState)
+		{
+			UserState = userState;
+		}
+
+		public Object UserState { get; }
+	}
+
+	public delegate void CompletingEventHandler(Object sender, CompletingEventArgs e);
+	public delegate void MilestoneAchievedEventHandler(Object sender, MilestoneAchievedEventArgs e);
 }

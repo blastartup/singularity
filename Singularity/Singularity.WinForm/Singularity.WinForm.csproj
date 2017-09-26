@@ -54,6 +54,8 @@
     <Compile Include="Extensions\FormCollectionExtension.cs" />
     <Compile Include="FlexibleMessageBox.cs" />
     <Compile Include="FormController.cs" />
+    <Compile Include="Async\AsyncJob.cs" />
+    <Compile Include="Interfaces\IAsyncService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
