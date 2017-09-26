@@ -780,7 +780,7 @@ namespace Singularity
 
 		#endregion
 
-		public static TValue ReplaceUsing<TValue>(this TValue value, Tuple<TValue, TValue>[] replacementValueMaps)
+		public static TValue ReplaceUsing<TValue>(this TValue value, IEnumerable<Tuple<TValue, TValue>> replacementValueMaps)
 		{
 			if (replacementValueMaps.Any(f => f.Item1.Equals(value)))
 			{
