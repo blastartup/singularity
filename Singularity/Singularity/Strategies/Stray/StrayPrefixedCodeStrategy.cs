@@ -22,9 +22,9 @@ namespace Singularity
 		[DebuggerStepThrough]
 		public override IReply Execute()
 		{
-			var reply = new ReplyMessage();
-			var codeBuilder = new StringBuilder();
-			for (var idx = 0; idx < Length - Prefix.Length; idx++)
+			ReplyMessage reply = new ReplyMessage();
+			StringBuilder codeBuilder = new StringBuilder();
+			for (Int32 idx = 0; idx < Length - Prefix.Length; idx++)
 			{
 				codeBuilder.Append(ValueLib.AlphaNumeric[Random.Next(0, 36)]);
 			}

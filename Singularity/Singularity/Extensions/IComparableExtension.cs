@@ -81,7 +81,7 @@ namespace Singularity
 				lowLimit = lowLimit.Swap(ref highLimit);
 			}
 
-			var result = LimitMax(LimitMin(input, lowLimit), highLimit);
+			IComparable result = LimitMax(LimitMin(input, lowLimit), highLimit);
 			wasOutOfRange = input != result;
 			return result;
 		}

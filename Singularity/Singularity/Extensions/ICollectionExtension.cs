@@ -16,7 +16,7 @@ namespace Singularity
 		/// <param name="addCollection"></param>
 		public static void AddRange<T>(this ICollection<T> sourceCollection, ICollection<T> addCollection)
 		{
-			foreach (var item in addCollection)
+			foreach (T item in addCollection)
 			{
 				sourceCollection.Add(item);
 			}
@@ -30,7 +30,7 @@ namespace Singularity
 		/// <param name="removeCollection">Collection of T type objects to remove from the source collection.</param>
 		public static void Remove<T>(this ICollection<T> sourceCollection, ICollection<T> removeCollection)
 		{
-			foreach (var item in removeCollection)
+			foreach (T item in removeCollection)
 			{
 				sourceCollection.Remove(item);
 			}

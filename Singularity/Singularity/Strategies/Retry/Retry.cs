@@ -18,7 +18,7 @@ namespace Singularity
 
 		public IReply Execute()
 		{
-			var result = new ReplySimple(true);
+			ReplySimple result = new ReplySimple(true);
 			RetryStrategry.Started = DateTime.UtcNow;
 			while (CanContinue())
 			{

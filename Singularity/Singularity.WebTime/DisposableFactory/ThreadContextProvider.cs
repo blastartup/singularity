@@ -16,14 +16,14 @@ namespace Singularity.WebTime
 		[DebuggerHidden]
 		public T GetItem<T>(String key) where T : class
 		{
-			var lds = Thread.GetNamedDataSlot(key);
+			LocalDataStoreSlot lds = Thread.GetNamedDataSlot(key);
 			return (T)Thread.GetData(lds);
 		}
 
 		[DebuggerHidden]
 		public void SetItem<T>(String key, T value) where T : class
 		{
-			var lds = Thread.GetNamedDataSlot(key);
+			LocalDataStoreSlot lds = Thread.GetNamedDataSlot(key);
 			Thread.SetData(lds, value);
 		}
 	}

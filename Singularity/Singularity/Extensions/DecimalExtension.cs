@@ -9,14 +9,14 @@ namespace Singularity
 	{
 		public static Boolean IsWithinSqlPrecisionAndScale(this Decimal value, Int32 precision, Int32 scale)
 		{
-			var maxIntegralPart = GetMaxIntegralPart(precision, scale);
+			Decimal maxIntegralPart = GetMaxIntegralPart(precision, scale);
 			return (Math.Abs(Decimal.Truncate(value)) <= maxIntegralPart);
 		}
 
 		public static Int32 DecimalPlaces(this Decimal value)
 		{
-			var decimalPlaces = 0;
-			var decimalPart = value - Decimal.Truncate(value);	// To stop potential overflow
+			Int32 decimalPlaces = 0;
+			Decimal decimalPart = value - Decimal.Truncate(value);	// To stop potential overflow
 			while (Decimal.Truncate(decimalPart) != decimalPart)
 			{
 				decimalPart *= 10;
@@ -87,14 +87,14 @@ namespace Singularity
 				lowLimit = lowLimit.Swap(ref highLimit);
 			}
 
-			var result = input.LimitMin(lowLimit).LimitMax(highLimit);
+			Decimal result = input.LimitMin(lowLimit).LimitMax(highLimit);
 			wasOutOfRange = input != result;
 			return result;
 		}
 
 		public static Boolean IsOutOfRange(this Decimal input, Decimal lowLimit, Decimal highLimit)
 		{
-			var result = false;
+			Boolean result = false;
 			LimitInRange(input, lowLimit, highLimit, out result);
 			return result;
 		}

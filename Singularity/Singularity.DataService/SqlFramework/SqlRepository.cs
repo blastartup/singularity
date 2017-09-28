@@ -31,25 +31,25 @@ namespace Singularity.DataService.SqlFramework
 			}
 
 			selectColumns = selectColumns ?? SelectAllColunms();
-			return AssembleClassList(SelectQuery(selectColumns, FromTables(), "", filter, filterParameters, orderBy, paging));
+			return AssembleClassList(SelectQuery(selectColumns, FromTables(), String.Empty, filter, filterParameters, orderBy, paging));
 		}
 
 		public List<TSqlEntity> GetListByIds<T>(IEnumerable<T> ids, String selectColumns = null, String orderBy = null, Paging paging = null)
 		{
 			selectColumns = selectColumns ?? SelectAllColunms();
-			return AssembleClassList(SelectQuery(selectColumns, FromTables(), "", FilterIn(ids), null, orderBy, paging));
+			return AssembleClassList(SelectQuery(selectColumns, FromTables(), String.Empty, FilterIn(ids), null, orderBy, paging));
 		}
 
 		public virtual TSqlEntity GetEntity(String filter = "", SqlParameter[] filterParameters = null, String selectColumns = null)
 		{
 			selectColumns = selectColumns ?? SelectAllColunms();
-			return ReadAndAssembleClass(SelectQuery(selectColumns, FromTables(), "", filter, filterParameters, null, new Paging(1)));
+			return ReadAndAssembleClass(SelectQuery(selectColumns, FromTables(), String.Empty, filter, filterParameters, null, new Paging(1)));
 		}
 
 		public TSqlEntity GetById(Object id, String selectColumns = null)
 		{
 			selectColumns = selectColumns ?? SelectAllColunms();
-			return ReadAndAssembleClass(SelectQuery(selectColumns, FromTables(), "", WhereClause(), Parameters(id)));
+			return ReadAndAssembleClass(SelectQuery(selectColumns, FromTables(), String.Empty, WhereClause(), Parameters(id)));
 		}
 
 		//public virtual Boolean Exists(String filter = "", SqlParameter[] filterParameters = null, String selectColumns = null)
@@ -65,7 +65,7 @@ namespace Singularity.DataService.SqlFramework
 				Context.BeginTransaction();
 			}
 
-			var modifiableEntity = sqlEntity as IModifiable;
+			IModifiable modifiableEntity = sqlEntity as IModifiable;
 			if (modifiableEntity != null)
 			{
 				modifiableEntity.CreatedDate = NowDateTime;
@@ -167,7 +167,7 @@ namespace Singularity.DataService.SqlFramework
 
 		public virtual Int32 Delete(Object id)
 		{
-			var query = "delete from {0} where {1} = @PrimaryKeyName".FormatX(TableName, PrimaryKeyName);
+			String query = "delete from {0} where {1} = @PrimaryKeyName".FormatX(TableName, PrimaryKeyName);
 			return Context.ExecuteNonQuery(query, new SqlParameter[]
 			{
 				new SqlParameter("@PrimaryKeyName", id)
@@ -186,7 +186,7 @@ namespace Singularity.DataService.SqlFramework
 				filterParameters = new SqlParameter[] { };
 			}
 
-			var query = $"delete from {TableName}";
+			String query = $"delete from {TableName}";
 			if (!filter.IsEmpty())
 			{
 				query += $" where {filter}";
@@ -223,10 +223,10 @@ namespace Singularity.DataService.SqlFramework
 			}
 			else
 			{
-				orderBy = "";
+				orderBy = String.Empty;
 			}
 
-			String takeFilter = "";
+			String takeFilter = String.Empty;
 			if (paging != null)
 			{
 				takeFilter = $"Top {paging.Take} ";

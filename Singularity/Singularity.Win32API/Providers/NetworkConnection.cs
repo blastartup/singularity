@@ -18,7 +18,7 @@ namespace Singularity.Win32API
 		{
 			_networkName = networkName;
 
-			var netResource = new NetResource()
+			NetResource netResource = new NetResource()
 			{
 				Scope = ResourceScope.GlobalNetwork,
 				ResourceType = ResourceType.Disk,
@@ -26,11 +26,11 @@ namespace Singularity.Win32API
 				RemoteName = networkName
 			};
 
-			var userName = String.IsNullOrEmpty(credentials.Domain)
+			String userName = String.IsNullOrEmpty(credentials.Domain)
 				 ? credentials.UserName
 				 : $@"{credentials.Domain}\{credentials.UserName}";
 
-			var result = WNetAddConnection2(netResource, credentials.Password, userName, 0);
+			Int32 result = WNetAddConnection2(netResource, credentials.Password, userName, 0);
 
 			if (result != 0 && !(reuseExisting && result.In((Int32)SystemErrorCodes.ErrorSessionCredentialConflict)))
 			{

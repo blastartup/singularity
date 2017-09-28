@@ -26,10 +26,10 @@ namespace Singularity.Win32API
 
 		private static void NextGuid()
 		{
-			var bytes = _currentGuid.ToByteArray();
-			for (var mapIndex = 0; mapIndex < 16; mapIndex++)
+			Byte[] bytes = _currentGuid.ToByteArray();
+			for (Int32 mapIndex = 0; mapIndex < 16; mapIndex++)
 			{
-				var bytesIndex = SqlOrderMap[mapIndex];
+				Int32 bytesIndex = SqlOrderMap[mapIndex];
 				bytes[bytesIndex]++;
 				if (bytes[bytesIndex] != 0)
 				{

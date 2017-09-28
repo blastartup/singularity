@@ -18,17 +18,17 @@ namespace Singularity.DataService
 
 		public void Execute()
 		{
-			using (var connection = new SqlConnection(ConfigurationManager.ConnectionStrings[_connectionName].ToString()))
-			using (var sqlCommand = new SqlCommand(_sqlQuery, connection))
+			using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings[_connectionName].ToString()))
+			using (SqlCommand sqlCommand = new SqlCommand(_sqlQuery, connection))
 			{
 				sqlCommand.CommandTimeout = 240;
-				var fillTable = new FillTable(sqlCommand);
-				var outcome = (ReplyDataTable)fillTable.Execute();
+				FillTable fillTable = new FillTable(sqlCommand);
+				ReplyDataTable outcome = (ReplyDataTable)fillTable.Execute();
 				if (outcome.Condition)
 				{
-					var localFileName = "{0} {1}.csv".FormatX(_filename, DateTime.Now.ToString("yyyy MM dd (dddd)"));
-					var extractFile = new FileInfo(Path.Combine(_folder, localFileName));
-					var exportToFile = new WriteToTextFile(outcome.Value, extractFile, true);
+					String localFileName = "{0} {1}.csv".FormatX(_filename, DateTime.Now.ToString("yyyy MM dd (dddd)"));
+					FileInfo extractFile = new FileInfo(Path.Combine(_folder, localFileName));
+					WriteToTextFile exportToFile = new WriteToTextFile(outcome.Value, extractFile, true);
 					exportToFile.Execute();
 				}
 			}

@@ -46,7 +46,7 @@ namespace Singularity.DataService.OleDbFramework
 
 		public Boolean Commit()
 		{
-			var result = false;
+			Boolean result = false;
 			if (_oleDbTransaction != null)
 			{
 				try
@@ -103,7 +103,7 @@ namespace Singularity.DataService.OleDbFramework
 
 		protected virtual OleDbCommand CreateCommand(String query, CommandType commandType, OleDbParameter[] filterParameters)
 		{
-			var oleDbCommand = new OleDbCommand(query, _oleDbConnection)
+			OleDbCommand oleDbCommand = new OleDbCommand(query, _oleDbConnection)
 			{
 				CommandType = commandType,
 				Transaction = _oleDbTransaction

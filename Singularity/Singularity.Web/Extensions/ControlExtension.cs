@@ -11,8 +11,8 @@ namespace Singularity.Web
 	{
 		public static String ToHtml(this Control selectedControl)
 		{
-			var sb = new StringBuilder();
-			using (var sw = new StringWriter(sb))
+			StringBuilder sb = new StringBuilder();
+			using (StringWriter sw = new StringWriter(sb))
 			{
 				using (HtmlTextWriter textWriter = new HtmlTextWriter(sw))
 				{

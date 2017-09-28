@@ -77,7 +77,7 @@ namespace Singularity.DataService.SqlFramework
 
 		public List<TClass> AssembleClassList()
 		{
-			var classList = new List<TClass>();
+			List<TClass> classList = new List<TClass>();
 			if (DataReader == null)
 			{
 				return classList;

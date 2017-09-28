@@ -8,7 +8,7 @@ namespace Singularity.DataService.OleDbFramework
 
 		public Boolean Save(Boolean clearContext = false)
 		{
-			var result = Context.Commit();
+			Boolean result = Context.Commit();
 			if (clearContext)
 			{
 				Context.Dispose();

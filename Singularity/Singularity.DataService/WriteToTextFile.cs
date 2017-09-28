@@ -25,10 +25,10 @@ namespace Singularity.DataService
 
 		public IReply Execute()
 		{
-			var reply = new ReplyDataTable();
+			ReplyDataTable reply = new ReplyDataTable();
 			try
 			{
-				using (var outputFile = new FileStream(_outputFilePath.FullName, FileMode.Create))
+				using (FileStream outputFile = new FileStream(_outputFilePath.FullName, FileMode.Create))
 				{
 					_writer.WriteToStream(_dataSource, outputFile);
 					outputFile.Close();

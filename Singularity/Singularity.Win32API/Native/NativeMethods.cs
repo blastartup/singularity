@@ -25,7 +25,7 @@ namespace Singularity.Win32API
 		public static Guid CreateSequentialGuid()
 		{
 			Guid guid;
-			var result = UuidCreateSequential(out guid);
+			Int32 result = UuidCreateSequential(out guid);
 			if (result != RpcSOk)
 			{
 				guid = Guid.NewGuid();
@@ -125,14 +125,14 @@ namespace Singularity.Win32API
 
 		internal static Int32 RegisterWindowMessage(String format, params Object[] args)
 		{
-			var message = String.Format(format, args);
+			String message = String.Format(format, args);
 			return RegisterWindowMessage(message);
 		}
 
 		internal static void WindowAction(String title, IntPtr action)
 		{
 			IntPtr appHwnd;
-			var wp = new Windowplacement();
+			Windowplacement wp = new Windowplacement();
 			appHwnd = (IntPtr)FindWindow(null, title);
 			GetWindowPlacement(appHwnd, ref wp);
 			wp.ShowCmd = action; // 1- Normal; 2 - Minimize; 3 - Maximize;
@@ -237,23 +237,23 @@ namespace Singularity.Win32API
 		// Assume dirName passed in is already prefixed with \\?\
 		internal static List<String> FindFilesAndDirectories(String directoryPath)
 		{
-			var results = new List<String>();
-			var findData = new Win32FindData();
-			using (var findHandle = FindFirstFile(directoryPath.TrimEnd('\\') + @"\*", findData))
+			List<String> results = new List<String>();
+			Win32FindData findData = new Win32FindData();
+			using (SafeFindHandle findHandle = FindFirstFile(directoryPath.TrimEnd('\\') + @"\*", findData))
 			{
 				if (!findHandle.IsInvalid)
 				{
 					Boolean found;
 					do
 					{
-						var currentFileName = findData.cFileName;
+						String currentFileName = findData.cFileName;
 
 						// if this is a directory, find its contents
 						if (((Int32)findData.dwFileAttributes & (Int32)AttributeFlags.Directory) != 0)
 						{
 							if (currentFileName != @"." && currentFileName != @"..")
 							{
-								var childResults = FindFilesAndDirectories(Path.Combine(directoryPath, currentFileName));
+								List<String> childResults = FindFilesAndDirectories(Path.Combine(directoryPath, currentFileName));
 								// add children and self to results
 								results.AddRange(childResults);
 								results.Add(Path.Combine(directoryPath, currentFileName));

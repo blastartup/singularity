@@ -9,10 +9,10 @@ namespace Singularity
 	{
 		public static List<T> ToListSafe<T>(this Array array)
 		{
-			var result = new List<T>();
+			List<T> result = new List<T>();
 			if (array != null)
 			{
-				foreach (var item in array)
+				foreach (Object item in array)
 				{
 					try
 					{

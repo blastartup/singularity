@@ -23,7 +23,7 @@ namespace Singularity.WinForm
 		{
 			lock (AccessLock)
 			{
-				var obj = ContextProvider.GetItem<TDisposable>(instanceKey);
+				TDisposable obj = ContextProvider.GetItem<TDisposable>(instanceKey);
 				if (obj != null) return obj;
 
 				obj = constructor();
@@ -37,7 +37,7 @@ namespace Singularity.WinForm
 		{
 			lock (AccessLock)
 			{
-				var obj = ContextProvider.GetItem<IDisposable>(instanceKey);
+				IDisposable obj = ContextProvider.GetItem<IDisposable>(instanceKey);
 				if (obj == null) return;
 				obj.Dispose();
 				ContextProvider.SetItem<IDisposable>(instanceKey, null);

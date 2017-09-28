@@ -24,7 +24,7 @@ namespace Singularity
 				return null;
 			}
 
-			var output = new TOut();
+			TOut output = new TOut();
 			Populate(output, input);
 			return output;
 		}

@@ -27,11 +27,11 @@ namespace Singularity
 		/// <returns>The input with the calculated check digit appended.</returns>
 		public static String AppendCheckDigit(String input)
 		{
-			var resultArray = Instance._AppendCheckDigit(_ConvertToIntArray(input));
+			Int32[] resultArray = Instance._AppendCheckDigit(_ConvertToIntArray(input));
 
-			var resultString = new StringBuilder();
+			StringBuilder resultString = new StringBuilder();
 
-			for (var i = 0; i < resultArray.Length; i++)
+			for (Int32 i = 0; i < resultArray.Length; i++)
 			{
 				resultString.Append(resultArray[i]);
 			}
@@ -47,7 +47,7 @@ namespace Singularity
 		/// <returns>The input with the calculated check digit appended.</returns>
 		public static Int64 AppendCheckDigit(Int64 input)
 		{
-			var resultArray = Instance._AppendCheckDigit(_ConvertToIntArray(input));
+			Int32[] resultArray = Instance._AppendCheckDigit(_ConvertToIntArray(input));
 			return _ConvertToLong(resultArray);
 		}
 
@@ -59,8 +59,8 @@ namespace Singularity
 		/// <returns>The input with the calculated check digit appended.</returns>
 		public static Int32 AppendCheckDigit(Int32 input)
 		{
-			var resultArray = Instance._AppendCheckDigit(_ConvertToIntArray(input));
-			var resultLong = _ConvertToLong(resultArray);
+			Int32[] resultArray = Instance._AppendCheckDigit(_ConvertToIntArray(input));
+			Int64 resultLong = _ConvertToLong(resultArray);
 			return (Int32)resultLong;
 		}
 
@@ -255,11 +255,11 @@ namespace Singularity
 
 			_f[0] = new Int32[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };  // identity permutation
 			_f[1] = new Int32[] { 1, 5, 7, 6, 2, 8, 3, 0, 9, 4 };  // "magic" permutation
-			for (var i = 2; i < 8; i++)
+			for (Int32 i = 2; i < 8; i++)
 			{
 				// iterate for remaining permutations
 				_f[i] = new Int32[10];
-				for (var j = 0; j < 10; j++)
+				for (Int32 j = 0; j < 10; j++)
 					_f[i][j] = _f[i - 1][_f[1][j]];
 			}
 		}
@@ -284,9 +284,9 @@ namespace Singularity
 		//-----------------------------------------------------------------------------------------------
 		private static Int32[] _ConvertToIntArray(String input)
 		{
-			var inputArray = new Int32[input.Length];
+			Int32[] inputArray = new Int32[input.Length];
 
-			for (var i = 0; i < input.Length; i++)
+			for (Int32 i = 0; i < input.Length; i++)
 				inputArray[i] = Convert.ToInt32(input.Substring(i, 1));
 
 			return inputArray;
@@ -307,7 +307,7 @@ namespace Singularity
 			Int64 result = 0;
 			Int64 power = 1;
 
-			for (var i = 0; i < input.Length; i++)
+			for (Int32 i = 0; i < input.Length; i++)
 			{
 				result += input[input.Length - (i + 1)] * power;
 				power *= 10;
@@ -322,8 +322,8 @@ namespace Singularity
 		//-----------------------------------------------------------------------------------------------
 		private Int32[] _AppendCheckDigit(Int32[] input)
 		{
-			var checkDigit = _CalculateCheckDigit(input);
-			var result = new Int32[input.Length + 1];
+			Int32 checkDigit = _CalculateCheckDigit(input);
+			Int32[] result = new Int32[input.Length + 1];
 			input.CopyTo(result, 0);
 			result[result.Length - 1] = checkDigit;
 
@@ -333,14 +333,14 @@ namespace Singularity
 		private Int32 _CalculateCheckDigit(Int32[] input)
 		{
 			// First we need to reverse the order of the input digits
-			var reversedInput = new Int32[input.Length];
-			for (var i = 0; i < input.Length; i++)
+			Int32[] reversedInput = new Int32[input.Length];
+			for (Int32 i = 0; i < input.Length; i++)
 				reversedInput[i] = input[input.Length - (i + 1)];
 
-			var check = 0;
-			for (var i = 0; i < reversedInput.Length; i++)
+			Int32 check = 0;
+			for (Int32 i = 0; i < reversedInput.Length; i++)
 				check = _op[check][_f[(i + 1) % 8][reversedInput[i]]];
-			var checkDigit = _inv[check];
+			Int32 checkDigit = _inv[check];
 
 			return checkDigit;
 		}
@@ -348,12 +348,12 @@ namespace Singularity
 		private Boolean _Check(Int32[] input)
 		{
 			// First we need to reverse the order of the input digits
-			var reversedInput = new Int32[input.Length];
-			for (var i = 0; i < input.Length; i++)
+			Int32[] reversedInput = new Int32[input.Length];
+			for (Int32 i = 0; i < input.Length; i++)
 				reversedInput[i] = input[input.Length - (i + 1)];
 
-			var check = 0;
-			for (var i = 0; i < reversedInput.Length; i++)
+			Int32 check = 0;
+			for (Int32 i = 0; i < reversedInput.Length; i++)
 				check = _op[check][_f[i % 8][reversedInput[i]]];
 
 			return (check == 0);
@@ -361,7 +361,7 @@ namespace Singularity
 
 		private Boolean _Check(Int32[] input, Int32 checkDigit)
 		{
-			var newInput = new Int32[input.Length + 1];
+			Int32[] newInput = new Int32[input.Length + 1];
 			input.CopyTo(newInput, 0);
 			newInput[newInput.Length - 1] = checkDigit;
 			return _Check(newInput);

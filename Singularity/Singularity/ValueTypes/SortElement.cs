@@ -26,8 +26,8 @@ namespace Singularity
 				return null;
 			}
 
-			var sortElements = new List<SortElement>();
-			var keyValuePairs = orderBys.ToKeyValuePairs(ValueLib.Space.CharValue, ValueLib.Comma.CharValue);
+			List<SortElement> sortElements = new List<SortElement>();
+			KeyValuePairs keyValuePairs = orderBys.ToKeyValuePairs(ValueLib.Space.CharValue, ValueLib.Comma.CharValue);
 			foreach (KeyValuePair<String, String> keyValuePair in keyValuePairs)
 			{
 				sortElements.Add(new SortElement(keyValuePair.Key, keyValuePair.Value.StartsWith("desc", StringComparison.OrdinalIgnoreCase)));

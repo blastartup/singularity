@@ -27,7 +27,7 @@ namespace Singularity
 		/// <param name="elements">A collection of elememts of which only the non empty ones will be added.</param>
 		public static void AddRangeNonEmpty<T>(this List<T> list, IEnumerable<T> elements)
 		{
-			foreach (var lElement in elements)
+			foreach (T lElement in elements)
 			{
 				AddNonEmpty(list, lElement);
 			}
@@ -48,7 +48,7 @@ namespace Singularity
 		{
 			Contract.Requires(converter != null);
 
-			var result = new List<TOutput>(list.Count);
+			List<TOutput> result = new List<TOutput>(list.Count);
 			result.AddRange(list.ConvertAll(converter));
 			return result;
 		}
@@ -67,7 +67,7 @@ namespace Singularity
 				return default(T);
 			}
 
-			var result = list[index];
+			T result = list[index];
 			list.RemoveAt(index);
 			return result;
 		}
@@ -84,7 +84,7 @@ namespace Singularity
 		{
 			Contract.Requires(match != null);
 
-			var result = new List<T>(list.Count);
+			List<T> result = new List<T>(list.Count);
 			result.AddRange(list.FindAll(match));
 			result.TrimExcess();
 			return result;
@@ -188,11 +188,11 @@ namespace Singularity
 			Contract.Requires(index >= 0);
 			Contract.Requires(count > 0);
 
-			var result = new List<T>(list.Count);
+			List<T> result = new List<T>(list.Count);
 			if (list.Count > 0)
 			{
 				index = Math.Min(list.Count - 1, index).LimitMin(0);
-				var limit = Math.Min(list.Count - index, count).LimitMin(1);
+				Int32 limit = Math.Min(list.Count - index, count).LimitMin(1);
 
 				result.AddRangeNonEmpty(list.GetRange(index, limit));
 				result.TrimExcess();
@@ -215,8 +215,8 @@ namespace Singularity
 			Contract.Requires(index >= 0);
 			Contract.Requires(occurrence > 0);
 
-			var foundCounter = 0;
-			for (var idx = index; idx < list.Count; idx++)
+			Int32 foundCounter = 0;
+			for (Int32 idx = index; idx < list.Count; idx++)
 			{
 				if (predicate.Invoke(list[idx]))
 				{
@@ -239,8 +239,8 @@ namespace Singularity
 		{
 			Contract.Requires(collection != null);
 
-			var lSafeCollection = new Collection<T>();
-			foreach (var lItem in collection)
+			Collection<T> lSafeCollection = new Collection<T>();
+			foreach (T lItem in collection)
 			{
 				if (lItem != null) lSafeCollection.Add(lItem);
 			}

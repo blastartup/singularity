@@ -23,8 +23,8 @@ namespace Singularity.DataInjectionService
 		protected sealed override void InjectEntityFromDto(TEntity entity, TRequestDto requestDto)
 		{
 			// Ignore the primary key coming in from the DTO - it'll most likely be Guid.Empty and the new domain entity will have a real GUID.
-			var pkBaseName = typeof(TDto).Name.RemoveSuffix("Dto");
-			var ignoreNulls = new IgnoreNulls(new[] { pkBaseName + "ID", pkBaseName + "Id" });
+			String pkBaseName = typeof(TDto).Name.RemoveSuffix("Dto");
+			IgnoreNulls ignoreNulls = new IgnoreNulls(new[] { pkBaseName + "ID", pkBaseName + "Id" });
 			entity.InjectFrom(ignoreNulls, requestDto);
 		}
 	}

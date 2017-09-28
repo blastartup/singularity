@@ -81,7 +81,7 @@ namespace Singularity
 		{
 			Contract.Requires(collection != null);
 
-			var internalList = new List<T>((Int32)EListCapacityType.Minimum);
+			List<T> internalList = new List<T>((Int32)EListCapacityType.Minimum);
 			internalList.AddRange(collection);
 			return internalList;
 		}
@@ -94,7 +94,7 @@ namespace Singularity
 		{
 			Contract.Requires(collection != null);
 
-			var internalList = new List<T>(collection.Count);
+			List<T> internalList = new List<T>(collection.Count);
 			internalList.AddRange(collection);
 			return internalList;
 		}
@@ -108,7 +108,7 @@ namespace Singularity
 		{
 			Contract.Requires(collection != null);
 
-			var internalList = new List<T>(collection.Length);
+			List<T> internalList = new List<T>(collection.Length);
 			internalList.AddRange(collection);
 			return internalList;
 		}
@@ -122,7 +122,7 @@ namespace Singularity
 		{
 			Contract.Requires(collection != null);
 
-			var internalList = new List<T>((Int32)capacityChunk);
+			List<T> internalList = new List<T>((Int32)capacityChunk);
 			internalList.AddRange(collection);
 			return internalList;
 		}

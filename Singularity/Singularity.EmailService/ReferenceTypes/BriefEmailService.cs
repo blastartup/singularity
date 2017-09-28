@@ -13,7 +13,7 @@ namespace Singularity.EmailService
 		public TEmailMessage PackageEmail<TEmailMessage>(TEmailMessage emailContent, params Object[] contents)
 			where TEmailMessage : IEmailMessage, new()
 		{
-			var result = new TEmailMessage();
+			TEmailMessage result = new TEmailMessage();
 			if (!emailContent.IsEmpty() && !emailContent.Subject.IsEmpty() && !emailContent.Body.IsEmpty())
 			{
 				result = new TEmailMessage
@@ -22,7 +22,7 @@ namespace Singularity.EmailService
 					Body = emailContent.Body,
 					IsBodyHtml = emailContent.IsBodyHtml,
 				};
-				var model = contents.ToExpandoObject();
+				ExpandoObject model = contents.ToExpandoObject();
 				result.Body = PackageTemplateCore(result.Body, model);
 				result.Subject = PackageTemplateCore(result.Subject, model);
 			}
@@ -33,7 +33,7 @@ namespace Singularity.EmailService
 		{
 			Contract.Assert(staticMessage != null);
 
-			var model = contents.ToExpandoObject();
+			ExpandoObject model = contents.ToExpandoObject();
 			return new StaticMessage
 				(
 					new EmailFrom(PackageTemplateCore(staticMessage.From.Address, model)), 
@@ -83,11 +83,11 @@ namespace Singularity.EmailService
 		// Preferred method to send email.  Modify interface for new features...
 		public SendEmailResponse<INotification> SendSmtpMail(IEmailMessage emailMessage)
 		{
-			var result = new SendEmailResponse<INotification>();
+			SendEmailResponse<INotification> result = new SendEmailResponse<INotification>();
 			try
 			{
-				using (var mailMessage = emailMessage.ToMailMessage())
-				using (var smtp = new SmtpClient())
+				using (MailMessage mailMessage = emailMessage.ToMailMessage())
+				using (SmtpClient smtp = new SmtpClient())
 				{
 					smtp.Send(mailMessage);
 				}

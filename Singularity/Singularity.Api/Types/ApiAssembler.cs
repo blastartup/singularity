@@ -59,14 +59,14 @@ namespace Singularity.Api
 				return null;
 			}
 
-			var dto = new TDto();
+			TDto dto = new TDto();
 			InjectDtoFromEntity(dto, entity);
 			return dto;
 		}
 
 		private TEntity DtoToNewEntity(TRequestDto requestDto)
 		{
-			var entity = new TEntity();
+			TEntity entity = new TEntity();
 			if (requestDto.IsEmpty())
 			{
 				return entity;

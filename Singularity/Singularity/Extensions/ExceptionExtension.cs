@@ -18,10 +18,10 @@ namespace Singularity
 		/// <returns>All the main properties of this exception and any inner exceptions as a single lined string.</returns>
 		public static String ToLogString(this Exception exception)
 		{
-			var result = String.Empty;
+			String result = String.Empty;
 			if (exception != null) 
 			{
-				var message = new DelimitedStringBuilder();
+				DelimitedStringBuilder message = new DelimitedStringBuilder();
 				message.Add("Exception:{0}", exception.GetType().Name);
 				message.Add("Message:{0}", exception.Message);
 
@@ -57,11 +57,11 @@ namespace Singularity
 
 		public static String LineNumber(this Exception exception)
 		{
-			var stackTrace = new StackTrace(exception, true);
-			var stackFrames = stackTrace.GetFrames();
+			StackTrace stackTrace = new StackTrace(exception, true);
+			StackFrame[] stackFrames = stackTrace.GetFrames();
 			if (stackFrames != null)
 			{
-				foreach (var stackFrame in stackFrames.Where(f => f.GetFileLineNumber() > 0))
+				foreach (StackFrame stackFrame in stackFrames.Where(f => f.GetFileLineNumber() > 0))
 				{
 					return $"Line: {stackFrame.GetFileLineNumber()}";
 				}
@@ -72,14 +72,14 @@ namespace Singularity
 
 		private static IEnumerable<T> GetStackTraceWorkFlow<T>(Exception exception)
 		{
-			var traceSteps = new List<T>();
-			var attributeType = typeof(T);
-			var stackTrace = new StackTrace(exception);
+			List<T> traceSteps = new List<T>();
+			Type attributeType = typeof(T);
+			StackTrace stackTrace = new StackTrace(exception);
 			if (stackTrace.FrameCount > 0)
 			{
-				for (var idx = stackTrace.FrameCount - 1; idx >= 0; idx--)
+				for (Int32 idx = stackTrace.FrameCount - 1; idx >= 0; idx--)
 				{
-					var attribute = stackTrace.GetFrame(idx).GetMethod().GetCustomAttributes(attributeType, false).FirstOrDefault();
+					Object attribute = stackTrace.GetFrame(idx).GetMethod().GetCustomAttributes(attributeType, false).FirstOrDefault();
 					if (attribute != null)
 					{
 						traceSteps.Add((T)attribute);

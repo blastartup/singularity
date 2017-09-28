@@ -464,7 +464,7 @@ namespace Singularity.WinForm
             {
                 if (String.IsNullOrEmpty(message)) return null;
 
-                var messageRows = message.Split(new Char[] { '\n' }, StringSplitOptions.None);
+                String[] messageRows = message.Split(new Char[] { '\n' }, StringSplitOptions.None);
                 return messageRows;
             }
 
@@ -476,7 +476,7 @@ namespace Singularity.WinForm
             /// <returns>The button text</returns>
             private String GetButtonText(ButtonID buttonID)
             {
-                var buttonTextArrayIndex = Convert.ToInt32(buttonID);
+                Int32 buttonTextArrayIndex = Convert.ToInt32(buttonID);
                 
                 switch (this.languageID)
                 {
@@ -518,7 +518,7 @@ namespace Singularity.WinForm
                 //If no owner given: Center on current screen
                 if (owner == null)
                 {
-                    var screen = Screen.FromPoint(Cursor.Position);
+                    Screen screen = Screen.FromPoint(Cursor.Position);
                     flexibleMessageBoxForm.StartPosition = FormStartPosition.Manual;
                     flexibleMessageBoxForm.Left = screen.Bounds.Left + screen.Bounds.Width / 2 - flexibleMessageBoxForm.Width / 2;
                     flexibleMessageBoxForm.Top = screen.Bounds.Top + screen.Bounds.Height / 2 - flexibleMessageBoxForm.Height / 2;
@@ -539,21 +539,21 @@ namespace Singularity.WinForm
                                                               Convert.ToInt32(SystemInformation.WorkingArea.Height * FlexibleMessageBoxForm.GetCorrectedWorkingAreaFactor(MAX_HEIGHT_FACTOR)));
 
                 //Get rows. Exit if there are no rows to render...
-                var stringRows = GetStringRows(text);
+                String[] stringRows = GetStringRows(text);
                 if (stringRows == null) return;
 
                 //Calculate whole text height
-                var textHeight = TextRenderer.MeasureText(text, FONT).Height;
+                Int32 textHeight = TextRenderer.MeasureText(text, FONT).Height;
                     
                 //Calculate width for longest text line
                 const Int32 SCROLLBAR_WIDTH_OFFSET = 15;
-                var longestTextRowWidth = stringRows.Max(textForRow => TextRenderer.MeasureText(textForRow, FONT).Width);
-                var captionWidth = TextRenderer.MeasureText(caption, SystemFonts.CaptionFont).Width;
-                var textWidth = Math.Max(longestTextRowWidth + SCROLLBAR_WIDTH_OFFSET, captionWidth);
+                Int32 longestTextRowWidth = stringRows.Max(textForRow => TextRenderer.MeasureText(textForRow, FONT).Width);
+                Int32 captionWidth = TextRenderer.MeasureText(caption, SystemFonts.CaptionFont).Width;
+                Int32 textWidth = Math.Max(longestTextRowWidth + SCROLLBAR_WIDTH_OFFSET, captionWidth);
                 
                 //Calculate margins
-                var marginWidth = flexibleMessageBoxForm.Width - flexibleMessageBoxForm.richTextBoxMessage.Width;
-                var marginHeight = flexibleMessageBoxForm.Height - flexibleMessageBoxForm.richTextBoxMessage.Height;
+                Int32 marginWidth = flexibleMessageBoxForm.Width - flexibleMessageBoxForm.richTextBoxMessage.Width;
+                Int32 marginHeight = flexibleMessageBoxForm.Height - flexibleMessageBoxForm.richTextBoxMessage.Height;
 
                 //Set calculated dialog size (if the calculated values exceed the maximums, they were cut by windows forms automatically)
                 flexibleMessageBoxForm.Size = new Size(textWidth + marginWidth,
@@ -777,12 +777,12 @@ namespace Singularity.WinForm
                 //Handle standard key strikes for clipboard copy: "Ctrl + C" and "Ctrl + Insert"
                 if (e.Control && (e.KeyCode == Keys.C || e.KeyCode == Keys.Insert))
                 {
-                    var buttonsTextLine = (this.button1.Visible ? this.button1.Text + STANDARD_MESSAGEBOX_SEPARATOR_SPACES : String.Empty)
+                    String buttonsTextLine = (this.button1.Visible ? this.button1.Text + STANDARD_MESSAGEBOX_SEPARATOR_SPACES : String.Empty)
                                         + (this.button2.Visible ? this.button2.Text + STANDARD_MESSAGEBOX_SEPARATOR_SPACES : String.Empty)
                                         + (this.button3.Visible ? this.button3.Text + STANDARD_MESSAGEBOX_SEPARATOR_SPACES : String.Empty);
 
                     //Build same clipboard text like the standard .Net MessageBox
-                    var textForClipboard = STANDARD_MESSAGEBOX_SEPARATOR_LINES
+                    String textForClipboard = STANDARD_MESSAGEBOX_SEPARATOR_LINES
                                          + this.Text + Environment.NewLine
                                          + STANDARD_MESSAGEBOX_SEPARATOR_LINES
                                          + this.richTextBoxMessage.Text + Environment.NewLine
@@ -826,7 +826,7 @@ namespace Singularity.WinForm
             public static DialogResult Show(IWin32Window owner, String text, String caption, MessageBoxButtons buttons, MessageBoxIcon icon, MessageBoxDefaultButton defaultButton)
             {
                 //Create a new instance of the FlexibleMessageBox form
-                var flexibleMessageBoxForm = new FlexibleMessageBoxForm();
+                FlexibleMessageBoxForm flexibleMessageBoxForm = new FlexibleMessageBoxForm();
                 flexibleMessageBoxForm.ShowInTaskbar = false;
 
                 //Bind the caption and the message text

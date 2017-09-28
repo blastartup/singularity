@@ -117,7 +117,7 @@ namespace Singularity.Parsers
 		/// <param name="parameterHelp">Information about the parameter. This string will later be used by GetParameterInfo().</param>
 		public void Parameter(ParamAllowType allowType, String parameterName, ECommandArgumentValueTypes valueType, String parameterHelp)
 		{
-			var param = new ParameterDefinition(parameterName, allowType, valueType, parameterHelp);
+			ParameterDefinition param = new ParameterDefinition(parameterName, allowType, valueType, parameterHelp);
 			_wantedParameters.Add(param.Parameter, param);
 		}
 
@@ -132,7 +132,7 @@ namespace Singularity.Parsers
 			//(from cmd.exe this seems to be necessary; instead single quotes could be used.)
 
 			//pure: ^(((?<unknownvalues>[^/-]*)[\s]*)?([/-](?<name>[^\s-/:=]+)([:=]?)([\s]*)(?<value>(".*")|('.*')|([\s]*[^/-][^\s]+[\s]*)|([^/-]+)|)?([\s]*))*)$                                               
-			var correctCmdLineRegEx = "^(((?<unknownvalues>[^/-]*)[\\s]*)?([/-](?<name>[^\\s-/:=]+)([:=]?)([\\s]*)(?<value>(\".*\")|('.*')|([\\s]*[^/-][^\\s]+[\\s]*)|([^/-]+)|)?([\\s]*))*)$";
+			String correctCmdLineRegEx = "^(((?<unknownvalues>[^/-]*)[\\s]*)?([/-](?<name>[^\\s-/:=]+)([:=]?)([\\s]*)(?<value>(\".*\")|('.*')|([\\s]*[^/-][^\\s]+[\\s]*)|([^/-]+)|)?([\\s]*))*)$";
 			//start from beginning (^) and go to very end ($)
 			//find anything except \ or - ([^\/-])
 			//find each parameter-value pair which seems to be okay. however, there might be unwanted some / or - signs in between.
@@ -144,10 +144,10 @@ namespace Singularity.Parsers
 			//  -anything but / or - ([^/-]+).
 			//the argument may end with spaces (([\\s]*))
 
-			var ro = new RegexOptions();
+			RegexOptions ro = new RegexOptions();
 			ro = ro | RegexOptions.IgnoreCase;
 			ro = ro | RegexOptions.Multiline;
-			var parseCmdLine = new Regex(correctCmdLineRegEx, ro);
+			Regex parseCmdLine = new Regex(correctCmdLineRegEx, ro);
 
 			///For test and debug purposes function Matches() is used which returns
 			///a MatchCollection. However, there should never be more than one entry.
@@ -157,15 +157,15 @@ namespace Singularity.Parsers
 			foreach (Match m in mc)*/
 
 			///By default use Match() because in case of no match raising ExceptionSyntaxError would be skipped by Matches() and foreach.
-			var m = parseCmdLine.Match(argumentLine.ToString());
+			Match m = parseCmdLine.Match(argumentLine.ToString());
 			{
 
 				if (m.Success == false)
 				{
 					///Regular expression did not match ArgumentLine. There might be two / or -.
 					///Find out up to where ArgumentLine seems to be okay and raise an exception reporting the rest.
-					var lastCorrectPosition = FindMismatchReasonInRegex(correctCmdLineRegEx, argumentLine);
-					var probableErrorCause = argumentLine.Substring(lastCorrectPosition);
+					Int32 lastCorrectPosition = FindMismatchReasonInRegex(correctCmdLineRegEx, argumentLine);
+					String probableErrorCause = argumentLine.Substring(lastCorrectPosition);
 					throw new InvalidOperationException(ResManager.Translate(
 						new Words("Exception,ExceptionSyntaxError,[{0}],ExceptionSyntaxError2,[{1}],ExceptionSyntaxError3".FormatX(argumentLine, probableErrorCause), 
 						ValueLib.Comma.StringValue)));
@@ -177,20 +177,20 @@ namespace Singularity.Parsers
 					///try to add values without parameters to FoundParameter using function
 					///AddNewFoundParameter(). Before adding move quotes if any.
 					///If those arguments are not allowed AddNewFoundParameter() raises an exception.
-					var uGrp = m.Groups["unknownvalues"];
+					Group uGrp = m.Groups["unknownvalues"];
 					if (uGrp != null && uGrp.Value != String.Empty)
 					{
-						var unknown = uGrp.Value.Trim();
-						var enclosed = new Regex("^(\".*\")|('.*')$");
-						var e = enclosed.Match(unknown);
+						String unknown = uGrp.Value.Trim();
+						Regex enclosed = new Regex("^(\".*\")|('.*')$");
+						Match e = enclosed.Match(unknown);
 						if (e.Length != 0)
 							unknown = unknown.Substring(1, unknown.Length - 2);
 
-						AddNewFoundParameter("", unknown);
+						AddNewFoundParameter(String.Empty, unknown);
 					}
 
-					var paramGrp = m.Groups["name"];
-					var valueGrp = m.Groups["value"];
+					Group paramGrp = m.Groups["name"];
+					Group valueGrp = m.Groups["value"];
 					if (paramGrp == null || valueGrp == null)
 					{
 						//this should never happen.
@@ -204,13 +204,13 @@ namespace Singularity.Parsers
 					///try to add each name-value-match to FoundParameters using AddNewFoundParameter() function.
 					///if value is quoted, remove quotes before calling AddNewFoundParameter().
 					///if value is of wrong type AddNewFoundParameter() throws an exception.
-					for (var i = 0; i < paramGrp.Captures.Count; i++)
+					for (Int32 i = 0; i < paramGrp.Captures.Count; i++)
 					{
 						//if there are spaces at either side of value or param, trim those.
-						var value = valueGrp.Captures[i].ToString().Trim();
-						var param = paramGrp.Captures[i].ToString().Trim();
-						var enclosed = new Regex("^(\".*\")|('.*')$");
-						var e = enclosed.Match(value);
+						String value = valueGrp.Captures[i].ToString().Trim();
+						String param = paramGrp.Captures[i].ToString().Trim();
+						Regex enclosed = new Regex("^(\".*\")|('.*')$");
+						Match e = enclosed.Match(value);
 						if (e.Length != 0)
 							value = value.Substring(1, value.Length - 2);
 						AddNewFoundParameter(param, value);
@@ -227,8 +227,8 @@ namespace Singularity.Parsers
 		/// <param name="arguments">Arguments as string array passed via command line to the program.</param>
 		public void Parse(String[] arguments)
 		{
-			var mArgs = "";
-			foreach (var s in arguments)
+			String mArgs = String.Empty;
+			foreach (String s in arguments)
 			{
 				mArgs += s + " ";
 			}
@@ -237,7 +237,7 @@ namespace Singularity.Parsers
 
 		private void CheckRequiredParameters()
 		{
-			foreach (var param in _wantedParameters)
+			foreach (KeyValuePair<String, ParameterDefinition> param in _wantedParameters)
 			{
 				if (param.Value.AllowType == ParamAllowType.Required)
 				{
@@ -261,15 +261,15 @@ namespace Singularity.Parsers
 		/// <returns></returns>
 		public String GetUsage()
 		{
-			var value = "";
-			var usage = ResManager.Translate("Usage") + "\r\n" + System.IO.Path.GetFileName(Environment.GetCommandLineArgs()[0]);
-			var optionalBracketLeft = "";
-			var optionalBracketRight = "";
+			String value = String.Empty;
+			String usage = ResManager.Translate("Usage") + "\r\n" + System.IO.Path.GetFileName(Environment.GetCommandLineArgs()[0]);
+			String optionalBracketLeft = String.Empty;
+			String optionalBracketRight = String.Empty;
 			String paramString;
 
-			for (var i = 0; i < 2; i++)
+			for (Int32 i = 0; i < 2; i++)
 			{
-				foreach (var param in _wantedParameters)
+				foreach (KeyValuePair<String, ParameterDefinition> param in _wantedParameters)
 				{
 					//first take only required parameters then only optional
 					if (i == 0 && param.Value.AllowType == ParamAllowType.Optional) continue;
@@ -284,12 +284,12 @@ namespace Singularity.Parsers
 					switch (param.Value.ValueType)
 					{
 						default:
-						case ECommandArgumentValueTypes.Bool: value = ""; break;
+						case ECommandArgumentValueTypes.Bool: value = String.Empty; break;
 						case ECommandArgumentValueTypes.String: value = " <" + ResManager.Translate("String") + ">"; break;
 						case ECommandArgumentValueTypes.Int: value = " <" + ResManager.Translate("Int") + ">"; break;
 						case ECommandArgumentValueTypes.OptionalString: value = " [<" + ResManager.Translate("String") + ">]"; break;
 						case ECommandArgumentValueTypes.OptionalInt: value = " [<" + ResManager.Translate("Int") + ">]"; break;
-						case ECommandArgumentValueTypes.MultipleBool: value = ""; paramString += " [" + ParameterPrefix + paramString + " [...]]"; break;
+						case ECommandArgumentValueTypes.MultipleBool: value = String.Empty; paramString += " [" + ParameterPrefix + paramString + " [...]]"; break;
 						case ECommandArgumentValueTypes.MultipleInts: value = " [<" + ResManager.Translate("Int") + "1> [<" + ResManager.Translate("Int") + "2> [...]]]"; break;
 					}
 					usage += " " + optionalBracketLeft + ParameterPrefix + paramString + value + optionalBracketRight + " ";
@@ -315,13 +315,13 @@ namespace Singularity.Parsers
 		/// <returns>string with information about each parameter</returns>
 		public String GetParameterInfo()
 		{
-			var parameterInfo = ResManager.Translate("Parameters") + "\r\n";
+			String parameterInfo = ResManager.Translate("Parameters") + "\r\n";
 
-			for (var i = 0; i < 2; i++)
+			for (Int32 i = 0; i < 2; i++)
 			{
 				//find the longest parameter for this section (i==0->required, i==1->optional)
-				var longestParamter = 0;
-				foreach (var param in _wantedParameters)
+				Int32 longestParamter = 0;
+				foreach (KeyValuePair<String, ParameterDefinition> param in _wantedParameters)
 					if ((i == 0 && param.Value.AllowType == ParamAllowType.Required) ||
 						 (i == 1 && param.Value.AllowType == ParamAllowType.Optional))
 						if (longestParamter < param.Key.Length)
@@ -331,7 +331,7 @@ namespace Singularity.Parsers
 				if (longestParamter > 0 && i == 0) parameterInfo += ResManager.Translate("Required") + "\r\n";
 				else if (longestParamter > 0 && i == 1) parameterInfo += "\r\n" + ResManager.Translate("Optional") + "\r\n";
 
-				foreach (var param in _wantedParameters)
+				foreach (KeyValuePair<String, ParameterDefinition> param in _wantedParameters)
 				{
 					//first take only required parameters then only optional
 					if (i == 0 && param.Value.AllowType == ParamAllowType.Optional) continue;
@@ -408,11 +408,11 @@ namespace Singularity.Parsers
 		private Int32 FindMismatchReasonInRegex(String regEx, String searchStr)
 		{
 			//disassemble RegEx string by finding all opening parentheses and their matching closing parts.
-			var parentesis = new SortedDictionary<Int32, Int32>();
-			var openP = new Stack<Int32>();
+			SortedDictionary<Int32, Int32> parentesis = new SortedDictionary<Int32, Int32>();
+			Stack<Int32> openP = new Stack<Int32>();
 			try
 			{
-				for (var i = 0; i < regEx.Length; i++)
+				for (Int32 i = 0; i < regEx.Length; i++)
 				{
 					if (regEx[i] == '(')
 					{
@@ -428,7 +428,7 @@ namespace Singularity.Parsers
 						if (!((i == 1 && regEx[i - 1] == '\\') ||
 								 (i > 1 && regEx[i - 1] == '\\' && regEx[i - 2] != '\\')))
 						{
-							var pop = openP.Pop();
+							Int32 pop = openP.Pop();
 							parentesis.Add(pop, i);
 						}
 					}
@@ -444,13 +444,13 @@ namespace Singularity.Parsers
 
 			// Parenthesis contains all parenthesis matches ordered by the position of the opening parenthesis
 			IEnumerator e = parentesis.GetEnumerator();
-			var lastCorrectPosition = 0;
+			Int32 lastCorrectPosition = 0;
 			while (e.MoveNext())
 			{
-				var c = (KeyValuePair<Int32, Int32>)e.Current;
+				KeyValuePair<Int32, Int32> c = (KeyValuePair<Int32, Int32>)e.Current;
 
 				//get sub-regular-expression of parenthesis grouping.
-				var subRegEx = regEx.Substring(c.Key, c.Value - c.Key + 1);
+				String subRegEx = regEx.Substring(c.Key, c.Value - c.Key + 1);
 				Regex sub = null;
 				try
 				{
@@ -461,7 +461,7 @@ namespace Singularity.Parsers
 					//this should never happen since subexpression of a valid regex should still be valid.
 					throw new Exception("Internal Exception: SubRegEx invalid: " + subRegEx.ToString());
 				}
-				var m = sub.Match(searchStr);
+				Match m = sub.Match(searchStr);
 				if (m.Success == true)
 				{
 					// if there is a match this subexpression matches the SearchStr and the mismatch must
@@ -470,7 +470,7 @@ namespace Singularity.Parsers
 					// (warning: here the wrong match might be detected,
 					// but since its is unlikely that commandline argument contains several identical parts,
 					// this potential problem is ignored.)
-					var newLastCorrectPosition = searchStr.IndexOf(m.Value) + m.Value.Length;
+					Int32 newLastCorrectPosition = searchStr.IndexOf(m.Value) + m.Value.Length;
 					if (newLastCorrectPosition > lastCorrectPosition)
 						lastCorrectPosition = newLastCorrectPosition;
 				}
@@ -491,10 +491,10 @@ namespace Singularity.Parsers
 				throw new Exception("Internal Exception: NewParam or NewValue in AddNewFoundParameter() == null!");
 
 			// values without parameter is only allowed if AllowValuesWithoutParameter==true.
-			if (newParam == "" && AllowValuesWithoutParameter == false)
+			if (newParam == String.Empty && AllowValuesWithoutParameter == false)
 				throw new ExceptionValueWithoutParameterFound(ResManager.Translate("Exception") + ResManager.Translate("ExceptionValueWithoutParameterFound") + newValue + ResManager.Translate("ExceptionValueWithoutParameterFound2"));
 
-			if (newParam == "" && AllowValuesWithoutParameter == true)
+			if (newParam == String.Empty && AllowValuesWithoutParameter == true)
 			{
 				// values without parameter are allowed -> add them to FoundParameters
 				_foundParameters.Add(newParam, newValue);
@@ -513,12 +513,12 @@ namespace Singularity.Parsers
 					{
 						// bool parameters do not accept any value.
 						case ECommandArgumentValueTypes.MultipleBool:
-						case ECommandArgumentValueTypes.Bool: if (newValue != "")
+						case ECommandArgumentValueTypes.Bool: if (newValue != String.Empty)
 								throw new ExceptionInvalidValueFound(ResManager.Translate("Exception") + ResManager.Translate("ExceptionInvalidValueFound") + newParam + ResManager.Translate("ExceptionInvalidValueFoundBool"));
 							break;
 
 						// optionalInt might be empty, then make it 0 and treat like a normal int.
-						case ECommandArgumentValueTypes.OptionalInt: if (newValue == "") newValue = "0"; goto case ECommandArgumentValueTypes.Int; //"" is okay for OptionalInt
+						case ECommandArgumentValueTypes.OptionalInt: if (newValue == String.Empty) newValue = "0"; goto case ECommandArgumentValueTypes.Int; //"" is okay for OptionalInt
 						// int must be able to be converted to int32 without causing exception!
 						case ECommandArgumentValueTypes.Int:                                                                      //else check if integer
 							try
@@ -535,9 +535,9 @@ namespace Singularity.Parsers
 						case ECommandArgumentValueTypes.MultipleInts:
 							try
 							{
-								var split = new Regex("[\\s]+");
-								var values = split.Split(newValue);
-								foreach (var value in values)
+								Regex split = new Regex("[\\s]+");
+								String[] values = split.Split(newValue);
+								foreach (String value in values)
 									Convert.ToInt32(value);
 							}
 							catch (Exception)
@@ -548,7 +548,7 @@ namespace Singularity.Parsers
 
 						// String can be anything but not empty.
 						case ECommandArgumentValueTypes.String:
-							if (newValue == "")
+							if (newValue == String.Empty)
 								throw new ExceptionInvalidValueFound(ResManager.Translate("Exception") + ResManager.Translate("ExceptionInvalidValueFound") + newParam + ResManager.Translate("ExceptionInvalidValueFoundString"));
 							break;
 

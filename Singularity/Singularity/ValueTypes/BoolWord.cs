@@ -29,7 +29,7 @@ namespace Singularity
 		[DebuggerStepThrough]
 		public BoolWord(String value, EBoolWordStyle wordStyle = EBoolWordStyle.TrueFalse)
 		{
-			var trueValue = wordStyle.GetAlternateValue().KeepLeft(ValueLib.Comma.CharValue);
+			String trueValue = wordStyle.GetAlternateValue().KeepLeft(ValueLib.Comma.CharValue);
 			_value = value.Equals(trueValue, StringComparison.OrdinalIgnoreCase);
 			_default = false;
 			_style = wordStyle;
@@ -50,10 +50,10 @@ namespace Singularity
 
 		public Char ToChar()
 		{
-			var result = 'F';
+			Char result = 'F';
 			if (_style < EBoolWordStyle.OnOff)
 			{
-				var values = _style.GetAlternateValue().Split(ValueLib.Comma.CharValue);
+				String[] values = _style.GetAlternateValue().Split(ValueLib.Comma.CharValue);
 				result = values[Convert.ToInt32(!_value)][0];
 			}
 			return result;
@@ -61,7 +61,7 @@ namespace Singularity
 
 		public override String ToString()
 		{
-			var values = _style.GetAlternateValue().Split(ValueLib.Comma.CharValue);
+			String[] values = _style.GetAlternateValue().Split(ValueLib.Comma.CharValue);
 			return values[Convert.ToInt32(!_value)];
 		}
 

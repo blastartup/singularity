@@ -34,7 +34,7 @@ namespace Singularity.DataService.OleDbFramework.SelectStrategy
 			}
 			else
 			{
-				orderBy = "";
+				orderBy = String.Empty;
 			}
 
 			// Visual FoxPro doesn't support Top #.  It has a recno() instead that is included as part of the Where clause...

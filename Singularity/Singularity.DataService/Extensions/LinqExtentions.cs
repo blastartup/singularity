@@ -60,7 +60,7 @@ namespace Singularity.DataService
 			{
 				depth++;
 
-				foreach (var item in childs)
+				foreach (TEntity item in childs)
 					yield return new HierarchyNode<TEntity>()
 					{
 						Entity = item,

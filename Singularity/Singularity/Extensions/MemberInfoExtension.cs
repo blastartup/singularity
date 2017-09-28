@@ -31,7 +31,7 @@ namespace Singularity
 
 		public static IList<T> GetFields<T>(this MemberInfo property) where T : Attribute
 		{
-			var result = new List<T>();
+			List<T> result = new List<T>();
 			if (Attribute.IsDefined(property, typeof(T)))
 			{
 				result.AddRange(property.GetCustomAttributes(typeof(T), false).Cast<T>());

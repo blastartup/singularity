@@ -111,7 +111,7 @@ namespace Singularity
 			_delimiter = delimiter;
 
 			// Originally had Regex.Split but it doesn't work with fullstops, commas or pipes.
-			var lWordCollection = new List<String>(value.Split(delimiter));
+			List<String> lWordCollection = new List<String>(value.Split(delimiter));
 			if (wordCount.Equals(-1))
 			{
 				wordCount = lWordCollection.Count;
@@ -119,8 +119,8 @@ namespace Singularity
 			if (positionOfFirstWord <= lWordCollection.Count)
 			{
 				positionOfFirstWord--;  // Adjust for zero based array.
-				var lLastField = (positionOfFirstWord + wordCount).LimitMax(lWordCollection.Count);
-				for (var iIdx = 0; iIdx < lLastField; iIdx++)
+				Int32 lLastField = (positionOfFirstWord + wordCount).LimitMax(lWordCollection.Count);
+				for (Int32 iIdx = 0; iIdx < lLastField; iIdx++)
 				{
 					_internalList.Add(lWordCollection[iIdx]);
 				}
@@ -158,7 +158,7 @@ namespace Singularity
 		{
 			get
 			{
-				var result = String.Empty;
+				String result = String.Empty;
 				if (!index.IsOutOfRange(0, _internalList.Count - 1))
 				{
 					result = _internalList[index];
@@ -198,7 +198,7 @@ namespace Singularity
 		{
 			if (!words.IsEmpty())
 			{
-				foreach (var word in words)
+				foreach (String word in words)
 				{
 					Append(word, includeEmptyWords);
 				}
@@ -246,14 +246,14 @@ namespace Singularity
 
 			count = count.LimitInRange(1, _internalList.Count - index);
 
-			var result = new Words(_internalList.GetRange(index, count));
+			Words result = new Words(_internalList.GetRange(index, count));
 			_internalList.RemoveRange(index, count);
 			return result;
 		}
 
 		public Words FormatWith(Object model, String beginTag = "{{", String endTag = "}}")
 		{
-			var result = new List<String>(_internalList.Count);
+			List<String> result = new List<String>(_internalList.Count);
 			foreach (String item in _internalList)
 			{
 				result.Add(item.FormatWith(model, beginTag, endTag));
@@ -309,7 +309,7 @@ namespace Singularity
 		{
 			Contract.Requires(index >= 0);
 
-			var result = false;
+			Boolean result = false;
 			if (index.IsInRange(0, _internalList.Count - 1))
 			{
 				_internalList.Insert(index, word);
@@ -322,7 +322,7 @@ namespace Singularity
 		{
 			Contract.Requires(index >= 0);
 
-			var result = false;
+			Boolean result = false;
 			if (index.IsInRange(0, _internalList.Count - 1))
 			{
 
@@ -337,7 +337,7 @@ namespace Singularity
 		{
 			get 
 			{
-				var result = String.Empty;
+				String result = String.Empty;
 				if (_internalList.Count > 0)
 				{
 					result = _internalList[_internalList.Count - 1];
@@ -360,13 +360,13 @@ namespace Singularity
 		[DebuggerHidden]
 		public Boolean Remove(params String[] wordStrings)
 		{
-			var result = false;
-			foreach (var wordString in wordStrings)
+			Boolean result = false;
+			foreach (String wordString in wordStrings)
 			{
-				var removeWords = new Words(wordString, _delimiter);
-				foreach (var removeWord in removeWords)
+				Words removeWords = new Words(wordString, _delimiter);
+				foreach (String removeWord in removeWords)
 				{
-					var foundWord = _internalList.FirstOrDefault(w => w.ToUpper() == removeWord);
+					String foundWord = _internalList.FirstOrDefault(w => w.ToUpper() == removeWord);
 					if (!foundWord.IsEmpty())
 					{
 						result |= _internalList.Remove(foundWord);
@@ -383,7 +383,7 @@ namespace Singularity
 		[DebuggerHidden]
 		public Boolean RemoveLastWord()
 		{
-			var result = false;
+			Boolean result = false;
 			if (_internalList.Count > 0)
 			{
 				_internalList.RemoveAt(_internalList.Count - 1);
@@ -416,7 +416,7 @@ namespace Singularity
 		[DebuggerHidden]
 		public Words ToUpper()
 		{
-			for (var idx = 0; idx < _internalList.Count; idx++)
+			for (Int32 idx = 0; idx < _internalList.Count; idx++)
 			{
 				_internalList[idx] = _internalList[idx].ToUpper();
 			}
@@ -426,7 +426,7 @@ namespace Singularity
 		[DebuggerHidden]
 		public Words ToLower()
 		{
-			for (var idx = 0; idx < _internalList.Count; idx++)
+			for (Int32 idx = 0; idx < _internalList.Count; idx++)
 			{
 				_internalList[idx] = _internalList[idx].ToLower();
 			}

@@ -22,7 +22,7 @@ namespace Singularity.DataService
 
 			if (_isFirstRowHeadings)
 			{
-				for (var idx = 0; idx < columnCount; idx++)
+				for (Int32 idx = 0; idx < columnCount; idx++)
 				{
 					if (!IsRequiredColumn(idx)) continue;
 					sw.Write(dataSource.Columns[idx]);
@@ -36,7 +36,7 @@ namespace Singularity.DataService
 
 			foreach (DataRow dataRow in dataSource.Rows)
 			{
-				for (var idx = 0; idx < columnCount; idx++)
+				for (Int32 idx = 0; idx < columnCount; idx++)
 				{
 					if (!IsRequiredColumn(idx)) continue;
 					if (!Convert.IsDBNull(dataRow[idx]))
@@ -68,7 +68,7 @@ namespace Singularity.DataService
 		/// <param name="stream"></param>
 		public Boolean WriteToStream(DataTable dataSource, Stream stream)
 		{
-			var sw = new StreamWriter(stream);
+			StreamWriter sw = new StreamWriter(stream);
 			OutputToStreamWriter(dataSource, sw);
 			sw.Flush();
 			stream.Seek(0, SeekOrigin.Begin);
@@ -77,7 +77,7 @@ namespace Singularity.DataService
 
 		public Boolean WriteToFile(DataTable dataSource, String fileName)
 		{
-			using (var fs = new FileStream(fileName, FileMode.Create))
+			using (FileStream fs = new FileStream(fileName, FileMode.Create))
 			{
 				return WriteToStream(dataSource, fs);
 			}

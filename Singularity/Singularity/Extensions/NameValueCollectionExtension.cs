@@ -12,7 +12,7 @@ namespace Singularity
 	{
 		public static IEnumerable<KeyValuePair<String, String>> ToKeyValuePairs(this NameValueCollection collection)
 		{
-			var result = new List<KeyValuePair<String, String>>();
+			List<KeyValuePair<String, String>> result = new List<KeyValuePair<String, String>>();
 			if (!collection.IsEmpty())
 			{
 				result.AddRange(collection.AllKeys.Select(key => new KeyValuePair<String, String>(key, collection[key])));

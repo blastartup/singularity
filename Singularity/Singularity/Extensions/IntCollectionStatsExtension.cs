@@ -12,12 +12,12 @@ namespace Singularity
 		{
 			Double lSumOfSquares = 0;
 			Func<Int32, Int32> lConversion = ToInt;
-			var lAverage = value.Average<Int32>(lConversion);
-			foreach (var lItem in value)
+			Double lAverage = value.Average<Int32>(lConversion);
+			foreach (Int32 lItem in value)
 			{
 				lSumOfSquares += Math.Pow(((Double)lItem - lAverage), 2);
 			}
-			var lCount = (Double)value.Count();
+			Double lCount = (Double)value.Count();
 			return Math.Sqrt(lSumOfSquares / (lCount - 1));
 		}
 
@@ -28,11 +28,11 @@ namespace Singularity
 
 		public static Double Median(this IEnumerable<Int32> value)
 		{
-			var sortedList = new List<Int32>(value.ToList());
+			List<Int32> sortedList = new List<Int32>(value.ToList());
 			sortedList.Sort();
 
 			Double median = 0;
-			var middleValue = 0;
+			Int32 middleValue = 0;
 			Decimal half = 0;
 
 			half = (sortedList.Count - 1) / 2;

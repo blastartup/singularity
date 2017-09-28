@@ -28,7 +28,7 @@ namespace Singularity.FileService
 		{
 			Byte[] plainText = text.ToByteArray();
 
-			using (var sourceStream = new FileStream(fileInfo.FullName, FileMode.Create, FileAccess.Write, FileShare.None,
+			using (FileStream sourceStream = new FileStream(fileInfo.FullName, FileMode.Create, FileAccess.Write, FileShare.None,
 				 4096, true))
 			{
 				await sourceStream.WriteAsync(plainText, 0, plainText.Length);
@@ -67,7 +67,7 @@ namespace Singularity.FileService
 		// Todo - replace switch table by looking up a T4 auto generated enum from a MimeType reference table.
 		public static IFileContentType GetFileContentType(this FileInfo documentFile)
 		{
-			var result = new ContentAndFileType();
+			ContentAndFileType result = new ContentAndFileType();
 			switch (documentFile.Extension.ToLower())
 			{
 				case ".doc":

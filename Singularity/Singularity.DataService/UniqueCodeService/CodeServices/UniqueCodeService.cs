@@ -26,7 +26,7 @@ namespace Singularity.DataService.UniqueCodeService
 
 		protected virtual ReplyMessage IsValid(IReply generatedCodeResult)
 		{
-			var result = (ReplyMessage)generatedCodeResult;
+			ReplyMessage result = (ReplyMessage)generatedCodeResult;
 			result.Condition = IsCodeUnique(result.Message) && (result.Message.Length == strategy.CompleteLength);
 			return result;
 		}

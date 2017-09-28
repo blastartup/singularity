@@ -16,7 +16,7 @@ namespace Singularity
 			{
 				if (aValue is String)
 				{
-					var lValue = (String)aValue;
+					String lValue = (String)aValue;
 					if (!lValue.IsEmpty())
 					{
 						return new BaseN(Convert.ToInt32(aValue.ToString()));

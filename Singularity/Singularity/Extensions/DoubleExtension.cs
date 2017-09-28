@@ -81,14 +81,14 @@ namespace Singularity
 				lowLimit = lowLimit.Swap(ref highLimit);
 			}
 
-			var result = input.LimitMin(lowLimit).LimitMax(highLimit);
+			Double result = input.LimitMin(lowLimit).LimitMax(highLimit);
 			wasOutOfRange = !input.Equals(result);
 			return result;
 		}
 
 		public static Boolean IsOutOfRange(this Double input, Double lowLimit, Double highLimit)
 		{
-			var result = false;
+			Boolean result = false;
 			LimitInRange(input, lowLimit, highLimit, out result);
 			return result;
 		}

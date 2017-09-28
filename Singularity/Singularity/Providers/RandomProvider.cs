@@ -111,13 +111,13 @@ namespace Singularity
 		/// <returns></returns>
 		public Int32 Next()
 		{
-			var t=(_x^(_x<<11));
+			UInt32 t=(_x^(_x<<11));
 			_x=_y; _y=_z; _z=_w;
 			_w=(_w^(_w>>19))^(t^(t>>8));
 
 			// Handle the special case where the value int.MaxValue is generated. This is outside of 
 			// the range of permitted values, so we therefore call Next() to try again.
-			var rtn = _w&0x7FFFFFFF;
+			UInt32 rtn = _w&0x7FFFFFFF;
 			if(rtn==0x7FFFFFFF)
 				return Next();
 			return (Int32)rtn;			
@@ -133,7 +133,7 @@ namespace Singularity
 			if(upperBound<0)
 				throw new ArgumentOutOfRangeException("upperBound", upperBound, "upperBound must be >=0");
 
-			var t=(_x^(_x<<11));
+			UInt32 t=(_x^(_x<<11));
 			_x=_y; _y=_z; _z=_w;
 
 			// The explicit int cast before the first multiplication gives better performance.
@@ -155,12 +155,12 @@ namespace Singularity
 				throw new ArgumentOutOfRangeException(nameof(upperBound), upperBound, "upperBound must be >=lowerBound");
 			}
 
-			var t=(_x^(_x<<11));
+			UInt32 t=(_x^(_x<<11));
 			_x=_y; _y=_z; _z=_w;
 
 			// The explicit int cast before the first multiplication gives better performance.
 			// See comments in NextDouble.
-			var range = upperBound-lowerBound;
+			Int32 range = upperBound-lowerBound;
 			if(range<0)
 			{	// If range is <0 then an overflow has occured and must resort to using long integer arithmetic instead (slower).
 				// We also must use all 32 bits of precision, instead of the normal 31, which again is slower.	
@@ -178,7 +178,7 @@ namespace Singularity
 		/// <returns></returns>
 		public Double NextDouble()
 		{	
-			var t = (_x^(_x<<11));
+			UInt32 t = (_x^(_x<<11));
 			_x = _y;
 			_y = _z;
 			_z = _w;
@@ -205,9 +205,9 @@ namespace Singularity
 		{
 			// Fill up the bulk of the buffer in chunks of 4 bytes at a time.
 			UInt32 x = _x, y = _y, z = _z, w = _w;
-			var i = 0;
+			Int32 i = 0;
 			UInt32 t;
-			for(var bound=buffer.Length-3; i < bound;)
+			for(Int32 bound=buffer.Length-3; i < bound;)
 			{	
 				// Generate 4 bytes. 
 				// Increased performance is achieved by generating 4 random bytes per loop.
@@ -309,7 +309,7 @@ namespace Singularity
 		[CLSCompliant(false)]
 		public UInt32 NextUInt()
 		{
-			var t=(_x^(_x<<11));
+			UInt32 t=(_x^(_x<<11));
 			_x=_y; _y=_z; _z=_w;
 			return (_w=(_w^(_w>>19))^(t^(t>>8)));
 		}
@@ -325,7 +325,7 @@ namespace Singularity
 		/// <returns>A positive random integer quickly.</returns>
 		public Int32 NextInt()
 		{
-			var t=(_x^(_x<<11));
+			UInt32 t=(_x^(_x<<11));
 			_x=_y; _y=_z; _z=_w;
 			return (Int32)(0x7FFFFFFF&(_w=(_w^(_w>>19))^(t^(t>>8))));
 		}
@@ -347,7 +347,7 @@ namespace Singularity
 			if(_bitMask==1)
 			{	
 				// Generate 32 more bits.
-				var t=(_x^(_x<<11));
+				UInt32 t=(_x^(_x<<11));
 				_x=_y; _y=_z; _z=_w;
 				_bitBuffer=_w=(_w^(_w>>19))^(t^(t>>8));
 

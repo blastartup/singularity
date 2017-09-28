@@ -144,7 +144,7 @@ namespace Singularity
 
 		public void Delete(Int32 fieldIndex, Int32 count)
 		{
-			for (var lIdx = fieldIndex; lIdx < count; lIdx++)
+			for (Int32 lIdx = fieldIndex; lIdx < count; lIdx++)
 			{
 				StringList.RemoveAt(lIdx);
 			}
@@ -227,10 +227,10 @@ namespace Singularity
 
 		private String ToStringCore(String delimiter, Int32 startFieldIndex, Int32 count)
 		{
-			var result = String.Empty;
+			String result = String.Empty;
 			if (StringList.Count > 0)
 			{
-				var lBuilder = ToStringBuilderCore(delimiter, startFieldIndex, count);
+				StringBuilder lBuilder = ToStringBuilderCore(delimiter, startFieldIndex, count);
 				result = lBuilder.ToString();
 			}
 			return result;
@@ -238,9 +238,9 @@ namespace Singularity
 
 		private StringBuilder ToStringBuilderCore(String delimiter, Int32 startFieldIndex, Int32 count)
 		{
-			var lBuilder = delimiter.IsEmpty() ? NewStringBuilder(Length) : NewStringBuilder(Length + (StringList.Count * delimiter.Length));
-			var lHasRunOnceAtLeast = false;
-			for (var iIdx = startFieldIndex; iIdx < count; iIdx++)
+			StringBuilder lBuilder = delimiter.IsEmpty() ? NewStringBuilder(Length) : NewStringBuilder(Length + (StringList.Count * delimiter.Length));
+			Boolean lHasRunOnceAtLeast = false;
+			for (Int32 iIdx = startFieldIndex; iIdx < count; iIdx++)
 			{
 				if (!delimiter.IsEmpty())
 				{

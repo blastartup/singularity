@@ -10,14 +10,14 @@ namespace Singularity
 		public static DateTime AddWorkingDays(this DateTime dateFrom, Int32 numberOfDays)
 		{
 			// determine if we are increasing or decreasing the days
-			var nDirection = 1;
+			Int32 nDirection = 1;
 			if (numberOfDays < 0)
 			{
 				nDirection = -1;
 			}
 
 			// move ahead the day of week
-			var nWeekday = numberOfDays % 5;
+			Int32 nWeekday = numberOfDays % 5;
 
 			while (nWeekday != 0)
 			{
@@ -132,7 +132,7 @@ namespace Singularity
 			}
 
 			// Split the time parts.
-			var digits = time.Split(':');
+			String[] digits = time.Split(':');
 
 			// At the least, we must have hour and minute.
 			if (digits.Length < 2)

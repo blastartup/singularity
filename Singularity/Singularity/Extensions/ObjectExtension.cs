@@ -27,7 +27,7 @@ namespace Singularity
 		[Pure]
 		public static Boolean IsEmpty(this Object value)
 		{
-			var result = false;
+			Boolean result = false;
 
 			if (value == null)
 			{
@@ -71,8 +71,8 @@ namespace Singularity
 			}
 			else if (value is IEnumerable)
 			{
-				var allItemsEmpty = true;
-				foreach (var item in (IEnumerable)value)
+				Boolean allItemsEmpty = true;
+				foreach (Object item in (IEnumerable)value)
 				{
 					allItemsEmpty &= item.IsEmpty();
 
@@ -130,9 +130,9 @@ namespace Singularity
 			}
 			else if (value is IDictionary)
 			{
-				var dictionary = value as IDictionary;
-				var innerResult = new DelimitedStringBuilder(dictionary.Count);
-				foreach (var key in dictionary.Keys)
+				IDictionary dictionary = value as IDictionary;
+				DelimitedStringBuilder innerResult = new DelimitedStringBuilder(dictionary.Count);
+				foreach (Object key in dictionary.Keys)
 				{
 					innerResult.Add("{0}{1}{2}", key.ToDescription(), ValueLib.KeyValueDelimiter.StringValue, dictionary[key].ToDescription());
 				}
@@ -165,7 +165,7 @@ namespace Singularity
 		[DebuggerStepThrough]
 		public static TObject Swap<TObject>(this TObject value1, ref TObject value2)
 		{
-			var result = value2;
+			TObject result = value2;
 			value2 = value1;
 			return result;
 		}
@@ -402,7 +402,7 @@ namespace Singularity
 
 		private static Object ToCore(Object value, Object defaultValue, NumberStyles? numberStyles = null)
 		{
-			var result = defaultValue;
+			Object result = defaultValue;
 			if (value != null)
 			{
 				try
@@ -466,7 +466,7 @@ namespace Singularity
 
 		private static DateTime ConvertToDateTime(Object value, DateTime defaultValue)
 		{
-			var result = defaultValue;
+			DateTime result = defaultValue;
 			try
 			{
 				result = Convert.ToDateTime(value);
@@ -491,7 +491,7 @@ namespace Singularity
 		[DebuggerStepThrough]
 		public static Int32? ToNullableInt(this Object value, Int32? defaultValue)
 		{
-			var result = defaultValue;
+			Int32? result = defaultValue;
 			if (value != null)
 			{
 				result = defaultValue != null ? value.ToInt(defaultValue.Value) : value.ToInt();
@@ -512,7 +512,7 @@ namespace Singularity
 		[DebuggerStepThrough]
 		public static Int64? ToNullableInt64(this Object value, Int64? defaultValue)
 		{
-			var result = defaultValue;
+			Int64? result = defaultValue;
 			if (value != null)
 			{
 				result = defaultValue != null ? value.ToInt64(defaultValue.Value) : value.ToInt();
@@ -533,7 +533,7 @@ namespace Singularity
 		[DebuggerStepThrough]
 		public static DateTime? ToNullableDateTime(this Object value, DateTime? defaultValue)
 		{
-			var result = defaultValue;
+			DateTime? result = defaultValue;
 			if (value != null)
 			{
 				result = defaultValue != null ? value.ToDateTime(defaultValue.Value) : value.ToDateTime();
@@ -554,7 +554,7 @@ namespace Singularity
 		[DebuggerStepThrough]
 		public static Decimal? ToNullableDecimal(this Object value, Decimal? defaultValue)
 		{
-			var result = defaultValue;
+			Decimal? result = defaultValue;
 			if (value != null)
 			{
 				result = defaultValue != null ? value.ToDecimal(defaultValue.Value) : value.ToDecimal();
@@ -574,7 +574,7 @@ namespace Singularity
 
 		public static Boolean? ToNullableBoolean(this Object value, Boolean? defaultValue)
 		{
-			var result = defaultValue;
+			Boolean? result = defaultValue;
 			if (value != null)
 			{
 				result = defaultValue != null ? value.ToBool(defaultValue.Value) : value.ToBool();
@@ -595,7 +595,7 @@ namespace Singularity
 		[DebuggerStepThrough]
 		public static Double? ToNullableDouble(this Object value, Double? defaultValue)
 		{
-			var result = defaultValue;
+			Double? result = defaultValue;
 			if (value != null)
 			{
 				result = defaultValue != null ? value.ToDouble(defaultValue.Value) : value.ToDouble();
@@ -616,7 +616,7 @@ namespace Singularity
 		[DebuggerStepThrough]
 		public static Single? ToNullableSingle(this Object value, Single? defaultValue)
 		{
-			var result = defaultValue;
+			Single? result = defaultValue;
 			if (value != null)
 			{
 				result = defaultValue != null ? value.ToSingle(defaultValue.Value) : value.ToSingle();
@@ -637,7 +637,7 @@ namespace Singularity
 		[DebuggerStepThrough]
 		public static Guid? ToNullableGuid(this Object value, Guid? defaultValue)
 		{
-			var result = defaultValue;
+			Guid? result = defaultValue;
 			if (value != null)
 			{
 				result = defaultValue != null ? value.ToGuid(defaultValue.Value) : value.ToGuid();
@@ -654,7 +654,7 @@ namespace Singularity
 		[DebuggerStepThrough]
 		public static KeyValuePairs PropertiesToKeyValuePairs<TObject>(this TObject @object) where TObject : class
 		{
-			var result = new KeyValuePairs();
+			KeyValuePairs result = new KeyValuePairs();
 
 			if (@object != null)
 			{
@@ -667,23 +667,23 @@ namespace Singularity
 		[DebuggerStepThrough]
 		private static KeyValuePairs AddFields<TObject>(TObject @object, Int32 nestCounter = 0) where TObject : class
 		{
-			var result = new KeyValuePairs();
+			KeyValuePairs result = new KeyValuePairs();
 			if (@object != null && nestCounter < MaxNesting)
 			{
 				nestCounter++;
-				var fields = @object.GetType().GetFields(BindingFlags.Instance | BindingFlags.Public);
-				foreach (var field in fields)
+				FieldInfo[] fields = @object.GetType().GetFields(BindingFlags.Instance | BindingFlags.Public);
+				foreach (FieldInfo field in fields)
 				{
-					var valueObject = field.GetValue(@object);
-					var keyValuePair = GetKeyValue(field.Name, valueObject);
+					Object valueObject = field.GetValue(@object);
+					KeyValuePair<String, String> keyValuePair = GetKeyValue(field.Name, valueObject);
 					if (!keyValuePair.Key.IsEmpty())
 					{
 						result.Add(keyValuePair);
 					}
 					else if (valueObject is IList)
 					{
-						var itemCntr = 0;
-						foreach (var item in (IList)valueObject)
+						Int32 itemCntr = 0;
+						foreach (Object item in (IList)valueObject)
 						{
 							result.Add(new KeyValuePair<String, String>("{0}[{1}]".FormatX(field.Name, itemCntr++), AddProperties(item, nestCounter).ToString()));
 						}
@@ -699,28 +699,28 @@ namespace Singularity
 
 		private static KeyValuePairs AddProperties<TObject>(TObject @object, Int32 nestCounter = 0) where TObject : class
 		{
-			var result = new KeyValuePairs();
+			KeyValuePairs result = new KeyValuePairs();
 			if (@object != null && nestCounter < MaxNesting)
 			{
 				nestCounter++;
-				var properties = @object.GetType().GetProperties(BindingFlags.Instance | BindingFlags.Public).Where(p => p != null).ToList();
-				foreach (var property in properties)
+				List<PropertyInfo> properties = @object.GetType().GetProperties(BindingFlags.Instance | BindingFlags.Public).Where(p => p != null).ToList();
+				foreach (PropertyInfo property in properties)
 				{
-					var valueObject = property.GetValue(@object, null);
+					Object valueObject = property.GetValue(@object, null);
 					if (valueObject == null)
 					{
 						continue;
 					}
 
-					var keyValuePair = GetKeyValue(property.Name, valueObject);
+					KeyValuePair<String, String> keyValuePair = GetKeyValue(property.Name, valueObject);
 					if (!keyValuePair.Key.IsEmpty())
 					{
 						result.Add(keyValuePair);
 					}
 					else if (valueObject is IList)
 					{
-						var itemCntr = 0;
-						foreach (var item in (IList)valueObject)
+						Int32 itemCntr = 0;
+						foreach (Object item in (IList)valueObject)
 						{
 							result.Add(new KeyValuePair<String, String>("{0}[{1}]".FormatX(property.Name, itemCntr++), AddProperties(item, nestCounter).ToString()));
 						}
@@ -738,10 +738,10 @@ namespace Singularity
 
 		private static KeyValuePair<String, String> GetKeyValue(String fieldName, Object valueObject)
 		{
-			var result = new KeyValuePair<String, String>();
+			KeyValuePair<String, String> result = new KeyValuePair<String, String>();
 			if (valueObject != null)
 			{
-				var valueObjectType = valueObject.GetType();
+				Type valueObjectType = valueObject.GetType();
 				if (valueObjectType.Name == "String")
 				{
 					result = new KeyValuePair<String, String>(fieldName, valueObject.ToString());
@@ -762,7 +762,7 @@ namespace Singularity
 
 		private static String GetStringValue(Object valueObject, Type valueObjectType)
 		{
-			var result = String.Empty;
+			String result = String.Empty;
 			if (valueObjectType == typeof(DateTime))
 			{
 				result = ((DateTime)valueObject).ToString("dd/MM/yyyy");
@@ -782,7 +782,7 @@ namespace Singularity
 
 		public static TValue ReplaceUsing<TValue>(this TValue value, IEnumerable<Tuple<TValue, TValue>> replacementValueMaps)
 		{
-			foreach (var replacementValueMap in replacementValueMaps)
+			foreach (Tuple<TValue, TValue> replacementValueMap in replacementValueMaps)
 			{
 				if (replacementValueMap.Item1.Equals(value))
 				{
@@ -796,10 +796,10 @@ namespace Singularity
 		{
 			Contract.Requires(objects != null);
 
-			var model = new ExpandoObject();
+			ExpandoObject model = new ExpandoObject();
 			if (objects != null)
 			{
-				var modelDictionary = model as IDictionary<String, Object>;
+				IDictionary<String, Object> modelDictionary = model as IDictionary<String, Object>;
 				ToExpandoObjectCore(objects, modelDictionary);
 			}
 			return model;
@@ -807,7 +807,7 @@ namespace Singularity
 
 		private static void ToExpandoObjectCore(Object[] objects, IDictionary<String, Object> modelDictionary)
 		{
-			foreach (var o in objects)
+			foreach (Object o in objects)
 			{
 				if (o == null)
 				{
@@ -820,8 +820,8 @@ namespace Singularity
 					continue;
 				}
 
-				var properties = o.GetType().GetProperties();
-				foreach (var property in properties)
+				PropertyInfo[] properties = o.GetType().GetProperties();
+				foreach (PropertyInfo property in properties)
 				{
 					modelDictionary[property.Name] = property.GetValue(o, null);
 				}
@@ -836,11 +836,11 @@ namespace Singularity
 		/// <returns></returns>
 		public static Object GetPropertyValue(this Object model, String propertyName)
 		{
-			var varName = propertyName;
-			var indexOfDot = propertyName.IndexOf('.');
+			String varName = propertyName;
+			Int32 indexOfDot = propertyName.IndexOf('.');
 			while (indexOfDot != -1)
 			{
-				var currentObjectName = varName.Substring(0, indexOfDot);
+				String currentObjectName = varName.Substring(0, indexOfDot);
 				varName = varName.Substring(indexOfDot + 1);
 				indexOfDot = varName.IndexOf('.');
 				model = model.GetPropertyValue(currentObjectName);
@@ -848,14 +848,14 @@ namespace Singularity
 			}
 
 			// ExpandoObject support
-			var dv = TryGetDictionaryValue<Object>(model, varName);
+			Object dv = TryGetDictionaryValue<Object>(model, varName);
 			if (dv != null) return dv;
 
 			// any IDictionary<String,String> support
 			dv = TryGetDictionaryValue<String>(model, varName);
 			if (dv != null) return dv;
 
-			var pv = TryGetPropertyValue(model, varName);
+			Object pv = TryGetPropertyValue(model, varName);
 			return pv ?? propertyName;
 
 			//no fields - discourage bad design
@@ -865,7 +865,7 @@ namespace Singularity
 
 		private static Object TryGetDictionaryValue<TValue>(Object obj, String name) where TValue : class
 		{
-			var dicObj = obj as IDictionary<String, TValue>;
+			IDictionary<String, TValue> dicObj = obj as IDictionary<String, TValue>;
 			if (dicObj != null)
 			{
 				return dicObj.ContainsKey(name) ? dicObj[name] : null;
@@ -875,8 +875,8 @@ namespace Singularity
 
 		private static Object TryGetPropertyValue(Object obj, String name)
 		{
-			var type = obj.GetType();
-			var property = type.GetProperty(name);
+			Type type = obj.GetType();
+			PropertyInfo property = type.GetProperty(name);
 			if (property != null) return property.GetValue(obj, null);
 			return null;
 		}

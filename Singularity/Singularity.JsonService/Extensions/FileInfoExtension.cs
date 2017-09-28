@@ -13,12 +13,12 @@ namespace Singularity.JsonService.Extensions
 	{
 		public static T ReadJsonFile<T>(this FileInfo sourceJsonFileInfo, Boolean rootedObject = false)
 		{
-			using (var reader = new StreamReader(sourceJsonFileInfo.FullName))
+			using (StreamReader reader = new StreamReader(sourceJsonFileInfo.FullName))
 			{
 				String jsonText = reader.ReadToEnd();
 				if (rootedObject)
 				{
-					var rootValue = JObject.Parse(jsonText).SelectToken(typeof(T).Name).ToString();
+					String rootValue = JObject.Parse(jsonText).SelectToken(typeof(T).Name).ToString();
 					return JsonConvert.DeserializeObject<T>(rootValue);
 				}
 				return JsonConvert.DeserializeObject<T>(jsonText);
@@ -27,9 +27,9 @@ namespace Singularity.JsonService.Extensions
 
 		public static void WriteJsonFile<T>(this FileInfo targetJsonFileInfo, T entity)
 		{
-			var serializer = new JsonSerializer();
-			using (var writer = new StreamWriter(targetJsonFileInfo.FullName))
-			using (var jsonWriter = new JsonTextWriter(writer))
+			JsonSerializer serializer = new JsonSerializer();
+			using (StreamWriter writer = new StreamWriter(targetJsonFileInfo.FullName))
+			using (JsonTextWriter jsonWriter = new JsonTextWriter(writer))
 			{
 				serializer.Serialize(jsonWriter, entity);
 			}

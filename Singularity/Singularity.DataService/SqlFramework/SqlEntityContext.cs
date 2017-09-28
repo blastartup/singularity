@@ -52,7 +52,7 @@ namespace Singularity.DataService.SqlFramework
 
 		public Boolean Commit()
 		{
-			var result = false;
+			Boolean result = false;
 			if (_sqlTransaction != null)
 			{
 				try
@@ -109,7 +109,7 @@ namespace Singularity.DataService.SqlFramework
 
 		private SqlCommand CreateCommand(String query, CommandType commandType, SqlParameter[] filterParameters)
 		{
-			var sqlCommand = new SqlCommand(query, _sqlConnection)
+			SqlCommand sqlCommand = new SqlCommand(query, _sqlConnection)
 			{
 				CommandType = commandType,
 				Transaction = _sqlTransaction
@@ -121,8 +121,8 @@ namespace Singularity.DataService.SqlFramework
 		private T ExecuteWithRetry<T>(SqlCommand cmd, Func<T> executeSql)
 		{
 			_errorMessage = String.Empty;
-			var reconnect = false;
-			for (var idx = 0; idx < MaximumRetries; idx++)
+			Boolean reconnect = false;
+			for (Int32 idx = 0; idx < MaximumRetries; idx++)
 			{
 				try
 				{

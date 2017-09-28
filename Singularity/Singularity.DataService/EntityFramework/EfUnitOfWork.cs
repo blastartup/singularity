@@ -36,10 +36,10 @@ namespace Singularity.DataService
 				}
 				else
 				{
-					var sqlException = (SqlException)ex.InnerException.InnerException;
+					SqlException sqlException = (SqlException)ex.InnerException.InnerException;
 					foreach (SqlError sqlExceptionError in sqlException.Errors)
 					{
-						var errorNumber = sqlExceptionError.Number;
+						Int32 errorNumber = sqlExceptionError.Number;
 						String errorText;
 						if (_sqlErrorTextDict.TryGetValue(errorNumber, out errorText))
 						{
@@ -58,9 +58,9 @@ namespace Singularity.DataService
 			{
 				result = false;
 				_efValidationResults.Clear();
-				foreach (var validationErrors in ex.EntityValidationErrors)
+				foreach (DbEntityValidationResult validationErrors in ex.EntityValidationErrors)
 				{
-					foreach (var validationError in validationErrors.ValidationErrors)
+					foreach (DbValidationError validationError in validationErrors.ValidationErrors)
 					{
 						_efValidationResults.Add(new EfValidationResult(validationError.ErrorMessage, validationErrors.Entry.Entity.GetType().Name, validationError.PropertyName));
 					}

@@ -13,8 +13,8 @@ namespace Singularity.Test
 		[TestMethod]
 		public void TestFormatWith()
 		{
-			var entiy = new EntityDto();
-			var result = normalTemplate.FormatWith(entiy);
+			EntityDto entiy = new EntityDto();
+			String result = normalTemplate.FormatWith(entiy);
 			Assert.IsTrue(result == "Chris went to School today.", "FormatWith worked for normal tags.");
 
 			result = abnormalTemplate.FormatWith(entiy, "«", "»");

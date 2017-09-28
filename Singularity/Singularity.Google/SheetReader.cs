@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Google.GData.Client;
 using Google.GData.Spreadsheets;
 
 namespace Singularity.Google
@@ -16,28 +17,28 @@ namespace Singularity.Google
 
 		public List<TDataRow> ReadAll<TDataRow>(String documentName, String sheetTitle) where TDataRow : GdataRow, new()
 		{
-			var sheetQuery = new SpreadsheetQuery();
-			var sheetFeed = AuthorisedSpreadsheetsService.Query(sheetQuery);
+			SpreadsheetQuery sheetQuery = new SpreadsheetQuery();
+			SpreadsheetFeed sheetFeed = AuthorisedSpreadsheetsService.Query(sheetQuery);
 
-			var affiliates = (from x in sheetFeed.Entries where x.Title.Text.Contains(documentName) select x).First();
+			AtomEntry affiliates = (from x in sheetFeed.Entries where x.Title.Text.Contains(documentName) select x).First();
 
 			// Get the first Worksheet...
-			var sheetLink = affiliates.Links.FindService(GDataSpreadsheetsNameTable.WorksheetRel, null);
-			var workSheetQuery = new WorksheetQuery(sheetLink.HRef.ToString());
-			var workSheetFeed = AuthorisedSpreadsheetsService.Query(workSheetQuery);
+			AtomLink sheetLink = affiliates.Links.FindService(GDataSpreadsheetsNameTable.WorksheetRel, null);
+			WorksheetQuery workSheetQuery = new WorksheetQuery(sheetLink.HRef.ToString());
+			WorksheetFeed workSheetFeed = AuthorisedSpreadsheetsService.Query(workSheetQuery);
 
-			var affiliateSheet = workSheetFeed.Entries.First(s => s.Title.Text.Equals(sheetTitle, StringComparison.InvariantCultureIgnoreCase));
+			AtomEntry affiliateSheet = workSheetFeed.Entries.First(s => s.Title.Text.Equals(sheetTitle, StringComparison.InvariantCultureIgnoreCase));
 
 			// Get the cells...
 			UInt32 startRow = 2;
-			var cellLink = affiliateSheet.Links.FindService(GDataSpreadsheetsNameTable.CellRel, null);
-			var cellQuery = new CellQuery(cellLink.HRef.ToString())
+			AtomLink cellLink = affiliateSheet.Links.FindService(GDataSpreadsheetsNameTable.CellRel, null);
+			CellQuery cellQuery = new CellQuery(cellLink.HRef.ToString())
 			{
 				MinimumRow = startRow,
 			};
-			var cellFeed = AuthorisedSpreadsheetsService.Query(cellQuery);
+			CellFeed cellFeed = AuthorisedSpreadsheetsService.Query(cellQuery);
 
-			var table = new List<TDataRow>();
+			List<TDataRow> table = new List<TDataRow>();
 			TDataRow row = null;
 			foreach (CellEntry currentCell in cellFeed.Entries)
 			{

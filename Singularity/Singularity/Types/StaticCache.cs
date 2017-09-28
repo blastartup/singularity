@@ -37,7 +37,7 @@ namespace Singularity
 		/// <returns>Cached item as type</returns>
 		public override Boolean GetOrNew(TKey key, out TValue value)
 		{
-			var result = false;
+			bool result = false;
 			if (Cache.ContainsKey(key))
 			{
 				value = Cache[key];

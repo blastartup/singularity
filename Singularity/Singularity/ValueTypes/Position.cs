@@ -125,7 +125,7 @@ namespace Singularity
 		public void Clear()
 		{
 			_latitude = _longitude = 0;
-			_name = "";
+			_name = String.Empty;
 		}
 
 		/// <summary>
@@ -140,7 +140,7 @@ namespace Singularity
 
 		public override Boolean Equals(Object o)
 		{
-			var pos = (Position)o;
+			Position pos = (Position)o;
 			return _latitude == pos._latitude && _longitude == pos._longitude;
 		}
 
@@ -173,7 +173,7 @@ namespace Singularity
 
 		public Double GetHorizontalRadialDistance(Position p2)
 		{
-			var diff = p2.Longitude - Longitude;
+			Double diff = p2.Longitude - Longitude;
 			return diff;
 		}
 
@@ -183,7 +183,7 @@ namespace Singularity
 
 		public Double GetVerticalRadialDistance(Position p2)
 		{
-			var diff = p2.Latitude - Latitude;
+			Double diff = p2.Latitude - Latitude;
 			return diff;
 		}
 
@@ -222,7 +222,7 @@ namespace Singularity
 
 		Int32 IComparable.CompareTo(Object o)
 		{
-			var p = (Position)o;
+			Position p = (Position)o;
 			if (this.Latitude > p.Latitude)
 				return 1;
 			if (this.Latitude < p.Latitude)

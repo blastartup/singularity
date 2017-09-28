@@ -16,10 +16,10 @@ namespace Singularity
 		{
 			Contract.Requires(value > 0);
 
-			var result = String.Empty;
+			String result = String.Empty;
 
-			var lastTwoDigits = value % 100;
-			var lastDigit = lastTwoDigits % 10;
+			Int32 lastTwoDigits = value % 100;
+			Int32 lastDigit = lastTwoDigits % 10;
 			String lSuffix;
 			switch (lastDigit)
 			{
@@ -61,8 +61,8 @@ namespace Singularity
 			{
 				return value == 2;
 			}
-			var lSquareRoot = (Int32)Math.Sqrt((Double)value);
-			for (var i = 3; i <= lSquareRoot; i += 2)
+			Int32 lSquareRoot = (Int32)Math.Sqrt((Double)value);
+			for (Int32 i = 3; i <= lSquareRoot; i += 2)
 			{
 				if ((value % i) == 0)
 					return false;
@@ -168,14 +168,14 @@ namespace Singularity
 				lowLimit = lowLimit.Swap(ref highLimit);
 			}
 
-			var result = input.LimitMin(lowLimit).LimitMax(highLimit);
+			Int32 result = input.LimitMin(lowLimit).LimitMax(highLimit);
 			wasOutOfRange = input != result;
 			return result;
 		}
 
 		public static Boolean IsOutOfRange(this Int32 input, Int32 lowLimt, Int32 highLimit)
 		{
-			var result = false;
+			Boolean result = false;
 			LimitInRange(input, lowLimt, highLimit, out result);
 			return result;
 		}

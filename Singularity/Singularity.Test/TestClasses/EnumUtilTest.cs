@@ -12,7 +12,7 @@ namespace Singularity.Test
 		[TestMethod]
 		public void TestGetEnumAdditionals_SetEnumValue()
 		{
-			var enumAttribute = EnumUtil.GetEnumAdditionals(typeof(TestEnum)).Skip(1).First();
+			EnumAdditionalAttribute enumAttribute = EnumUtil.GetEnumAdditionals(typeof(TestEnum)).Skip(1).First();
 			Assert.IsTrue(enumAttribute.EnumValue == 10, "Second enum value = 10");
 		}
 

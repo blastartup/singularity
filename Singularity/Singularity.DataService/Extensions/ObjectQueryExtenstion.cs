@@ -24,8 +24,8 @@ namespace Singularity.DataService
 				return query;
 			}
 
-			var includeList = includes.Select(x => x.Trim()).Where(x => allowedIncludes == null || allowedIncludes.Contains(x));
-			foreach (var include in includeList)
+			IEnumerable<String> includeList = includes.Select(x => x.Trim()).Where(x => allowedIncludes == null || allowedIncludes.Contains(x));
+			foreach (String include in includeList)
 			{
 				query = query.Include(include);
 			}

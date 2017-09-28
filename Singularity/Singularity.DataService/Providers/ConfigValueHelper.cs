@@ -16,7 +16,7 @@ namespace Singularity.DataService
 		{
 			get
 			{
-				var configuration = GetField();
+				IConfiguration configuration = GetField();
 				if (configuration == null)
 				{
 					T defaultValue = default(T);
@@ -25,7 +25,7 @@ namespace Singularity.DataService
 					return defaultValue;
 				}
 
-				var value = configuration.Value;
+				String value = configuration.Value;
 				if (value == null)
 				{
 					return default(T);
@@ -45,7 +45,7 @@ namespace Singularity.DataService
 
 		public void SetValue(T value, Boolean saveNow)
 		{
-			var field = GetField();
+			IConfiguration field = GetField();
 			if (field == null)
 			{
 				throw new ArgumentException("Cannot update field ({0}) as it is not defined in the database and no default provided at initialization".FormatX(DefaultConfiguration.ConfigurationId));

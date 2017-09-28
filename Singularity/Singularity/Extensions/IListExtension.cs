@@ -67,19 +67,19 @@ namespace Singularity
 
 		private static IList<T> QuickSortCore<T>(IList<T> list) where T : IComparable<T>
 		{
-			var random = new RandomProvider();
+			RandomProvider random = new RandomProvider();
 
 			if (list.Count <= 1)
 				return list;
 
-			var pivotIndex = random.Next(list.Count);
+			Int32 pivotIndex = random.Next(list.Count);
 			IList<T> lowList = new List<T>(pivotIndex);
 			IList<T> highList = new List<T>(list.Count - pivotIndex);
 
-			var pivot = list[pivotIndex];
+			T pivot = list[pivotIndex];
 			list.RemoveAt(pivotIndex);
 
-			foreach (var element in list)
+			foreach (T element in list)
 			{
 				if (element.CompareTo(pivot) <= 0)
 				{
@@ -110,9 +110,9 @@ namespace Singularity
 
 		private static void BubbleSort<T>(ref IList<T> list) where T : IComparable<T>
 		{
-			for (var lOuterIdx = 1; lOuterIdx <= list.Count; lOuterIdx++)
+			for (Int32 lOuterIdx = 1; lOuterIdx <= list.Count; lOuterIdx++)
 			{
-				for (var lInnerIdx = 0; lInnerIdx < list.Count - lOuterIdx; lInnerIdx++)
+				for (Int32 lInnerIdx = 0; lInnerIdx < list.Count - lOuterIdx; lInnerIdx++)
 				{
 					if (list[lInnerIdx].CompareTo(list[lInnerIdx + 1]) == 1)
 					{
@@ -142,10 +142,10 @@ namespace Singularity
 				return;
 
 
-			var middle = list.Count / 2;
-			for (var i = 0; i < middle; i++)
+			Int32 middle = list.Count / 2;
+			for (Int32 i = 0; i < middle; i++)
 				leftList.Add(list[i]);
-			for (var i = middle; i < list.Count; i++)
+			for (Int32 i = middle; i < list.Count; i++)
 				rightList.Add(list[i]);
 
 			MergeSortInternal(ref leftList);
@@ -163,7 +163,7 @@ namespace Singularity
 
 		private static IList<T> Merge<T>(IList<T> leftList, IList<T> rightList) where T : IComparable<T>
 		{
-			var result = new List<T>((Int32)(((Single)(leftList.Count + rightList.Count) * .5f) + 1f));
+			List<T> result = new List<T>((Int32)(((Single)(leftList.Count + rightList.Count) * .5f) + 1f));
 			while (leftList.Count > 0 && rightList.Count > 0)
 			{
 				if (leftList[0].CompareTo(rightList[0]) < 0)
@@ -247,7 +247,7 @@ namespace Singularity
 
 		public static String ToDelimitedString(this IList<String> list, String delimiter = ",")
 		{
-			var delimitedStringBuilder = new DelimitedStringBuilder(list);
+			DelimitedStringBuilder delimitedStringBuilder = new DelimitedStringBuilder(list);
 			return delimitedStringBuilder.ToDelimitedString(delimiter);
 		}
 	}

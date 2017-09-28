@@ -18,7 +18,7 @@ namespace Singularity
 		/// <returns>Whether or not the folder was created rather than the mere fact the folder exists.</returns>
 		public static Boolean CreateSafely(this DirectoryInfo folder)
 		{
-			var created = false;
+			Boolean created = false;
 			Byte attemptCounter = 0;
 			while (!folder.Exists)
 			{

@@ -35,10 +35,10 @@ namespace Singularity.DataService.OleDbFramework.SelectStrategy
 			}
 			else
 			{
-				orderBy = "";
+				orderBy = String.Empty;
 			}
 
-			String takeFilter = "";
+			String takeFilter = String.Empty;
 			if (paging != null)
 			{
 				takeFilter = $"Top {paging.Take} ";

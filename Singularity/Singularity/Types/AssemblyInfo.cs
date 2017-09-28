@@ -23,7 +23,7 @@ namespace Singularity
 
 		private T CustomAttributes<T>() where T : Attribute
 		{
-			var customAttributes = _assembly.GetCustomAttributes(typeof(T), false);
+			object[] customAttributes = _assembly.GetCustomAttributes(typeof(T), false);
 
 			if (customAttributes.Length > 0)
 			{

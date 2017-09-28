@@ -23,7 +23,7 @@ namespace Singularity.Resources
 
 		private String TranslateCore(Words words)
 		{
-			for (var idx = 0; idx < words.Count; idx++)
+			for (Int32 idx = 0; idx < words.Count; idx++)
 			{
 				words[idx] = ResString(words[idx]);
 			}
@@ -40,7 +40,7 @@ namespace Singularity.Resources
 		/// <returns>Match in ResourceManager or if no match available ResourceManagerString</returns>
 		private String ResString(String resourceManagerString)
 		{
-			var result = resourceManagerString;
+			String result = resourceManagerString;
 
 			if (!result.IsSurroundedBy(ESurroundType.SquareBrackets))
 			{

@@ -34,21 +34,21 @@ namespace Singularity
 			// represents a particular element of the articulation, ordered
 			// according to the temporal duration of each element.
 
-			var lGroupingCollection = new List<TemporalGrouping>(4);
+			List<TemporalGrouping> lGroupingCollection = new List<TemporalGrouping>(4);
 
 			// foreach possible temporal type (day/hour/minute etc.)
-			foreach (var lType in _mGroupTypes)
+			foreach (ETemporalGroupFlag lType in _mGroupTypes)
 			{
 				// if the temporal type isn't specified in the accuracy, skip.
 				if ((accuracy & lType) != lType) continue;
 
 				// get the timespan for this temporal type
-				var lTimeSpan = TimeSpanAttribute.RetrieveAttribute(lType).GetTimeSpan();
+				TimeSpan lTimeSpan = TimeSpanAttribute.RetrieveAttribute(lType).GetTimeSpan();
 
 				if (span.Ticks >= lTimeSpan.Ticks)
 				{
 					// divide the current timespan with the temporal group span
-					var magnitude = (Int32)(span.Ticks / lTimeSpan.Ticks);
+					Int32 magnitude = (Int32)(span.Ticks / lTimeSpan.Ticks);
 
 					lGroupingCollection.Add(new TemporalGrouping(lType, magnitude));
 
@@ -64,11 +64,11 @@ namespace Singularity
 		/// </summary>
 		private static String Textify(IList<TemporalGrouping> groupingsCollection)
 		{
-			var lStringBuilder = new StringBuilder();
+			StringBuilder lStringBuilder = new StringBuilder();
 
-			for (var idx = 0; idx < groupingsCollection.Count; idx++)
+			for (Int32 idx = 0; idx < groupingsCollection.Count; idx++)
 			{
-				var lGroupingStr = groupingsCollection[idx].ToString();
+				String lGroupingStr = groupingsCollection[idx].ToString();
 
 				if (idx > 0)
 				{
@@ -133,7 +133,7 @@ namespace Singularity
 
 			public override String ToString()
 			{
-				var result = this.Magnitude.ToString();
+				String result = this.Magnitude.ToString();
 				result += ValueLib.Space.StringValue + TimeSpanAttribute.RetrieveAttribute(this.Type).Name;
 
 				if (this.Magnitude > 1)

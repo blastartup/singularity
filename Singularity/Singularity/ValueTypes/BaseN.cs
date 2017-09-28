@@ -25,7 +25,7 @@ namespace Singularity
 			}
 			else
 			{
-				var lTypeConverter = new BaseNTypeConverter();
+				BaseNTypeConverter lTypeConverter = new BaseNTypeConverter();
 				if (value == null || lTypeConverter.CanConvertFrom(value.GetType()))
 				{
 					this = (BaseN)lTypeConverter.ConvertFrom(value);
@@ -95,14 +95,14 @@ namespace Singularity
 
 		private String ToStringCore(Byte aBase)
 		{
-			var lResult = String.Empty;
+			String lResult = String.Empty;
 			if (aBase == 10)
 			{
 				lResult = MValue.ToString();
 			}
 			else
 			{
-				var lCalcValue = Math.Abs(MValue);
+				Int32 lCalcValue = Math.Abs(MValue);
 				Int32 lDigitNumber;
 				do
 				{
@@ -203,7 +203,7 @@ namespace Singularity
 
 		public static BaseN operator --(BaseN aValue)
 		{
-			var lResult = new BaseN(aValue.MValue - 1)
+			BaseN lResult = new BaseN(aValue.MValue - 1)
 			{
 				Base = aValue.Base
 			};
@@ -241,7 +241,7 @@ namespace Singularity
 		public static Boolean TryParse(String aValue, out BaseN aResult)
 		{
 			Double lTryParseResult;
-			var lSuccess = Double.TryParse(aValue, NumberStyles.Integer, Factory.CurrentCultureInfo.NumberFormat, out lTryParseResult)
+			Boolean lSuccess = Double.TryParse(aValue, NumberStyles.Integer, Factory.CurrentCultureInfo.NumberFormat, out lTryParseResult)
 				&& CanConvertToFBaseN(lTryParseResult);
 			aResult = lSuccess ? (BaseN)lTryParseResult : Zero;
 			return lSuccess;

@@ -28,15 +28,15 @@ namespace Singularity
 			}
 
 			Length = length;
-			var upperExponential = length / 2;
+			Int32 upperExponential = length / 2;
 			_upperBound = (Int32)Math.Pow(10, upperExponential);
-			var lowerExponential = upperExponential - 1;
+			Int32 lowerExponential = upperExponential - 1;
 			_lowerBound = (Int32)Math.Pow(10, lowerExponential);
 		}
 
 		public override IReply Execute()
 		{
-			var reply = new ReplyInteger
+			ReplyInteger reply = new ReplyInteger
 			{
 				Value = Random.Next(_lowerBound, _upperBound)*_upperBound + Random.Next(_lowerBound, _upperBound),
 				Condition = true

@@ -90,7 +90,7 @@ namespace Singularity.DataService
 
 		public virtual void Insert(TEntity entity)
 		{
-			var modifiableEntity = entity as IModifiable;
+			IModifiable modifiableEntity = entity as IModifiable;
 			if (modifiableEntity != null)
 			{
 				modifiableEntity.CreatedDate = NowDateTime;
@@ -112,13 +112,13 @@ namespace Singularity.DataService
 
 		public virtual void Deactivate(TEntity entityToDeactivate)
 		{
-			var deletable = entityToDeactivate as IDeletable;
+			IDeletable deletable = entityToDeactivate as IDeletable;
 			if (deletable != null)
 			{
 				deletable.DeletedDate = Context.Now;
 			}
 
-			var modifiable = entityToDeactivate as IModifiable;
+			IModifiable modifiable = entityToDeactivate as IModifiable;
 			if (modifiable != null)
 			{
 				modifiable.ModifiedDate = NowDateTime;

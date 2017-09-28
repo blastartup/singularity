@@ -70,8 +70,8 @@ namespace Singularity
 		/// </summary>
 		public Int32 EnumValue
 		{
-			get { return _enumValue; }
-			internal set { _enumValue = value; }
+			get => _enumValue;
+			internal set => _enumValue = value;
 		}
 		private Int32 _enumValue;
 
@@ -117,7 +117,7 @@ namespace Singularity
 		/// <returns>Standard comparison values.</returns>
 		public Int32 CompareTo(Object obj)
 		{
-			var attribute = obj as EnumAdditionalAttribute;
+			EnumAdditionalAttribute attribute = obj as EnumAdditionalAttribute;
 			return attribute != null ? String.Compare(HumanisedName, attribute.HumanisedName, StringComparison.Ordinal) : 0;
 		}
 	}

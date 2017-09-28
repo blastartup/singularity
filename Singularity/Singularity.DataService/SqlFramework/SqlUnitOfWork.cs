@@ -9,7 +9,7 @@ namespace Singularity.DataService.SqlFramework
 
 		public Boolean Save(Boolean clearContext = false)
 		{
-			var result = Context.Commit();
+			Boolean result = Context.Commit();
 			if (clearContext)
 			{
 				Context.Dispose();

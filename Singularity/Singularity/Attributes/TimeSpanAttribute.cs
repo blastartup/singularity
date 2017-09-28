@@ -38,7 +38,7 @@ namespace Singularity
 		/// </summary>
 		public static TimeSpanAttribute RetrieveAttribute(Enum aTarget)
 		{
-			var lAttributeCollection = aTarget.GetType().GetField(aTarget.ToString()).GetCustomAttributes(typeof(TimeSpanAttribute), true);
+			Object[] lAttributeCollection = aTarget.GetType().GetField(aTarget.ToString()).GetCustomAttributes(typeof(TimeSpanAttribute), true);
 
 			if (lAttributeCollection != null && lAttributeCollection.Length > 0)
 				return (TimeSpanAttribute)lAttributeCollection[0];

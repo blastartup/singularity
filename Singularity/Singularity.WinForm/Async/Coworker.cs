@@ -136,7 +136,7 @@ namespace Singularity.WinForm.Async
 			}
 			else
 			{
-				var runner = new TaskRunner();
+				TaskRunner runner = new TaskRunner();
 				runner.Run(actionToBeRunSync, false);
 			}
 		}

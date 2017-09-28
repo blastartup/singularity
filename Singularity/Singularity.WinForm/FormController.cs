@@ -22,7 +22,7 @@ namespace Singularity.WinForm
 				folderBrowserDialog.SelectedPath = textbox.Text;
 			}
 
-			var result = folderBrowserDialog.ShowDialog(Owner);
+			DialogResult result = folderBrowserDialog.ShowDialog(Owner);
 			if (result == DialogResult.OK)
 			{
 				textbox.Text = folderBrowserDialog.SelectedPath;
@@ -34,13 +34,13 @@ namespace Singularity.WinForm
 		public String GetConnectedString(String originalString)
 		{
 			//var dataConnectionDialog = new DataConnectionDialog();
-			return "";
+			return String.Empty;
 		}
 
 		public static IEnumerable<T> GetControlsOfType<T>(Control root)
 			 where T : Control
 		{
-			var t = root as T;
+			T t = root as T;
 			if (t != null)
 			{
 				yield return t;
@@ -48,7 +48,7 @@ namespace Singularity.WinForm
 
 			foreach (Control c in root.Controls)
 			{
-				foreach (var i in GetControlsOfType<T>(c))
+				foreach (T i in GetControlsOfType<T>(c))
 				{
 					yield return i;
 				}

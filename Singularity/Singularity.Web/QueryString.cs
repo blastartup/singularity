@@ -92,7 +92,7 @@ namespace Singularity.Web
 			Boolean parsedSuccessfully = Int32.TryParse(queryVal, out output);
 			if (!parsedSuccessfully)
 			{
-				var errorMessage = $"The query string value '{name}' must be an integer. The provided input was '{queryVal}'.";
+				String errorMessage = $"The query string value '{name}' must be an integer. The provided input was '{queryVal}'.";
 				throw new ArgumentException(errorMessage);
 			}
 			return output;

@@ -16,7 +16,7 @@ namespace Singularity
 
 		public static IList<Guid?> GetKeys(Type enumType)
 		{
-			var result = new List<Guid?>();
+			List<Guid?> result = new List<Guid?>();
 			result.AddRange(GetEnumsCore(enumType).Select(e => e.Key));
 			return result;
 		}
@@ -33,28 +33,28 @@ namespace Singularity
 
 		public static IList<String> GetCodes(Type enumType)
 		{
-			var result = new List<String>();
+			List<String> result = new List<String>();
 			result.AddRange(GetEnumsCore(enumType).Select(e => e.Code));
 			return result;
 		}
 
 		public static IList<String> GetHumanisedNames(params Enum[] enumValues)
 		{
-			var result = new List<String>(enumValues.Length);
+			List<String> result = new List<String>(enumValues.Length);
 			enumValues.ForEach(ev => result.Add(ev.GetHumanisedName()));
 			return result;
 		}
 
 		public static IList<String> GetHumanisedNames(Type enumType)
 		{
-			var result = new List<String>();
+			List<String> result = new List<String>();
 			result.AddRange(GetEnumsCore(enumType).Select(e => e.HumanisedName));
 			return result;
 		}
 
 		public static IList<String> GetDescriptions(Type enumType)
 		{
-			var result = new List<String>();
+			List<String> result = new List<String>();
 			result.AddRange(GetEnumsCore(enumType).Select(e => e.Description));
 			return result;
 		}
@@ -66,15 +66,15 @@ namespace Singularity
 
 		private static IList<EnumAdditionalAttribute> GetEnumsCore(Type enumType)
 		{
-			var result = new List<EnumAdditionalAttribute>();
+			List<EnumAdditionalAttribute> result = new List<EnumAdditionalAttribute>();
 			//Look for our string value associated with fields in this enum
-			foreach (var fieldInfo in enumType.GetFields())
+			foreach (FieldInfo fieldInfo in enumType.GetFields())
 			{
 				//Check for our custom attribute
-				var attributes = fieldInfo.GetCustomAttributes(typeof(EnumAdditionalAttribute), false) as EnumAdditionalAttribute[];
+				EnumAdditionalAttribute[] attributes = fieldInfo.GetCustomAttributes(typeof(EnumAdditionalAttribute), false) as EnumAdditionalAttribute[];
 				if (attributes != null && attributes.Length > 0)
 				{
-					var attribute = attributes[0];
+					EnumAdditionalAttribute attribute = attributes[0];
 					attribute.EnumValue = (Int32)fieldInfo.GetValue(enumType);
 					//attribute.ValueName = fieldInfo.Name;
 					result.Add(attribute);
@@ -86,8 +86,8 @@ namespace Singularity
 		[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1007:UseGenericsWhereAppropriate")]
 		public static Boolean ParseCode(Type type, String code, Boolean ignoreCase, ref Object value)
 		{
-			var defaultValue = (value != null) ? value : null;
-			var returnValue = ParseCode(type, code, ignoreCase);
+			Object defaultValue = (value != null) ? value : null;
+			Object returnValue = ParseCode(type, code, ignoreCase);
 			if (returnValue == null && defaultValue != null)
 			{
 				value = defaultValue;
@@ -123,13 +123,13 @@ namespace Singularity
 			Contract.Requires(!String.IsNullOrEmpty(code));
 
 			Object lOutput = null;
-			var lEnumStringCode = String.Empty;
+			String lEnumStringCode = String.Empty;
 
 			//Look for our string value associated with fields in this enum
-			foreach (var fieldInfo in type.GetFields())
+			foreach (FieldInfo fieldInfo in type.GetFields())
 			{
 				//Check for our custom attribute
-				var attributes = fieldInfo.GetCustomAttributes(typeof(EnumAdditionalAttribute), false) as EnumAdditionalAttribute[];
+				EnumAdditionalAttribute[] attributes = fieldInfo.GetCustomAttributes(typeof(EnumAdditionalAttribute), false) as EnumAdditionalAttribute[];
 				if (attributes.Length > 0)
 				{
 					lEnumStringCode = attributes[0].Code;
@@ -171,9 +171,9 @@ namespace Singularity
 		{
 			Contract.Requires(enumValue != null);
 
-			var result = 0;
-			var provider = new EnumAdditionalProvider<EnumAdditionalAttribute>();
-			var resource = provider.GetEnumResource(enumValue);
+			Int32 result = 0;
+			EnumAdditionalProvider<EnumAdditionalAttribute> provider = new EnumAdditionalProvider<EnumAdditionalAttribute>();
+			EnumAdditionalAttribute resource = provider.GetEnumResource(enumValue);
 			if (resource != null)
 			{
 				result = resource.EnumValue;
@@ -196,10 +196,10 @@ namespace Singularity
 			Guid? lEnumKey = null;
 
 			//Look for our string value associated with fields in this enum
-			foreach (var fieldInfo in enumType.GetFields())
+			foreach (FieldInfo fieldInfo in enumType.GetFields())
 			{
 				//Check for our custom attribute
-				var attributes = fieldInfo.GetCustomAttributes(typeof(EnumAdditionalAttribute), false) as EnumAdditionalAttribute[];
+				EnumAdditionalAttribute[] attributes = fieldInfo.GetCustomAttributes(typeof(EnumAdditionalAttribute), false) as EnumAdditionalAttribute[];
 				if (attributes.Length > 0)
 				{
 					lEnumKey = attributes[0].Key;
@@ -245,10 +245,10 @@ namespace Singularity
 		/// </summary>
 		public static List<KeyValuePair<Int32, String>> GetEnumValues(Type enumType)
 		{
-			var returnValue = new List<KeyValuePair<Int32, String>>();
+			List<KeyValuePair<Int32, String>> returnValue = new List<KeyValuePair<Int32, String>>();
 
-			var enumAdditionalList = GetEnumAdditionals(enumType);
-			foreach (var enumAdditional in enumAdditionalList)
+			IList<EnumAdditionalAttribute> enumAdditionalList = GetEnumAdditionals(enumType);
+			foreach (EnumAdditionalAttribute enumAdditional in enumAdditionalList)
 			{
 				returnValue.Add(new KeyValuePair<Int32, String>(enumAdditional.EnumValue, enumAdditional.HumanisedName));
 			}

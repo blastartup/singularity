@@ -18,7 +18,7 @@ namespace Singularity
 
 		public Boolean LogTrace(ITraceLog traceLog)
 		{
-			var entity = LogTraceCore(traceLog.Description, traceLog.MethodName, traceLog.StatusCode);
+			TTraceLog entity = LogTraceCore(traceLog.Description, traceLog.MethodName, traceLog.StatusCode);
 			if (entity == null)
 			{
 				return false;
@@ -35,15 +35,15 @@ namespace Singularity
 
 		public async Task<Boolean> LogExceptionAsync(IExceptionLog exceptionLog)
 		{
-			var exceptionMessagesTask = new Task<Tuple<String, String>>(() => ExceptionMessages(exceptionLog.Exception));
+			Task<Tuple<String, String>> exceptionMessagesTask = new Task<Tuple<String, String>>(() => ExceptionMessages(exceptionLog.Exception));
 			await exceptionMessagesTask;
-			var exceptionMessages = exceptionMessagesTask.Result;
+			Tuple<String, String> exceptionMessages = exceptionMessagesTask.Result;
 
-			var traceLogEntity = LogTraceCore(exceptionLog.Description, exceptionLog.MethodName, exceptionLog.StatusCode);
+			TTraceLog traceLogEntity = LogTraceCore(exceptionLog.Description, exceptionLog.MethodName, exceptionLog.StatusCode);
 			if (traceLogEntity != null)
 			{
-				var exceptionLogged = new ExceptionLogged(InsertAsync(traceLogEntity, exceptionMessages.Item1, exceptionMessages.Item2), exceptionLog) as IExceptionLogged;
-				var sendEmailTask = new Task(() => { SendEmailAsync(exceptionLogged);});
+				IExceptionLogged exceptionLogged = new ExceptionLogged(InsertAsync(traceLogEntity, exceptionMessages.Item1, exceptionMessages.Item2), exceptionLog) as IExceptionLogged;
+				Task sendEmailTask = new Task(() => { SendEmailAsync(exceptionLogged);});
 				await sendEmailTask;
 				return true;
 			}
@@ -52,12 +52,12 @@ namespace Singularity
 
 		public Boolean LogException(IExceptionLog exceptionLog)
 		{
-			var exceptionMessages = ExceptionMessages(exceptionLog.Exception);
+			Tuple<String, String> exceptionMessages = ExceptionMessages(exceptionLog.Exception);
 
-			var traceLogEntity = LogTraceCore(exceptionLog.Description, exceptionLog.MethodName, exceptionLog.StatusCode);
+			TTraceLog traceLogEntity = LogTraceCore(exceptionLog.Description, exceptionLog.MethodName, exceptionLog.StatusCode);
 			if (traceLogEntity != null)
 			{
-				var exceptionLogged = new ExceptionLogged(InsertAsync(traceLogEntity, exceptionMessages.Item1, exceptionMessages.Item2), exceptionLog);
+				ExceptionLogged exceptionLogged = new ExceptionLogged(InsertAsync(traceLogEntity, exceptionMessages.Item1, exceptionMessages.Item2), exceptionLog);
 				SendEmailAsync(exceptionLogged);
 				return true;
 			}
@@ -66,8 +66,8 @@ namespace Singularity
 
 		private Tuple<String, String> ExceptionMessages(Exception exception)
 		{
-			var exceptionMessages = new DelimitedStringBuilder();
-			var exceptionStackTraces = new DelimitedStringBuilder();
+			DelimitedStringBuilder exceptionMessages = new DelimitedStringBuilder();
+			DelimitedStringBuilder exceptionStackTraces = new DelimitedStringBuilder();
 
 			while (exception != null)
 			{

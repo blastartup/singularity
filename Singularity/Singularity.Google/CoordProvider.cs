@@ -8,9 +8,9 @@ namespace Singularity.Google
 	{
 		public static Coord GetLatLong(String accessKey, String address1, String address2, String suburb, String state, String postcode, String country)
 		{
-			var coord = new Coord();
+			Coord coord = new Coord();
 			String address = address1;
-			if (address2 != "")
+			if (address2 != String.Empty)
 			{
 				address += " " + address2;
 			}

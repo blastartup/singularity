@@ -35,12 +35,12 @@ namespace Singularity.Google
 			}
 			else if (CellLink != null && Service != null)
 			{
-				var cellQuery = new CellQuery(CellLink.HRef.ToString());
+				CellQuery cellQuery = new CellQuery(CellLink.HRef.ToString());
 				cellQuery.MinimumRow = cellQuery.MaximumRow = RowNbr;
 				cellQuery.MinimumColumn = cellQuery.MaximumColumn = index;
 				cellQuery.ReturnEmpty = ReturnEmptyCells.yes;
 
-				var cellFeed = Service.Query(cellQuery);
+				CellFeed cellFeed = Service.Query(cellQuery);
 				cellEntry = cellFeed.Entries[0] as CellEntry;
 				if (cellEntry != null)
 				{

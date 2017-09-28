@@ -13,12 +13,12 @@ namespace Singularity.DataService
 	
 		public IReply  Execute()
 		{
-			var reply = new ReplyDataTable {Value = new DataTable()};
+			ReplyDataTable reply = new ReplyDataTable {Value = new DataTable()};
 
 			try
 			{
 				_command.Connection.Open();
-				using (var adapter = new SqlDataAdapter(_command))
+				using (SqlDataAdapter adapter = new SqlDataAdapter(_command))
 				{
 					adapter.Fill(reply.Value);
 				}

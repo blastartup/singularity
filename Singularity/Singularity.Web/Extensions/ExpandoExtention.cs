@@ -15,7 +15,7 @@ namespace Singularity.Web
 		{
 			IDictionary<String, Object> anonymousDictionary = new RouteValueDictionary(anonymousObject);
 			IDictionary<String, Object> expando = new ExpandoObject();
-			foreach (var item in anonymousDictionary)
+			foreach (KeyValuePair<String, Object> item in anonymousDictionary)
 			{
 				expando.Add(item);
 			}

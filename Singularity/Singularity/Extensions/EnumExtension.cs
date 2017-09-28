@@ -23,7 +23,7 @@ namespace Singularity
 		{
 			Contract.Requires(enumValue != null);
 
-			var provider = new EnumAdditionalProvider<EnumAdditionalAttribute>();
+			EnumAdditionalProvider<EnumAdditionalAttribute> provider = new EnumAdditionalProvider<EnumAdditionalAttribute>();
 			return provider.GetEnumResource(enumValue)?.Key;
 		}
 
@@ -36,7 +36,7 @@ namespace Singularity
 		{
 			Contract.Requires(enumValue != null);
 
-			var provider = new EnumAdditionalProvider<EnumAdditionalAttribute>();
+			EnumAdditionalProvider<EnumAdditionalAttribute> provider = new EnumAdditionalProvider<EnumAdditionalAttribute>();
 			return provider.GetEnumResource(enumValue)?.AlternateValue;
 		}
 
@@ -49,7 +49,7 @@ namespace Singularity
 		{
 			Contract.Requires(enumValue != null);
 
-			var provider = new EnumAdditionalProvider<EnumAdditionalAttribute>();
+			EnumAdditionalProvider<EnumAdditionalAttribute> provider = new EnumAdditionalProvider<EnumAdditionalAttribute>();
 			return provider.GetEnumResource(enumValue)?.Code ?? String.Empty;
 		}
 
@@ -62,7 +62,7 @@ namespace Singularity
 		{
 			Contract.Requires(enumValue != null);
 
-			var provider = new EnumAdditionalProvider<EnumAdditionalAttribute>();
+			EnumAdditionalProvider<EnumAdditionalAttribute> provider = new EnumAdditionalProvider<EnumAdditionalAttribute>();
 			return provider.GetEnumResource(enumValue)?.HumanisedName ?? Enum.GetName(enumValue.GetType(), enumValue) ?? String.Empty;
 		}
 
@@ -88,8 +88,8 @@ namespace Singularity
 		{
 			Contract.Requires(enumValue != null);
 
-			var provider = new EnumAdditionalProvider<EnumAdditionalAttribute>();
-			var resource = provider.GetEnumResource(enumValue);
+			EnumAdditionalProvider<EnumAdditionalAttribute> provider = new EnumAdditionalProvider<EnumAdditionalAttribute>();
+			EnumAdditionalAttribute resource = provider.GetEnumResource(enumValue);
 			return resource != null ? resource.Description : Enum.GetName(enumValue.GetType(), enumValue);
 		}
 
@@ -106,8 +106,8 @@ namespace Singularity
 			}
 
 			String result;
-			var provider = new EnumAdditionalProvider<EnumAdditionalAttribute>();
-			var resource = provider.GetEnumResource(enumValue);
+			EnumAdditionalProvider<EnumAdditionalAttribute> provider = new EnumAdditionalProvider<EnumAdditionalAttribute>();
+			EnumAdditionalAttribute resource = provider.GetEnumResource(enumValue);
 			if (resource != null)
 			{
 				if (!resource.Code.IsEmpty())

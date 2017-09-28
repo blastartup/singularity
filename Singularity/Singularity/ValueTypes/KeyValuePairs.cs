@@ -30,7 +30,7 @@ namespace Singularity
 			{
 				IList<String> lPairs = keyValueString.Split(pairDelimiter);
 				_internalValue = new Dictionary<String, String>(lPairs.Count);
-				foreach (var lPair in lPairs)
+				foreach (String lPair in lPairs)
 				{
 					if (!lPair.IsEmpty())
 					{
@@ -55,7 +55,7 @@ namespace Singularity
 			_keyValueDelimiter = ValueLib.EqualsSign.CharValue;
 			_internalValue = new Dictionary<String, String>(keyValueDictionary.Count);
 
-			foreach (var keyValuePair in keyValueDictionary)
+			foreach (KeyValuePair<String, String> keyValuePair in keyValueDictionary)
 			{
 				Add(keyValuePair.Key, keyValuePair.Value);
 			}
@@ -121,8 +121,8 @@ namespace Singularity
 
 		private String ObtainUniqueKey(String key)
 		{
-			var lookupKey = LowerCaseKeyIfCaseInsensitive(key);
-			var occ = 0;
+			String lookupKey = LowerCaseKeyIfCaseInsensitive(key);
+			Int32 occ = 0;
 			while (InternalValue.ContainsKey(lookupKey))
 			{
 				occ++;
@@ -177,8 +177,8 @@ namespace Singularity
 				return String.Empty;
 			}
 
-			var builder = new DelimitedStringBuilder(InternalValue.Count);
-			foreach (var keyValue in InternalValue)
+			DelimitedStringBuilder builder = new DelimitedStringBuilder(InternalValue.Count);
+			foreach (KeyValuePair<String, String> keyValue in InternalValue)
 			{
 				builder.Add(Pattern.FormatX(keyValue.Key, KeyValueDelimiter, keyValue.Value));
 			}

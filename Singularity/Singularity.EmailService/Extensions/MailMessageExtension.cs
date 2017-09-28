@@ -15,7 +15,7 @@ namespace Singularity.EmailService
 		/// <returns>A cloned MailMessage.</returns>
 		public static MailMessage Clone(this MailMessage templateMailMessage)
 		{
-			var result = new MailMessage();
+			MailMessage result = new MailMessage();
 			if (templateMailMessage == null)
 			{
 				return result;
@@ -53,7 +53,7 @@ namespace Singularity.EmailService
 
 			if (!templateMailMessage.Attachments.IsEmpty())
 			{
-				foreach (var attachment in templateMailMessage.Attachments)
+				foreach (Attachment attachment in templateMailMessage.Attachments)
 				{
 					result.Attachments.Add(attachment);
 				}
@@ -61,7 +61,7 @@ namespace Singularity.EmailService
 
 			if (!templateMailMessage.AlternateViews.IsEmpty())
 			{
-				foreach (var alternateView in templateMailMessage.AlternateViews)
+				foreach (AlternateView alternateView in templateMailMessage.AlternateViews)
 				{
 					result.AlternateViews.Add(alternateView);
 				}

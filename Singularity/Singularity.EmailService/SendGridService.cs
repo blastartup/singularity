@@ -25,7 +25,7 @@ namespace Singularity.EmailService
 
 		public async Task SendAsync()
 		{
-			using(var client = new SmtpClient())
+			using(SmtpClient client = new SmtpClient())
 			{
 				client.Port = 587;
 				client.Host = "smtp.sendgrid.net";

@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Data;
 using System.Data.Entity;
 using System.Data.Entity.Core.Mapping;
 using System.Data.Entity.Core.Metadata.Edm;
+using System.Data.Entity.Core.Objects;
 using System.Data.Entity.Infrastructure;
 using System.Data.Entity.Validation;
 using System.Data.SqlClient;
@@ -45,26 +47,26 @@ namespace Singularity.DataService
 		{
 			if (entities.Count == 0) return;
 
-			var objectContext = ((IObjectContextAdapter)this).ObjectContext;
-			var workspace = objectContext.MetadataWorkspace;
+			ObjectContext objectContext = ((IObjectContextAdapter)this).ObjectContext;
+			MetadataWorkspace workspace = objectContext.MetadataWorkspace;
 
 			Type t = entities[0].GetType();
 
-			var mappings = GetMappings(workspace, objectContext.DefaultContainerName, t.Name);
+			Mappings mappings = GetMappings(workspace, objectContext.DefaultContainerName, t.Name);
 			if (recursive)
 			{
-				foreach (var fkMapping in mappings.ToForeignKeyMappings)
+				foreach (ForeignKeyMapping fkMapping in mappings.ToForeignKeyMappings)
 				{
-					var navProperties = new HashSet<Object>();
-					var modifiedEntities = new List<Object[]>();
-					foreach (var entity in entities)
+					HashSet<Object> navProperties = new HashSet<Object>();
+					List<Object[]> modifiedEntities = new List<Object[]>();
+					foreach (Object entity in entities)
 					{
-						var navProperty = GetProperty(fkMapping.NavigationPropertyName, entity);
-						var navPropertyKey = GetProperty(fkMapping.ToProperty, entity);
+						dynamic navProperty = GetProperty(fkMapping.NavigationPropertyName, entity);
+						dynamic navPropertyKey = GetProperty(fkMapping.ToProperty, entity);
 
 						if (navProperty != null && navPropertyKey == 0)
 						{
-							var currentValue = GetProperty(fkMapping.FromProperty, navProperty);
+							dynamic currentValue = GetProperty(fkMapping.FromProperty, navProperty);
 							if (currentValue > 0)
 							{
 								SetProperty(fkMapping.ToProperty, entity, currentValue);
@@ -79,18 +81,18 @@ namespace Singularity.DataService
 					if (navProperties.Any())
 					{
 						BulkInsertAll(navProperties.ToArray(), transaction, true, savedEntities);
-						foreach (var modifiedEntity in modifiedEntities)
+						foreach (Object[] modifiedEntity in modifiedEntities)
 						{
-							var e = modifiedEntity[0];
-							var p = modifiedEntity[1];
+							Object e = modifiedEntity[0];
+							Object p = modifiedEntity[1];
 							SetProperty(fkMapping.ToProperty, e, GetProperty(fkMapping.FromProperty, p));
 						}
 					}
 				}
 			}
 
-			var validEntities = new ArrayList();
-			var ignoredEntities = new ArrayList();
+			ArrayList validEntities = new ArrayList();
+			ArrayList ignoredEntities = new ArrayList();
 			foreach (dynamic entity in entities)
 			{
 				if (savedEntities.ContainsKey(entity))
@@ -105,20 +107,20 @@ namespace Singularity.DataService
 
 			if (recursive)
 			{
-				foreach (var fkMapping in mappings.FromForeignKeyMappings)
+				foreach (ForeignKeyMapping fkMapping in mappings.FromForeignKeyMappings)
 				{
-					var navigationPropertyName = fkMapping.NavigationPropertyName;
+					String navigationPropertyName = fkMapping.NavigationPropertyName;
 
-					var navPropertyEntities = new List<dynamic>();
-					foreach (var entity in entities)
+					List<dynamic> navPropertyEntities = new List<dynamic>();
+					foreach (Object entity in entities)
 					{
 						if (fkMapping.BuiltInTypeKind == BuiltInTypeKind.CollectionType ||
 							 fkMapping.BuiltInTypeKind ==
 							 BuiltInTypeKind.CollectionKind)
 						{
-							var navProperties = GetProperty(navigationPropertyName, entity);
+							dynamic navProperties = GetProperty(navigationPropertyName, entity);
 
-							foreach (var navProperty in navProperties)
+							foreach (dynamic navProperty in navProperties)
 							{
 								SetProperty(fkMapping.ToProperty, navProperty, GetProperty(fkMapping.FromProperty, entity));
 								navPropertyEntities.Add(navProperty);
@@ -126,7 +128,7 @@ namespace Singularity.DataService
 						}
 						else
 						{
-							var navProperty = GetProperty(navigationPropertyName, entity);
+							dynamic navProperty = GetProperty(navigationPropertyName, entity);
 							if (navProperty != null)
 							{
 								SetProperty(fkMapping.ToProperty, navProperty, GetProperty(fkMapping.FromProperty, entity));
@@ -146,17 +148,17 @@ namespace Singularity.DataService
 		private void BulkInsertAll(IList entities, Type t, Mappings mappings, SqlTransaction transaction = null)
 		{
 			Set(t).ToString();
-			var tableName = GetTableName(t);
-			var columnMappings = mappings.ColumnMappings;
+			String tableName = GetTableName(t);
+			Dictionary<String, CLR2ColumnMapping> columnMappings = mappings.ColumnMappings;
 
-			var conn = (SqlConnection)Database.Connection;
+			SqlConnection conn = (SqlConnection)Database.Connection;
 			if (conn.State == ConnectionState.Closed)
 				conn.Open();
-			var bulkCopy = new SqlBulkCopy(conn, SqlBulkCopyOptions.Default, transaction) { DestinationTableName = tableName };
+			SqlBulkCopy bulkCopy = new SqlBulkCopy(conn, SqlBulkCopyOptions.Default, transaction) { DestinationTableName = tableName };
 
-			var properties = t.GetProperties().Where(p => columnMappings.ContainsKey(p.Name)).ToArray();
-			var table = new DataTable();
-			foreach (var property in properties)
+			PropertyInfo[] properties = t.GetProperties().Where(p => columnMappings.ContainsKey(p.Name)).ToArray();
+			DataTable table = new DataTable();
+			foreach (PropertyInfo property in properties)
 			{
 				Type propertyType = property.PropertyType;
 
@@ -173,35 +175,35 @@ namespace Singularity.DataService
 					// Since we cannot trust the CLR type properties to be in the same order as
 					// the table columns we use the SqlBulkCopy column mappings.
 					table.Columns.Add(new DataColumn(property.Name, propertyType));
-					var clrPropertyName = property.Name;
-					var tableColumnName = columnMappings[property.Name].ColumnProperty.Name;
+					String clrPropertyName = property.Name;
+					String tableColumnName = columnMappings[property.Name].ColumnProperty.Name;
 					bulkCopy.ColumnMappings.Add(new SqlBulkCopyColumnMapping(clrPropertyName, tableColumnName));
 				}
 			}
 
 			// Add all our entities to our data table
-			foreach (var entity in entities)
+			foreach (Object entity in entities)
 			{
-				var e = entity;
+				Object e = entity;
 				table.Rows.Add(properties.Select(property => GetPropertyValue(property.GetValue(e, null))).ToArray());
 			}
 
-			var cmd = conn.CreateCommand();
+			SqlCommand cmd = conn.CreateCommand();
 			cmd.Transaction = transaction;
 
 			// Check to see if the table has a primary key with auto identity set. If so
 			// set the generated primary key values on the entities.
-			var pkColumn = columnMappings.Values.Where(m => m.ColumnProperty.IsStoreGeneratedIdentity).Select(m => m.ColumnProperty).SingleOrDefault();
+			EdmProperty pkColumn = columnMappings.Values.Where(m => m.ColumnProperty.IsStoreGeneratedIdentity).Select(m => m.ColumnProperty).SingleOrDefault();
 
 			if (pkColumn != null)
 			{
-				var pkColumnName = pkColumn.Name;
-				var pkColumnType = Type.GetType(pkColumn.PrimitiveType.ClrEquivalentType.FullName);
+				String pkColumnName = pkColumn.Name;
+				Type pkColumnType = Type.GetType(pkColumn.PrimitiveType.ClrEquivalentType.FullName);
 
 				// Get the number of existing rows in the table.
 				cmd.CommandText = $@"SELECT COUNT(*) FROM {tableName}";
-				var result = cmd.ExecuteScalar();
-				var count = Convert.ToInt64(result);
+				Object result = cmd.ExecuteScalar();
+				Int64 count = Convert.ToInt64(result);
 
 				// Get the identity increment value
 				cmd.CommandText = $"SELECT IDENT_INCR('{tableName}')";
@@ -213,7 +215,7 @@ namespace Singularity.DataService
 				result = cmd.ExecuteScalar();
 				dynamic identcurrent = Convert.ChangeType(result, pkColumnType);
 
-				var nextId = identcurrent + (count > 0 ? identIncrement : 0);
+				dynamic nextId = identcurrent + (count > 0 ? identIncrement : 0);
 
 				bulkCopy.BulkCopyTimeout = 5 * 60;
 				bulkCopy.WriteToServer(table);
@@ -223,8 +225,8 @@ namespace Singularity.DataService
 				dynamic lastId = Convert.ChangeType(result, pkColumnType);
 
 				cmd.CommandText = $"SELECT {pkColumnName} From {tableName} WHERE {pkColumnName} >= {nextId} and {pkColumnName} <= {lastId}";
-				var reader = cmd.ExecuteReader();
-				var ids = (from IDataRecord r in reader
+				SqlDataReader reader = cmd.ExecuteReader();
+				Object[] ids = (from IDataRecord r in reader
 							  let pk = r[pkColumnName]
 							  select pk)
 								.OrderBy(i => i)
@@ -246,10 +248,10 @@ namespace Singularity.DataService
 
 		private String GetTableName(Type t)
 		{
-			var dbSet = Set(t);
-			var sql = dbSet.ToString();
-			var regex = new Regex(@"FROM (?<table>.*) AS");
-			var match = regex.Match(sql);
+			DbSet dbSet = Set(t);
+			String sql = dbSet.ToString();
+			Regex regex = new Regex(@"FROM (?<table>.*) AS");
+			Match match = regex.Match(sql);
 			return match.Groups["table"].Value;
 		}
 
@@ -262,28 +264,28 @@ namespace Singularity.DataService
 
 		private Mappings GetMappings(MetadataWorkspace workspace, String containerName, String entityName)
 		{
-			var columnMappings = new Dictionary<String, CLR2ColumnMapping>();
-			var storageMapping = workspace.GetItem<GlobalItem>(containerName, DataSpace.CSSpace);
+			Dictionary<String, CLR2ColumnMapping> columnMappings = new Dictionary<String, CLR2ColumnMapping>();
+			GlobalItem storageMapping = workspace.GetItem<GlobalItem>(containerName, DataSpace.CSSpace);
 			dynamic temp = storageMapping.GetType().InvokeMember(
 				 "EntitySetMappings",
 				 BindingFlags.GetProperty | BindingFlags.Public | BindingFlags.Instance,
 				 null, storageMapping, null);
-			var entitySetMaps = new List<EntitySetMapping>();
-			foreach (var t in temp)
+			List<EntitySetMapping> entitySetMaps = new List<EntitySetMapping>();
+			foreach (dynamic t in temp)
 			{
 				entitySetMaps.Add((EntitySetMapping)t);
 			}
 
-			var entitySetMap = entitySetMaps.Single(m => m.EntitySet.ElementType.Name == entityName);
-			var typeMappings = entitySetMap.EntityTypeMappings;
+			EntitySetMapping entitySetMap = entitySetMaps.Single(m => m.EntitySet.ElementType.Name == entityName);
+			ReadOnlyCollection<EntityTypeMapping> typeMappings = entitySetMap.EntityTypeMappings;
 			EntityTypeMapping typeMapping = typeMappings[0];
-			var fragments = typeMapping.Fragments;
-			var fragment = fragments[0];
-			var properties = fragment.PropertyMappings;
-			foreach (var property in properties.Where(p => p is ScalarPropertyMapping).Cast<ScalarPropertyMapping>())
+			ReadOnlyCollection<MappingFragment> fragments = typeMapping.Fragments;
+			MappingFragment fragment = fragments[0];
+			ReadOnlyCollection<PropertyMapping> properties = fragment.PropertyMappings;
+			foreach (ScalarPropertyMapping property in properties.Where(p => p is ScalarPropertyMapping).Cast<ScalarPropertyMapping>())
 			{
-				var clrProperty = property.Property;
-				var columnProperty = property.Column;
+				EdmProperty clrProperty = property.Property;
+				EdmProperty columnProperty = property.Column;
 				columnMappings.Add(clrProperty.Name, new CLR2ColumnMapping
 				{
 					CLRProperty = clrProperty,
@@ -292,20 +294,20 @@ namespace Singularity.DataService
 			}
 
 
-			var foreignKeyMappings = new List<ForeignKeyMapping>();
-			var navigationProperties =
+			List<ForeignKeyMapping> foreignKeyMappings = new List<ForeignKeyMapping>();
+			NavigationProperty[] navigationProperties =
 				 typeMapping.EntityType.DeclaredMembers.Where(m => m.BuiltInTypeKind == BuiltInTypeKind.NavigationProperty)
 					  .Cast<NavigationProperty>()
 					  .Where(p => p.RelationshipType is AssociationType)
 					  .ToArray();
 
-			foreach (var navigationProperty in navigationProperties)
+			foreach (NavigationProperty navigationProperty in navigationProperties)
 			{
-				var relType = (AssociationType)navigationProperty.RelationshipType;
+				AssociationType relType = (AssociationType)navigationProperty.RelationshipType;
 
 				if (foreignKeyMappings.All(m => m.Name != relType.Name))
 				{
-					var fkMapping = new ForeignKeyMapping
+					ForeignKeyMapping fkMapping = new ForeignKeyMapping
 					{
 						NavigationPropertyName = navigationProperty.Name,
 						BuiltInTypeKind = navigationProperty.TypeUsage.EdmType.BuiltInTypeKind,
@@ -329,13 +331,13 @@ namespace Singularity.DataService
 
 		private dynamic GetProperty(String property, Object instance)
 		{
-			var type = instance.GetType();
+			Type type = instance.GetType();
 			return type.InvokeMember(property, BindingFlags.GetProperty | BindingFlags.Public | BindingFlags.Instance, Type.DefaultBinder, instance, null);
 		}
 
 		private void SetProperty(String property, Object instance, Object value)
 		{
-			var type = instance.GetType();
+			Type type = instance.GetType();
 			type.InvokeMember(property, BindingFlags.SetProperty | BindingFlags.Public | BindingFlags.Instance, Type.DefaultBinder, instance, new[] { value });
 		}
 

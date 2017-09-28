@@ -62,12 +62,12 @@ namespace Singularity
 					break;
 			}
 
-			var dLat = (pos2.Latitude - Latitude).ToRadians();
-			var dLon = (pos2.Longitude - Longitude).ToRadians();
-			var d1 = Math.Sin(dLat / 2) * Math.Sin(dLat / 2) +
+			Double dLat = (pos2.Latitude - Latitude).ToRadians();
+			Double dLon = (pos2.Longitude - Longitude).ToRadians();
+			Double d1 = Math.Sin(dLat / 2) * Math.Sin(dLat / 2) +
 				 Math.Cos(Latitude.ToRadians()) * Math.Cos(pos2.Latitude.ToRadians()) *
 				 Math.Sin(dLon / 2) * Math.Sin(dLon / 2);
-			var d2 = 2 * Math.Asin(Math.Min(1, Math.Sqrt(d1)));
+			Double d2 = 2 * Math.Asin(Math.Min(1, Math.Sqrt(d1)));
 			return r * d2;
 		}
 

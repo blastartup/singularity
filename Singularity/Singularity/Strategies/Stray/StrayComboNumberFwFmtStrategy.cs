@@ -21,7 +21,7 @@ namespace Singularity
 
 		public override IReply Execute()
 		{
-			var result = new ReplyMessage
+			ReplyMessage result = new ReplyMessage
 			{
 				Message = ((ReplyInteger)base.Execute()).Value.ToString(),
 				Condition = true,
@@ -31,7 +31,7 @@ namespace Singularity
 
 		private String Format()
 		{
-			var result = String.Empty;
+			String result = String.Empty;
 			switch (Length)
 			{
 				case 4:

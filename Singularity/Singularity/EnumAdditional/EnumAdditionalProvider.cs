@@ -9,7 +9,7 @@ namespace Singularity
 		public T GetEnumResource(Enum value)
 		{
 			T result = null;
-			var lType = value.GetType();
+			Type lType = value.GetType();
 
 			if (EnumResourceAttributeCollection.ContainsKey(value))
 			{
@@ -18,13 +18,13 @@ namespace Singularity
 			else
 			{
 				//Look for our 'StringValueAttribute' in the field's custom attributes
-				var lFieldInfo = lType.GetField(value.ToString());
+				FieldInfo lFieldInfo = lType.GetField(value.ToString());
 				if (lFieldInfo == null)
 				{
 					throw new InvalidOperationException("Cannot find an EnumAdditional attribute for value '{0}' in enum type {1}.".FormatX(value, typeof(T)));
 				}
-				var lAttributes = lFieldInfo.GetCustomAttributes(typeof(T), false) as T[];
-				if (lAttributes.Length > 0)
+				T[] lAttributes = lFieldInfo.GetCustomAttributes(typeof(T), false) as T[];
+				if (lAttributes?.Length > 0)
 				{
 					EnumResourceAttributeCollection.Add(value, lAttributes[0]);
 					result = lAttributes[0];

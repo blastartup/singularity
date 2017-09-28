@@ -77,9 +77,9 @@ namespace Singularity
 		[DebuggerStepThrough]
 		public static String FormatX(this String format, CultureInfo cultureInfo, params Object[] values)
 		{
-			var safeArgs = new ArrayList(values.Length);
+			ArrayList safeArgs = new ArrayList(values.Length);
 
-			foreach (var arg in values)
+			foreach (Object arg in values)
 			{
 				if (arg == null)
 				{
@@ -101,7 +101,7 @@ namespace Singularity
 
 		private static Regex TemplateRegex(String beginTag, String endTag, String regexFilter)
 		{
-			var key = beginTag + (regexFilter == StandardRegexTagFilter ? "1" : "2") + endTag;
+			String key = beginTag + (regexFilter == StandardRegexTagFilter ? "1" : "2") + endTag;
 			if (!RegexTagFilters.ContainsKey(key))
 			{
 				RegexTagFilters[key] = new Regex(
@@ -120,18 +120,18 @@ namespace Singularity
 
 		private static String ProcessPropertyMatch(Match m, Object model, String beginTag, String endTag)
 		{
-			var fullName = m.Groups["name"].Value;
-			var varName = fullName;
-			var indexOfDot = varName.IndexOf('.');
+			String fullName = m.Groups["name"].Value;
+			String varName = fullName;
+			Int32 indexOfDot = varName.IndexOf('.');
 			while (indexOfDot != -1)
 			{
-				var currentObjectName = varName.Substring(0, indexOfDot);
+				String currentObjectName = varName.Substring(0, indexOfDot);
 				varName = varName.Substring(indexOfDot + 1);
 				indexOfDot = varName.IndexOf('.');
 				model = model.GetPropertyValue(currentObjectName);
 				if (model == null) return beginTag + fullName + endTag; //if not found - return unchanged 
 			}
-			var ret = model.GetPropertyValue(varName);
+			Object ret = model.GetPropertyValue(varName);
 			return ret?.ToString() ?? beginTag + fullName + endTag; //if not found - return unchanged 
 		}
 
@@ -145,9 +145,9 @@ namespace Singularity
 		[DebuggerStepperBoundary]
 		public static Int32 IndexOf(this String input, Char value, Int32 occurrence)
 		{
-			var result = -1;
-			var matchCount = 0;
-			var position = 0;
+			Int32 result = -1;
+			Int32 matchCount = 0;
+			Int32 position = 0;
 			while (matchCount < occurrence && position < input.Length)
 			{
 				if (input[position] == value) matchCount++;
@@ -201,7 +201,7 @@ namespace Singularity
 		public static String InsertSafe(this String input, Int32 startIndex, String value)
 		{
 			Contract.Requires(startIndex >= 0);
-			var result = input;
+			String result = input;
 			if (!value.IsEmpty() && startIndex >= 0 && startIndex <= input.Length)
 			{
 				result = input.Insert(startIndex, value);
@@ -259,8 +259,8 @@ namespace Singularity
 		/// <returns>A list of substrings of given segment length.</returns>
 		public static IList<String> Split(this String input, Int32 segmentLength)
 		{
-			var result = new List<String>();
-			for (var i = 0; i < input.Length; i += segmentLength)
+			List<String> result = new List<String>();
+			for (Int32 i = 0; i < input.Length; i += segmentLength)
 			{
 				result.Add(SubstringSafe(input, i, segmentLength));
 
@@ -274,7 +274,7 @@ namespace Singularity
 		/// <returns>A list of substrings of given segment length.</returns>
 		public static IList<String> SplitSafe(this String input, params Char[] seperator)
 		{
-			var result = new List<String>();
+			List<String> result = new List<String>();
 			if (!input.IsEmpty() && !seperator.IsEmpty())
 			{
 				result.AddRange(input.Split(seperator));
@@ -295,8 +295,8 @@ namespace Singularity
 				return 0;
 			}
 
-			var counter = 0;
-			for (var idx = startIndex; idx > 0; idx--)
+			Int32 counter = 0;
+			for (Int32 idx = startIndex; idx > 0; idx--)
 			{
 				if (value[idx] == lookupChar)
 				{
@@ -320,7 +320,7 @@ namespace Singularity
 		public static String Cut(this String value, Char firstOccuranceOf, Boolean fromLeft = true)
 		{
 			if (value.IsEmpty()) return value;
-			var truncationPoint = fromLeft ? value.IndexOf(firstOccuranceOf) : value.LastIndexOf(firstOccuranceOf);
+			Int32 truncationPoint = fromLeft ? value.IndexOf(firstOccuranceOf) : value.LastIndexOf(firstOccuranceOf);
 			return truncationPoint == -1 ? String.Empty :
 				fromLeft ? value.Substring(truncationPoint + 1) : value.Substring(0, truncationPoint);
 		}
@@ -393,7 +393,7 @@ namespace Singularity
 		/// </summary>
 		private static String SubstringCore(String input, Int32 startIndex, Int32 length)
 		{
-			var result = String.Empty;
+			String result = String.Empty;
 			if (input == null)
 			{
 				return String.Empty;
@@ -424,8 +424,8 @@ namespace Singularity
 
 		public static String ToValidFileName(this String fileName)
 		{
-			var invalidChars = new String(Path.GetInvalidFileNameChars());
-			foreach (var invalidChar in invalidChars)
+			String invalidChars = new String(Path.GetInvalidFileNameChars());
+			foreach (Char invalidChar in invalidChars)
 			{
 				fileName = fileName.Replace(invalidChar, '_');
 			}
@@ -454,7 +454,7 @@ namespace Singularity
 		/// <returns>Either the correctly converted DateTime or the DateTime.MinValue if the given value is invalid in any way.</returns>
 		public static DateTime ToDateTime(this String value, String dateTimeFormat = null)
 		{
-			var result = DateTime.MinValue;
+			DateTime result = DateTime.MinValue;
 			if (!value.IsEmpty())
 			{
 				if (dateTimeFormat.IsEmpty())
@@ -477,8 +477,8 @@ namespace Singularity
 		/// <returns>Whether the conversion was successful.</returns>
 		private static Boolean TryParse(String value, out DateTime result)
 		{
-			var successful = false;
-			var lInnerResult = DateTime.MinValue;
+			Boolean successful = false;
+			DateTime lInnerResult = DateTime.MinValue;
 			try
 			{
 				successful = DateTime.TryParse(value, out lInnerResult);
@@ -500,7 +500,7 @@ namespace Singularity
 
 		private static Boolean ParseKnownStringToDateTime(String sourceDateTime, ref DateTime result, String dateTimeFormat = null)
 		{
-			var isParsed = false;
+			Boolean isParsed = false;
 			try
 			{
 				String[] supportedDateTimeFormats;
@@ -553,7 +553,7 @@ namespace Singularity
 		public static String PadCentre(this String value, Int32 totalWidth, Char pad = ' ')
 		{
 			value = value.Left(totalWidth);  // Ensure total length of value doesn't extend beyond totalWidth.
-			var leftPadding = Math.Round((Decimal)(totalWidth / 2)).ToInt() - Math.Round((Decimal)(value.Length / 2)).ToInt();
+			Int32 leftPadding = Math.Round((Decimal)(totalWidth / 2)).ToInt() - Math.Round((Decimal)(value.Length / 2)).ToInt();
 			return new String(pad, leftPadding) + value;
 		}
 
@@ -603,13 +603,13 @@ namespace Singularity
 		/// <remarks>Allows a padding String, as opposed to a padding character.</remarks>
 		private static String AddPadLeftCore(String value, Int32 totalWidth, String addPad, Boolean cutOff)
 		{
-			var result = String.Empty;
+			String result = String.Empty;
 			if (value.Length >= totalWidth)
 			{
 				return value;
 			}
 
-			var lAddPaddedString = new StringBuilder(totalWidth);
+			StringBuilder lAddPaddedString = new StringBuilder(totalWidth);
 			lAddPaddedString.Append(value);
 
 			while (lAddPaddedString.Length < totalWidth)
@@ -699,13 +699,13 @@ namespace Singularity
 		/// <remarks>Allows a padding String, as opposed to a padding character.</remarks>
 		private static String AddPadRightCore(String value, String aAddPad, Int32 totalWidth, Boolean aCutOff)
 		{
-			var result = String.Empty;
+			String result = String.Empty;
 			if (value.Length >= totalWidth)
 			{
 				return value;
 			}
 
-			var lAddPaddedString = new StringBuilder(totalWidth);
+			StringBuilder lAddPaddedString = new StringBuilder(totalWidth);
 			while (lAddPaddedString.Length < totalWidth - value.Length)
 			{
 				lAddPaddedString.Append(aAddPad);
@@ -736,7 +736,7 @@ namespace Singularity
 
 		public static Boolean ContainsAny(this String value, params String[] searchValues)
 		{
-			var result = false;
+			Boolean result = false;
 			searchValues.ForEach(sv => result |= value.Contains(sv));
 			return result;
 		}
@@ -745,7 +745,7 @@ namespace Singularity
 		{
 			Contract.Assert(!charValueacters.IsEmpty());
 
-			foreach (var lChar in charValueacters)
+			foreach (Char lChar in charValueacters)
 			{
 				if (value.Contains(lChar))
 				{
@@ -757,7 +757,7 @@ namespace Singularity
 
 		public static Boolean ContainsAnyLetters(this String value)
 		{
-			foreach (var c in value)
+			foreach (Char c in value)
 			{
 				if (Char.IsLetter(c))
 				{
@@ -775,9 +775,9 @@ namespace Singularity
 
 		public static String KeepChars(this String value, String charValueactersToKeep, String replaceCharacter)
 		{
-			var result = new StringBuilder(value.Length);
+			StringBuilder result = new StringBuilder(value.Length);
 
-			foreach (var c in value)
+			foreach (Char c in value)
 			{
 				if (charValueactersToKeep.Contains(c))
 				{
@@ -793,7 +793,7 @@ namespace Singularity
 
 		public static String KeepCharsUntil(this String value, String charValueactersToKeep, Char[] charactersToStopOnEncountering)
 		{
-			var lIndexOfChars = value.IndexOfAny(charactersToStopOnEncountering);
+			Int32 lIndexOfChars = value.IndexOfAny(charactersToStopOnEncountering);
 
 			if (lIndexOfChars < 0)
 			{
@@ -818,9 +818,9 @@ namespace Singularity
 
 		public static String ExcludeChars(this String value, String charValueactersToExclude)
 		{
-			var result = new StringBuilder(value.Length);
+			StringBuilder result = new StringBuilder(value.Length);
 
-			foreach (var c in value)
+			foreach (Char c in value)
 			{
 				if (!charValueactersToExclude.Contains(c)) result.Append(c);
 			}
@@ -850,7 +850,7 @@ namespace Singularity
 		public static Int64 Occurrences(this String source, Char searchChar)
 		{
 			Int64 count = 0;
-			var position = 0;
+			Int32 position = 0;
 			while ((position = source.IndexOf(searchChar, position)) != -1)
 			{
 				count++;
@@ -888,12 +888,12 @@ namespace Singularity
 		/// </summary>
 		public static IList<String> SplitIgnoringEscapedDelimiter(this String value, Char delimiter, Char escapeCharacter, Boolean leaveSplitCharacter)
 		{
-			var result = new List<String>();
+			List<String> result = new List<String>();
 
-			var startPos = 0;
-			for (var i = 0; i < value.Length; i++)
+			Int32 startPos = 0;
+			for (Int32 i = 0; i < value.Length; i++)
 			{
-				var currentCharacter = value[i];
+				Char currentCharacter = value[i];
 
 				if (currentCharacter == escapeCharacter)
 				{
@@ -901,7 +901,7 @@ namespace Singularity
 				}
 				else if (currentCharacter == delimiter)
 				{
-					var splittedString = SubstringSafe(value, startPos, (i - startPos));
+					String splittedString = SubstringSafe(value, startPos, (i - startPos));
 					if (leaveSplitCharacter)
 					{
 						splittedString += delimiter;
@@ -910,7 +910,7 @@ namespace Singularity
 					startPos = i + 1;
 				}
 			}
-			var remainingString = SubstringSafe(value, startPos);
+			String remainingString = SubstringSafe(value, startPos);
 			if (remainingString.Length > 0)
 			{
 				result.Add(remainingString);
@@ -925,16 +925,16 @@ namespace Singularity
 			WordCollection ignoreWords = null;
 			if (ignoreShortWords)
 			{
-				var current = new AssemblyInfo(Assembly.GetEntryAssembly());
+				AssemblyInfo current = new AssemblyInfo(Assembly.GetEntryAssembly());
 				using (TextReader reader = new StreamReader(current.GetEmbeddedResourceStream(Factory.CurrentCultureInfo.ResourceForShortNoTitleCaseWords())))
 				{
 					ignoreWords = new WordCollection(reader.ReadToEnd(), Environment.NewLine);
 				}
 			}
 
-			var result = new StringBuilder(value.Length);
-			var lWordCollection = new WordCollection(value);
-			foreach (var iWord in lWordCollection)
+			StringBuilder result = new StringBuilder(value.Length);
+			WordCollection lWordCollection = new WordCollection(value);
+			foreach (String iWord in lWordCollection)
 			{
 				if (ignoreShortWords == true && iWord != lWordCollection[0] && ignoreWords.Contains(iWord.ToLower()))
 				{
@@ -959,9 +959,9 @@ namespace Singularity
 			{
 				return false;
 			}
-			var idx = 0;
-			var decimalPointCounter = 0;
-			foreach (var c in value)
+			Int32 idx = 0;
+			Int32 decimalPointCounter = 0;
+			foreach (Char c in value)
 			{
 				if (!Char.IsDigit(c))
 				{
@@ -993,7 +993,7 @@ namespace Singularity
 			{
 				return false;
 			}
-			foreach (var c in value)
+			foreach (Char c in value)
 			{
 				if (!Char.IsLetter(c))
 				{
@@ -1005,7 +1005,7 @@ namespace Singularity
 
 		public static Boolean IsAlphanumeric(this String value)
 		{
-			foreach (var c in value)
+			foreach (Char c in value)
 			{
 				if (!Char.IsLetterOrDigit(c))
 				{
@@ -1017,7 +1017,7 @@ namespace Singularity
 
 		public static Boolean IsAlphanumericWithPunctuation(this String value)
 		{
-			foreach (var c in value)
+			foreach (Char c in value)
 			{
 				if (!Char.IsWhiteSpace(c) &&
 					 !Char.IsPunctuation(c) &&
@@ -1060,9 +1060,9 @@ namespace Singularity
 		/// <returns></returns>
 		public static String KeepCharacters(this String value, Func<Char, Boolean> isOkToKeep)
 		{
-			var buffer = value.ToCharArray();
-			var insertPos = 0;
-			for (var i = 0; i < buffer.Length; i++)
+			Char[] buffer = value.ToCharArray();
+			Int32 insertPos = 0;
+			for (Int32 i = 0; i < buffer.Length; i++)
 			{
 				if (isOkToKeep(buffer[i]))
 				{
@@ -1133,7 +1133,7 @@ namespace Singularity
 			Contract.Requires(positionOfFirstWord > 1);
 			Contract.Requires(wordCount >= -1);
 
-			var result = String.Empty;
+			String result = String.Empty;
 			if (String.IsNullOrEmpty(value) || wordCount.IsEmpty())
 			{
 				return result;
@@ -1144,7 +1144,7 @@ namespace Singularity
 				delimiter = ValueLib.Space.StringValue;
 			}
 
-			var words = new WordCollection(value.Split(delimiter.ToCharArray()));
+			WordCollection words = new WordCollection(value.Split(delimiter.ToCharArray()));
 			if (wordCount.Equals(-1))
 			{
 				wordCount = words.Count;
@@ -1152,8 +1152,8 @@ namespace Singularity
 			if (positionOfFirstWord <= words.Count)
 			{
 				positionOfFirstWord--;  // Adjust for zero based array.
-				var lLastField = (positionOfFirstWord + wordCount).LimitMax(words.Count);
-				for (var iIdx = positionOfFirstWord; iIdx < lLastField; iIdx++)
+				Int32 lLastField = (positionOfFirstWord + wordCount).LimitMax(words.Count);
+				for (Int32 iIdx = positionOfFirstWord; iIdx < lLastField; iIdx++)
 				{
 					result += delimiter + words[iIdx];
 				}
@@ -1180,7 +1180,7 @@ namespace Singularity
 		/// <returns>Returns the last word of the string.</returns>
 		public static String LastWord(this String value, String delimiter)
 		{
-			var words = new WordCollection(value, delimiter, 1, -1);
+			WordCollection words = new WordCollection(value, delimiter, 1, -1);
 			return words.Count > 0 ? words[words.Count - 1] : String.Empty;
 		}
 
@@ -1205,16 +1205,16 @@ namespace Singularity
 		{
 			Contract.Requires(filterWords != null);
 
-			var result = value;
-			var stringMask = mask == Char.MinValue ? String.Empty : mask.ToString();
-			var totalMask = stringMask;
+			String result = value;
+			String stringMask = mask == Char.MinValue ? String.Empty : mask.ToString();
+			String totalMask = stringMask;
 
-			foreach (var iFilterWord in filterWords)
+			foreach (String iFilterWord in filterWords)
 			{
-				var lRegEx = new Regex(iFilterWord, RegexOptions.IgnoreCase | RegexOptions.Multiline);
+				Regex lRegEx = new Regex(iFilterWord, RegexOptions.IgnoreCase | RegexOptions.Multiline);
 				if (stringMask.Length > 0)
 				{
-					for (var i = 1; i < iFilterWord.Length; i++)
+					for (Int32 i = 1; i < iFilterWord.Length; i++)
 						totalMask += stringMask;
 				}
 
@@ -1239,14 +1239,14 @@ namespace Singularity
 				return translatedVersion;
 			}
 
-			var tvLength = translatedVersion.Length;
-			var ovLength = originalVersion.Length;
-			var matchVersionBuilder = new StringBuilder(tvLength);
-			var oIdx = 0;
-			for (var idx = 0; idx < tvLength; idx++)
+			Int32 tvLength = translatedVersion.Length;
+			Int32 ovLength = originalVersion.Length;
+			StringBuilder matchVersionBuilder = new StringBuilder(tvLength);
+			Int32 oIdx = 0;
+			for (Int32 idx = 0; idx < tvLength; idx++)
 			{
-				var transalatedVersionCharacter = translatedVersion[idx];
-				var originalVersionCharacter = ' ';  // Just a default buffer value - not actually used.
+				Char transalatedVersionCharacter = translatedVersion[idx];
+				Char originalVersionCharacter = ' ';  // Just a default buffer value - not actually used.
 				while (oIdx < ovLength)
 				{
 					originalVersionCharacter = originalVersion[oIdx];
@@ -1257,8 +1257,8 @@ namespace Singularity
 						continue;
 					}
 
-					var ovAsString = originalVersionCharacter.ToString();
-					var tvAsString = transalatedVersionCharacter.ToString();
+					String ovAsString = originalVersionCharacter.ToString();
+					String tvAsString = transalatedVersionCharacter.ToString();
 					if (!ovAsString.Equals(tvAsString, StringComparison.OrdinalIgnoreCase))
 					{
 						if (oIdx + 1 < ovLength - 1 && originalVersion[oIdx + 1].ToString().Equals(tvAsString, StringComparison.OrdinalIgnoreCase))
@@ -1302,9 +1302,9 @@ namespace Singularity
 		{
 			Contract.Requires(elementCount > 0);
 
-			var internalValue = value;
-			var result = new List<String>(elementCount);
-			for (var iIdx = 0; iIdx < elementCount; iIdx++)
+			String internalValue = value;
+			List<String> result = new List<String>(elementCount);
+			for (Int32 iIdx = 0; iIdx < elementCount; iIdx++)
 			{
 				result.Add(internalValue.Substring(0, length));
 				internalValue = internalValue.Remove(0, length);
@@ -1316,13 +1316,13 @@ namespace Singularity
 
 		public static Boolean IsSurroundedBy(this String value, params ESurroundType[] surroundTypes)
 		{
-			var result = false;
+			Boolean result = false;
 			if (!value.IsEmpty() && value.Length > 1 && surroundTypes != null)
 			{
-				var firstChar = value[0];
-				var lastChar = value[value.Length - 1];
+				Char firstChar = value[0];
+				Char lastChar = value[value.Length - 1];
 
-				foreach (var surroundType in surroundTypes)
+				foreach (ESurroundType surroundType in surroundTypes)
 				{
 					switch (surroundType)
 					{
@@ -1431,7 +1431,7 @@ namespace Singularity
 		/// <returns>Copy of string with the characters replaced</returns>
 		public static String ReplaceCaseInsenstive(this String value, Char charValueToReplace, Char replacement)
 		{
-			var lRegEx = new Regex(charValueToReplace.ToString(), RegexOptions.IgnoreCase | RegexOptions.Multiline);
+			Regex lRegEx = new Regex(charValueToReplace.ToString(), RegexOptions.IgnoreCase | RegexOptions.Multiline);
 			return lRegEx.Replace(value, replacement.ToString());
 		}
 
@@ -1445,7 +1445,7 @@ namespace Singularity
 		/// <returns>Copy of String with the String replaced</returns>
 		public static String ReplaceCaseInsenstive(this String value, String stringToReplace, String replacement)
 		{
-			var regEx = new Regex(stringToReplace, RegexOptions.IgnoreCase | RegexOptions.Multiline);
+			Regex regEx = new Regex(stringToReplace, RegexOptions.IgnoreCase | RegexOptions.Multiline);
 			return regEx.Replace(value, replacement);
 		}
 
@@ -1459,7 +1459,7 @@ namespace Singularity
 		/// <returns>Copy of String with the String replaced</returns>
 		public static String ReplaceFirstRegex(this String value, String stringToReplace, String replacement)
 		{
-			var regEx = new Regex(stringToReplace, RegexOptions.Multiline);
+			Regex regEx = new Regex(stringToReplace, RegexOptions.Multiline);
 			return regEx.Replace(value, replacement, 1);
 		}
 
@@ -1473,7 +1473,7 @@ namespace Singularity
 		/// <returns>Copy of String with the character replaced</returns>
 		public static String ReplaceFirstRegex(this String value, Char charValueToReplace, Char replacement)
 		{
-			var regEx = new Regex(charValueToReplace.ToString(), RegexOptions.Multiline);
+			Regex regEx = new Regex(charValueToReplace.ToString(), RegexOptions.Multiline);
 			return regEx.Replace(value, replacement.ToString(), 1);
 		}
 
@@ -1491,7 +1491,7 @@ namespace Singularity
 			stringToReplace = stringToReplace ?? String.Empty;
 			replacement = replacement ?? String.Empty;
 
-			var pos = value.IndexOf(stringToReplace);
+			Int32 pos = value.IndexOf(stringToReplace);
 			if (pos < 0) return value;
 
 			if (replacement.IsEmpty())
@@ -1514,7 +1514,7 @@ namespace Singularity
 		{
 			if (!haystack.IsEmpty() && !needles.IsEmpty())
 			{
-				foreach (var needle in needles)
+				foreach (Char needle in needles)
 				{
 					haystack = haystack.ReplaceAll(needle.ToString(), String.Empty);
 				}
@@ -1531,7 +1531,7 @@ namespace Singularity
 		/// <returns>The source string if no needles found or the source string with replacement characters instead of any needle characters.</returns>
 		public static String Replace(this String haystack, Char[] needles, Char replacement)
 		{
-			var result = haystack;
+			String result = haystack;
 			needles.ForEach(n => result = result.Replace(n, replacement));
 			return result;
 		}
@@ -1547,7 +1547,7 @@ namespace Singularity
 		{
 			if (!haystack.IsEmpty() && !needles.IsEmpty())
 			{
-				foreach (var needle in needles)
+				foreach (String needle in needles)
 				{
 					haystack = haystack.ReplaceAll(needle, replacement);
 				}
@@ -1577,14 +1577,14 @@ namespace Singularity
 		/// <returns>Copy of String with the character replaced</returns>
 		public static String ReplaceLast(this String value, Char charValueToReplace, Char replacement)
 		{
-			var index = value.LastIndexOf(charValueToReplace);
+			Int32 index = value.LastIndexOf(charValueToReplace);
 			if (index < 0)
 			{
 				return value;
 			}
 			else
 			{
-				var sb = new StringBuilder(value.Length - 2);
+				StringBuilder sb = new StringBuilder(value.Length - 2);
 				sb.Append(value.Substring(0, index));
 				sb.Append(replacement);
 				sb.Append(value.Substring(index + 1, value.Length - index - 1));
@@ -1602,14 +1602,14 @@ namespace Singularity
 		/// <returns>Copy of String with the String replaced</returns>
 		public static String ReplaceLast(this String value, String stringToReplace, String replacement = "")
 		{
-			var index = value.LastIndexOf(stringToReplace);
+			Int32 index = value.LastIndexOf(stringToReplace);
 			if (index < 0)
 			{
 				return value;
 			}
 			else
 			{
-				var sb = new StringBuilder(value.Length - stringToReplace.Length + replacement.Length);
+				StringBuilder sb = new StringBuilder(value.Length - stringToReplace.Length + replacement.Length);
 				sb.Append(value.Substring(0, index));
 				if (!replacement.IsEmpty())
 				{
@@ -1652,9 +1652,9 @@ namespace Singularity
 		/// <returns>Returns a copy of the String after removing the new line character</returns>
 		public static String RemoveNewLines(this String value, Boolean addSpace)
 		{
-			var lReplace = addSpace ? ValueLib.Space.StringValue : String.Empty;
-			var lPattern = @"[\r|\n]";
-			var lRegEx = new Regex(lPattern, RegexOptions.IgnoreCase | RegexOptions.Multiline);
+			String lReplace = addSpace ? ValueLib.Space.StringValue : String.Empty;
+			String lPattern = @"[\r|\n]";
+			Regex lRegEx = new Regex(lPattern, RegexOptions.IgnoreCase | RegexOptions.Multiline);
 			return lRegEx.Replace(value, lReplace);
 		}
 
@@ -1664,8 +1664,8 @@ namespace Singularity
 		/// <returns>Copy of the String after removing non numeric characters</returns>
 		public static String RemoveNonNumeric(this String value)
 		{
-			var result = new StringBuilder();
-			for (var iIdx = 0; iIdx < value.Length; iIdx++)
+			StringBuilder result = new StringBuilder();
+			for (Int32 iIdx = 0; iIdx < value.Length; iIdx++)
 			{
 				if (Char.IsNumber(value[iIdx]))
 				{
@@ -1681,8 +1681,8 @@ namespace Singularity
 		/// <returns>Copy of the String after removing the numeric characters</returns>
 		public static String RemoveNumeric(this String value)
 		{
-			var result = new StringBuilder();
-			for (var iIdx = 0; iIdx < value.Length; iIdx++)
+			StringBuilder result = new StringBuilder();
+			for (Int32 iIdx = 0; iIdx < value.Length; iIdx++)
 			{
 				if (!Char.IsNumber(value[iIdx]))
 				{
@@ -1698,7 +1698,7 @@ namespace Singularity
 		/// <returns>Copy of the reversed String</returns>
 		public static String Reverse(this String value)
 		{
-			var lReverse = new Char[value.Length];
+			Char[] lReverse = new Char[value.Length];
 			for (Int32 iIdx = 0, iCountDown = value.Length - 1; iIdx < value.Length; iIdx++, iCountDown--)
 			{
 				if (Char.IsSurrogate(value[iCountDown]))
@@ -1781,8 +1781,8 @@ namespace Singularity
 
 		public static Byte[] ToByteArray(this String value)
 		{
-			var result = new List<Byte>(value.Length);
-			foreach (var lChar in value.ToCharArray())
+			List<Byte> result = new List<Byte>(value.Length);
+			foreach (Char lChar in value.ToCharArray())
 			{
 				result.Add(Convert.ToByte(lChar));
 			}
@@ -1868,9 +1868,9 @@ namespace Singularity
 		{
 			if (value.IsEmpty()) return String.Empty;
 
-			var builder = new StringBuilder(value.Length + 100);
-			var breakText = Environment.NewLine;
-			var counter = 0;
+			StringBuilder builder = new StringBuilder(value.Length + 100);
+			String breakText = Environment.NewLine;
+			Int32 counter = 0;
 
 			if (cutOff)
 			{
@@ -1890,8 +1890,8 @@ namespace Singularity
 			}
 			else
 			{
-				var wordCollection = new WordCollection(value);
-				for (var i = 0; i < wordCollection.Count - 1; i++)
+				WordCollection wordCollection = new WordCollection(value);
+				for (Int32 i = 0; i < wordCollection.Count - 1; i++)
 				{
 					// added one to represent the space.
 					counter += wordCollection[i].Length + 1;
@@ -1917,8 +1917,8 @@ namespace Singularity
 		{
 			if (val.IsEmpty()) return false;
 
-			var expresion = @"^(?:[a-zA-Z0-9_'^&/+-])+(?:\.(?:[a-zA-Z0-9_'^&/+-])+)*@(?:(?:\[?(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?))\.){3}(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\]?)|(?:[a-zA-Z0-9-]+\.)+(?:[a-zA-Z]){2,}\.?)$";
-			var regex = new Regex(expresion, RegexOptions.IgnoreCase);
+			String expresion = @"^(?:[a-zA-Z0-9_'^&/+-])+(?:\.(?:[a-zA-Z0-9_'^&/+-])+)*@(?:(?:\[?(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?))\.){3}(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\]?)|(?:[a-zA-Z0-9-]+\.)+(?:[a-zA-Z]){2,}\.?)$";
+			Regex regex = new Regex(expresion, RegexOptions.IgnoreCase);
 			return regex.IsMatch(val);
 		}
 
@@ -1950,11 +1950,11 @@ namespace Singularity
 			const String strIPv6PatternHexCompressed = @"\A((?:[0-9A-Fa-f]{1,4}(?::[0-9A-Fa-f]{1,4})*)?)::((?:[0-9A-Fa-f]{1,4}(?::[0-9A-Fa-f]{1,4})*)?)\z";
 			const String strIPv6Pattern6Hex4Dec = @"\A((?:[0-9A-Fa-f]{1,4}:){6,6})(25[0-5]|2[0-4]\d|[0-1]?\d?\d)(\.(25[0-5]|2[0-4]\d|[0-1]?\d?\d)){3}\z";
 			const String strIPv6PatternHex4DecCompressed = @"\A((?:[0-9A-Fa-f]{1,4}(?::[0-9A-Fa-f]{1,4})*)?) ::((?:[0-9A-Fa-f]{1,4}:)*)(25[0-5]|2[0-4]\d|[0-1]?\d?\d)(\.(25[0-5]|2[0-4]\d|[0-1]?\d?\d)){3}\z";
-			var checkstrIPv4Pattern = new Regex(strIPv4Pattern);
-			var checkstrIPv6Pattern = new Regex(strIPv6Pattern);
-			var checkstrIPv6PatternHexCompressed = new Regex(strIPv6PatternHexCompressed);
-			var checkStrIPv6Pattern6Hex4Dec = new Regex(strIPv6Pattern6Hex4Dec);
-			var checkStrIPv6PatternHex4DecCompressed = new Regex(strIPv6PatternHex4DecCompressed);
+			Regex checkstrIPv4Pattern = new Regex(strIPv4Pattern);
+			Regex checkstrIPv6Pattern = new Regex(strIPv6Pattern);
+			Regex checkstrIPv6PatternHexCompressed = new Regex(strIPv6PatternHexCompressed);
+			Regex checkStrIPv6Pattern6Hex4Dec = new Regex(strIPv6Pattern6Hex4Dec);
+			Regex checkStrIPv6PatternHex4DecCompressed = new Regex(strIPv6PatternHex4DecCompressed);
 			return checkstrIPv4Pattern.IsMatch(val, 0) ||
 				  checkstrIPv6Pattern.IsMatch(val, 0) ||
 				  checkstrIPv6PatternHexCompressed.IsMatch(val, 0) ||
@@ -1980,8 +1980,8 @@ namespace Singularity
 		/// <returns>Base 64 Encoded string</returns>
 		public static String ToBase64String(this String val)
 		{
-			var toEncodeAsBytes = ASCIIEncoding.ASCII.GetBytes(val);
-			var returnValue = Convert.ToBase64String(toEncodeAsBytes);
+			Byte[] toEncodeAsBytes = ASCIIEncoding.ASCII.GetBytes(val);
+			String returnValue = Convert.ToBase64String(toEncodeAsBytes);
 			return returnValue;
 		}
 
@@ -1992,8 +1992,8 @@ namespace Singularity
 		/// <returns>Base 64 decoded string</returns>
 		public static String FromBase64String(this String val)
 		{
-			var encodedDataAsBytes = Convert.FromBase64String(val);
-			var returnValue = ASCIIEncoding.ASCII.GetString(encodedDataAsBytes);
+			Byte[] encodedDataAsBytes = Convert.FromBase64String(val);
+			String returnValue = ASCIIEncoding.ASCII.GetString(encodedDataAsBytes);
 			return returnValue;
 		}
 
@@ -2004,12 +2004,12 @@ namespace Singularity
 		/// <returns>string representation of the MD5 encryption</returns>
 		public static String ToMd5String(this String val)
 		{
-			var builder = new StringBuilder();
-			using (var md5Hasher = MD5.Create())
+			StringBuilder builder = new StringBuilder();
+			using (MD5 md5Hasher = MD5.Create())
 			{
-				var data = md5Hasher.ComputeHash(Encoding.Default.GetBytes(val));
+				Byte[] data = md5Hasher.ComputeHash(Encoding.Default.GetBytes(val));
 
-				for (var i = 0; i < data.Length; i++)
+				for (Int32 i = 0; i < data.Length; i++)
 				{
 					builder.Append(data[i].ToString("x2"));
 				}
@@ -2024,8 +2024,8 @@ namespace Singularity
 		/// <returns>true is the given string is equal to the string encrypted</returns>
 		public static Boolean VerifyMd5String(this String val, String hash)
 		{
-			var hashOfInput = ToMd5String(val);
-			var comparer = StringComparer.OrdinalIgnoreCase;
+			String hashOfInput = ToMd5String(val);
+			StringComparer comparer = StringComparer.OrdinalIgnoreCase;
 			return 0 == comparer.Compare(hashOfInput, hash) ? true : false;
 		}
 
@@ -2055,10 +2055,10 @@ namespace Singularity
 
 		public static String EncryptSha1(this String password)
 		{
-			using (var hh = new SHA1Managed())
+			using (SHA1Managed hh = new SHA1Managed())
 			{
-				var combined = Encoding.ASCII.GetBytes(password);
-				return BitConverter.ToString(hh.ComputeHash(combined)).ToLower().Replace("-", "");
+				Byte[] combined = Encoding.ASCII.GetBytes(password);
+				return BitConverter.ToString(hh.ComputeHash(combined)).ToLower().Replace("-", String.Empty);
 			}
 		}
 
@@ -2088,7 +2088,7 @@ namespace Singularity
 		/// <returns></returns>
 		public static String StripTags(this String val)
 		{
-			var stripTags = new Regex("<(.|\n)+?>");
+			Regex stripTags = new Regex("<(.|\n)+?>");
 			return stripTags.Replace(val, String.Empty);
 		}
 
@@ -2100,15 +2100,15 @@ namespace Singularity
 		/// <returns></returns>
 		public static String NewLineToBreak(this String val)
 		{
-			var regEx = new Regex(@"[\n|\r]+");
+			Regex regEx = new Regex(@"[\n|\r]+");
 			return regEx.Replace(val, ValueLib.HtmlBreak.StringValue);
 		}
 
 		public static String RemoveNoise(this String value)
 		{
-			var safeValue = value != null ? value : String.Empty;
-			var sb = new StringBuilder(safeValue.Length);
-			foreach (var c in safeValue)
+			String safeValue = value != null ? value : String.Empty;
+			StringBuilder sb = new StringBuilder(safeValue.Length);
+			foreach (Char c in safeValue)
 			{
 				if (!Char.IsControl(c))
 				{
@@ -2125,9 +2125,9 @@ namespace Singularity
 		/// <returns></returns>
 		public static String ReplaceNoise(this String value)
 		{
-			var safeValue = value != null ? value : String.Empty;
-			var sb = new StringBuilder(safeValue.Length);
-			foreach (var c in safeValue)
+			String safeValue = value != null ? value : String.Empty;
+			StringBuilder sb = new StringBuilder(safeValue.Length);
+			foreach (Char c in safeValue)
 			{
 				if (!Char.IsControl(c))
 				{
@@ -2150,11 +2150,11 @@ namespace Singularity
 
 			if (characters != null)
 			{
-				var result = value;
-				characters.ForEach(c => result = result.Replace(c.ToString(), ""));
+				String result = value;
+				characters.ForEach(c => result = result.Replace(c.ToString(), String.Empty));
 				return result;
 			}
-			return Regex.Replace(value, @"[^\w\s]", "", RegexOptions.Compiled).TrimIntra();
+			return Regex.Replace(value, @"[^\w\s]", String.Empty, RegexOptions.Compiled).TrimIntra();
 		}
 
 		public static String Annul(this String value, IEnumerable<String> annulWords)
@@ -2172,8 +2172,8 @@ namespace Singularity
 
 		public static String CleanPunctuation(this String value)
 		{
-			var result = new StringBuilder();
-			foreach (var c in value.ToCharArray())
+			StringBuilder result = new StringBuilder();
+			foreach (Char c in value.ToCharArray())
 			{
 				if (!Char.IsPunctuation(c))
 				{
@@ -2188,9 +2188,9 @@ namespace Singularity
 			String result = null;
 			if (!value.IsEmpty())
 			{
-				var bytes = Encoding.Unicode.GetBytes(value);
-				var checksum = 0;
-				foreach (var character in bytes)
+				Byte[] bytes = Encoding.Unicode.GetBytes(value);
+				Int32 checksum = 0;
+				foreach (Byte character in bytes)
 				{
 					checksum += character;
 				}
@@ -2249,16 +2249,16 @@ namespace Singularity
 
 			time = time.Trim();
 
-			var pattern = @"^\d{1,2}:\d\d(:\d\d){0,1}$";
-			var regex = new Regex(pattern);
-			var match = regex.Match(time);
+			String pattern = @"^\d{1,2}:\d\d(:\d\d){0,1}$";
+			Regex regex = new Regex(pattern);
+			Match match = regex.Match(time);
 			if (!match.Success)
 			{
 				return false;
 			}
 
 			// Make sure that numeric values are valid.
-			var digits = time.Split(':');
+			String[] digits = time.Split(':');
 
 			// At the least, we must have hour and minute.
 			if (digits.Length < 2)
@@ -2315,15 +2315,15 @@ namespace Singularity
 		/// <returns>The percentage match from 0.0 to 1.0 where 1.0 is 100%</returns>
 		public static Double Similarity(this String value, String similar)
 		{
-			var pairs1 = WordLetterPairs(value.ToUpper());
-			var pairs2 = WordLetterPairs(similar.ToUpper());
+			IList<String> pairs1 = WordLetterPairs(value.ToUpper());
+			IList<String> pairs2 = WordLetterPairs(similar.ToUpper());
 
-			var intersection = 0;
-			var union = pairs1.Count + pairs2.Count;
+			Int32 intersection = 0;
+			Int32 union = pairs1.Count + pairs2.Count;
 
-			for (var i = 0; i < pairs1.Count; i++)
+			for (Int32 i = 0; i < pairs1.Count; i++)
 			{
-				for (var j = 0; j < pairs2.Count; j++)
+				for (Int32 j = 0; j < pairs2.Count; j++)
 				{
 					if (pairs1[i] == pairs2[j])
 					{
@@ -2348,17 +2348,17 @@ namespace Singularity
 			IList<String> allPairs = new List<String>();
 
 			// Tokenize the string and put the tokens/words into an array
-			var words = Regex.Split(str, @"\s");
+			String[] words = Regex.Split(str, @"\s");
 
 			// For each word
-			for (var w = 0; w < words.Length; w++)
+			for (Int32 w = 0; w < words.Length; w++)
 			{
 				if (!String.IsNullOrEmpty(words[w]))
 				{
 					// Find the pairs of characters
-					var pairsInWord = LetterPairs(words[w]);
+					String[] pairsInWord = LetterPairs(words[w]);
 
-					for (var p = 0; p < pairsInWord.Length; p++)
+					for (Int32 p = 0; p < pairsInWord.Length; p++)
 					{
 						allPairs.Add(pairsInWord[p]);
 					}
@@ -2376,9 +2376,9 @@ namespace Singularity
 		/// <returns></returns>
 		private static String[] LetterPairs(String str)
 		{
-			var numPairs = str.Length - 1;
-			var pairs = new String[numPairs];
-			for (var i = 0; i < numPairs; i++)
+			Int32 numPairs = str.Length - 1;
+			String[] pairs = new String[numPairs];
+			for (Int32 i = 0; i < numPairs; i++)
 			{
 				pairs[i] = str.Substring(i, 2);
 			}

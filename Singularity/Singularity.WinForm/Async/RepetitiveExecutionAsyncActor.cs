@@ -30,7 +30,7 @@ namespace Singularity.WinForm.Async
 			 * available the method will execute. */
 			ThreadPool.QueueUserWorkItem(new WaitCallback((x) =>
 			{
-				var state = x as State;
+				State state = x as State;
 				state.Run();
 
 				// If the calling application neglected to provide a WhenComplete delegate check if null before attempting to invoke.
