@@ -7,7 +7,7 @@ using System.Linq.Expressions;
 
 namespace Singularity.DataService.SqlFramework
 {
-	public abstract class SqlRepository<TSqlEntity> : IDisposable
+	public abstract class SqlRepository<TSqlEntity>
 		where TSqlEntity : class
 	{
 		protected SqlEntityContext Context;
@@ -324,29 +324,6 @@ namespace Singularity.DataService.SqlFramework
 		protected abstract String GetUpdateColumnValuePairs(TSqlEntity sqlEntity);
 		protected abstract String GetUpdateKeyColumnValuePair(TSqlEntity sqlEntity);
 		protected abstract void SetEntityPrimaryKey(TSqlEntity sqlEntity, Object newPrimaryKey);
-
-		#region IDisposable Support
-
-		public void Dispose()
-		{
-			Dispose(true);
-		}
-
-		protected virtual void Dispose(Boolean disposing)
-		{
-			if (!_disposedValue)
-			{
-				if (disposing)
-				{
-					Context?.Dispose();
-				}
-			}
-			_disposedValue = true;
-		}
-
-		private Boolean _disposedValue;
-
-		#endregion
 
 		protected const String UpdateColumnValuePattern = "{0} = {1}";
 		private const String InsertColumnsPattern = "Insert [{0}] ({1}) Values({2}) SELECT @@IDENTITY";
