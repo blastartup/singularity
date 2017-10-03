@@ -140,6 +140,22 @@ namespace Singularity.DataService.SqlFramework
 			return Context.ExecuteNonQuery(query, filterParameters) == 1;
 		}
 
+		public void IdentityInsertOn()
+		{
+			SqlCommand cmd = new SqlCommand($"Set Identity_Insert dbo.{TableName} On", Context.SqlConnection);
+			cmd.ExecuteNonQuery();
+			_identityInsert = true;
+		}
+
+		public void IdentityInsertOff()
+		{
+			SqlCommand cmd = new SqlCommand($"Set Identity_Insert dbo.{TableName} Off", Context.SqlConnection);
+			cmd.ExecuteNonQuery();
+			_identityInsert = false;
+		}
+
+		public Boolean IdentityInsert => _identityInsert;
+		private Boolean _identityInsert;
 
 		//public virtual void Deactivate(Object id)
 		//{

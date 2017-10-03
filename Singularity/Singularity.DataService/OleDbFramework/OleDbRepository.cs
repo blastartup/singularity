@@ -74,7 +74,7 @@ namespace Singularity.DataService.OleDbFramework
 		private static String DateTimeFormat = "yyyy/MM/dd HH:mm:ss.fff";
 	}
 
-	public abstract class OleDbRepository<TOleDbEntity> : OleDbRepository, IDisposable
+	public abstract class OleDbRepository<TOleDbEntity> : OleDbRepository
 		where TOleDbEntity : class
 	{
 
