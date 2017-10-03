@@ -4,6 +4,7 @@ using System.Data.Entity;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Runtime.InteropServices;
 
 namespace Singularity.DataService.SqlFramework
 {
@@ -138,6 +139,13 @@ namespace Singularity.DataService.SqlFramework
 
 			query = "If Exists (Select * from {0}{1}) Then Print 1 Else Print 0".FormatX(FromTables(), filter);
 			return Context.ExecuteNonQuery(query, filterParameters) == 1;
+		}
+
+		public void Reseed(Int32 newPrimaryKey = 0)
+		{
+			newPrimaryKey--;
+			SqlCommand cmd = new SqlCommand($"DBCC CheckIdent ({TableName}, reseed, {newPrimaryKey})", Context.SqlConnection);
+			cmd.ExecuteNonQuery();
 		}
 
 		public void IdentityInsertOn()
