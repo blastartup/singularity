@@ -122,5 +122,23 @@ namespace Singularity.FileService
 		{
 			return fileInfo.Name.IsValidFilename();
 		}
+
+		public static Boolean IsFileLocked(this FileInfo fileinfo)
+		{
+			FileStream stream = null;
+			try
+			{
+				stream = fileinfo.Open(FileMode.Open, FileAccess.Read, FileShare.None);
+			}
+			catch (IOException)
+			{
+				return true;
+			}
+			finally
+			{
+				stream?.Close();
+			}
+			return false;
+		}
 	}
 }

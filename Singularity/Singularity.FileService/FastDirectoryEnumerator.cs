@@ -200,29 +200,29 @@ namespace Singularity.FileService
             return FastDirectoryEnumerator.EnumerateFiles(path, searchPattern, SearchOption.TopDirectoryOnly);
         }
 
-        /// <summary>
-        /// Gets <see cref="FileData"/> for all the files in a directory that 
-        /// match a specific filter, optionally including all sub directories.
-        /// </summary>
-        /// <param name="path">The path to search.</param>
-        /// <param name="searchPattern">The search string to match against files in the path.</param>
-        /// <param name="searchOption">
-        /// One of the SearchOption values that specifies whether the search 
-        /// operation should include all subdirectories or only the current directory.
-        /// </param>
-        /// <returns>An object that implements <see cref="IEnumerable{FileData}"/> and 
-        /// allows you to enumerate the files in the given directory.</returns>
-        /// <exception cref="ArgumentNullException">
-        /// <paramref name="path"/> is a null reference (Nothing in VB)
-        /// </exception>
-        /// <exception cref="ArgumentNullException">
-        /// <paramref name="filter"/> is a null reference (Nothing in VB)
-        /// </exception>
-        /// <exception cref="ArgumentOutOfRangeException">
-        /// <paramref name="searchOption"/> is not one of the valid values of the
-        /// <see cref="System.IO.SearchOption"/> enumeration.
-        /// </exception>
-        public static IEnumerable<FileData> EnumerateFiles(string path, string searchPattern, SearchOption searchOption)
+		/// <summary>
+		/// Gets <see cref="FileData"/> for all the files in a directory that 
+		/// match a specific filter, optionally including all sub directories.
+		/// </summary>
+		/// <param name="path">The path to search.</param>
+		/// <param name="searchPattern">The search string to match against files in the path.</param>
+		/// <param name="searchOption">
+		/// One of the SearchOption values that specifies whether the search 
+		/// operation should include all subdirectories or only the current directory.
+		/// </param>
+		/// <returns>An object that implements <see cref="IEnumerable{FileData}"/> and 
+		/// allows you to enumerate the files in the given directory.</returns>
+		/// <exception cref="ArgumentNullException">
+		/// <paramref name="path"/> is a null reference (Nothing in VB)
+		/// </exception>
+		/// <exception cref="ArgumentNullException">
+		/// <paramref name="searchPattern"/> is a null reference (Nothing in VB)
+		/// </exception>
+		/// <exception cref="ArgumentOutOfRangeException">
+		/// <paramref name="searchOption"/> is not one of the valid values of the
+		/// <see cref="System.IO.SearchOption"/> enumeration.
+		/// </exception>
+		public static IEnumerable<FileData> EnumerateFiles(string path, string searchPattern, SearchOption searchOption)
         {
             if (path == null)
             {

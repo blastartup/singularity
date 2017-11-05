@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.Remoting.Messaging;
 using System.Windows.Forms;
+using Singularity.WinForm.Interfaces;
 
 namespace Singularity.WinForm.Async
 {
@@ -14,16 +15,19 @@ namespace Singularity.WinForm.Async
 	/// <seealso cref="SingleExecutionAsyncActor{TSender,TResult}"/>
 	/// <seealso cref="Coworker"/>
 	/// <seealso cref="RepetitiveExecutionAsyncActor{TSender,TResult}"/>
+	[Obsolete("Legacy hookup is too difficult so use AsyncAction instead.")]
 	public class AsyncWorker
 	{
 		/// <summary>
 		/// Occurs when [do work].
 		/// </summary>
 		public event DoWorkEventHandler DoWork;
+
 		/// <summary>
 		/// Occurs when [run worker completed].
 		/// </summary>
 		public event RunWorkerCompletedEventHandler RunWorkerCompleted;
+
 		/// <summary>
 		/// Occurs when [progress changed].
 		/// </summary>
@@ -37,7 +41,7 @@ namespace Singularity.WinForm.Async
 		/// </summary>
 		public AsyncWorker()
 		{
-			_workerCallback = OnRunWorkerCompleted;
+			_workerCallback = OnWorkCompleted;
 			_eventHandler = OnDoWork;
 		}
 
@@ -74,18 +78,8 @@ namespace Singularity.WinForm.Async
 		/// Runs the worker async.
 		/// </summary>
 		/// <param name="abortIfBusy">if set to <c>true</c> [abort if busy].</param>
-		public Boolean RunWorkerAsync(Boolean abortIfBusy)
-		{
-			return RunWorkerAsync(abortIfBusy, null);
-		}
-
-
-		/// <summary>
-		/// Runs the worker async.
-		/// </summary>
-		/// <param name="abortIfBusy">if set to <c>true</c> [abort if busy].</param>
 		/// <param name="argument">The argument.</param>
-		public Boolean RunWorkerAsync(Boolean abortIfBusy, Object argument)
+		public Boolean Start(Boolean abortIfBusy, Object argument = null)
 		{
 
 			if (abortIfBusy && IsBusy)
@@ -162,7 +156,7 @@ namespace Singularity.WinForm.Async
 		/// Called when [run worker completed].
 		/// </summary>
 		/// <param name="ar">The ar.</param>
-		protected virtual void OnRunWorkerCompleted(IAsyncResult ar)
+		protected virtual void OnWorkCompleted(IAsyncResult ar)
 		{
 			DoWorkEventHandler doWorkDelegate = (DoWorkEventHandler)((AsyncResult)ar).AsyncDelegate;
 			RunWorkerCompleted?.Invoke(this, new RunWorkerCompletedEventArgs(ar, null, _cancelationPending));
@@ -176,14 +170,22 @@ namespace Singularity.WinForm.Async
 		}
 		private readonly List<AsyncJob> _asyncJobs;
 
-		public void NextJob()
+		public void NextAsyncJob()
 		{
 			_currentJob++;
 		}
 
 		public void StartAsyncJob(Object sender, DoWorkEventArgs eventArgs)
 		{
-			CurrentJob.AsyncService.DoWork(sender, eventArgs);
+			IAsyncArgument argument = eventArgs.Argument as IAsyncArgument;
+			if (argument != null)
+			{
+				_asyncJobs[argument.JobIdx].AsyncService.DoWork(sender, eventArgs);
+			}
+			else
+			{
+				CurrentJob.AsyncService.DoWork(sender, eventArgs);
+			}
 		}
 
 		public Control CurrentControl => CurrentJob.Control;
