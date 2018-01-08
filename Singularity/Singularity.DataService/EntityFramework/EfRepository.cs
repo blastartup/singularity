@@ -74,7 +74,7 @@ namespace Singularity.DataService
 			if (id is Guid || id is Int32)
 			{
 				TEntity entity = DbSet.Find(id);
-				if (entity is IDeletable && ((IDeletable)entity).DeletedDate.HasValue)
+				if (entity is IDeletable deletable && deletable.DeletedDate.HasValue)
 				{
 					return null;
 				}
@@ -83,9 +83,18 @@ namespace Singularity.DataService
 			return null;
 		}
 
-		public virtual Boolean Exists(Expression<Func<TEntity, Boolean>> filter)
+		public virtual Boolean Exists(Object id)
 		{
-			return DbSet.Any(filter);
+			if (id is Guid || id is Int32)
+			{
+				TEntity entity = DbSet.Find(id);
+				if (entity is IDeletable deletable && deletable.DeletedDate.HasValue)
+				{
+					return false;
+				}
+				return true;
+			}
+			return false;
 		}
 
 		public virtual void Insert(TEntity entity)
@@ -112,14 +121,12 @@ namespace Singularity.DataService
 
 		public virtual void Deactivate(TEntity entityToDeactivate)
 		{
-			IDeletable deletable = entityToDeactivate as IDeletable;
-			if (deletable != null)
+			if (entityToDeactivate is IDeletable deletable)
 			{
 				deletable.DeletedDate = Context.Now;
 			}
 
-			IModifiable modifiable = entityToDeactivate as IModifiable;
-			if (modifiable != null)
+			if (entityToDeactivate is IModifiable modifiable)
 			{
 				modifiable.ModifiedDate = NowDateTime;
 			}
@@ -145,9 +152,9 @@ namespace Singularity.DataService
 
 		public virtual void Update(TEntity entityToUpdate)
 		{
-			if (entityToUpdate is IModifiable)
+			if (entityToUpdate is IModifiable modifiable)
 			{
-				((IModifiable)entityToUpdate).ModifiedDate = NowDateTime;
+				modifiable.ModifiedDate = NowDateTime;
 			}
 			DbSet.Attach(entityToUpdate);
 			Context.Entry(entityToUpdate).State = EntityState.Modified;

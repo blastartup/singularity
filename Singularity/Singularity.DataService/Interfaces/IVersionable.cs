@@ -4,8 +4,8 @@
 
 namespace Singularity.DataService
 {
-	public interface ICompletable : ICreatable
+	public interface IVersionable : IRevisable
 	{
-		DateTime? CompletedDate { get; set; }
+		Int32 Version { get; set; }
 	}
 }
