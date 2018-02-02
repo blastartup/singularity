@@ -136,7 +136,7 @@ namespace Singularity.DataService.SqlFramework
 			}
 
 			query = "Select Count(*) from {0}{1}".FormatX(FromTables(), filter);
-			return Context.ExecuteNonQuery(query, filterParameters);
+			return (Int64)Context.ExecScalar(query, filterParameters);
 		}
 
 		public Boolean Any(String filter = "", SqlParameter[] filterParameters = null)
