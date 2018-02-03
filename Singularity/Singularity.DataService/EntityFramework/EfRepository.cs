@@ -97,6 +97,11 @@ namespace Singularity.DataService
 			return false;
 		}
 
+		public virtual Boolean Exists(Expression<Func<TEntity, Boolean>> filter)
+		{
+			return DbSet.Any(filter);
+		}
+
 		public virtual void Insert(TEntity entity)
 		{
 			IModifiable modifiableEntity = entity as IModifiable;
