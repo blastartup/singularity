@@ -32,7 +32,7 @@ $platform = ""
 #	e.g. $packProperties = "TargetFrameworkVersion=v3.5;Optimize=true"
 # Do not specify the "Configuration" or "Platform" here; use the $configuration and $platform variables above.
 # MsBuild Properties that can be specified: http://msdn.microsoft.com/en-us/library/vstudio/bb629394.aspx
-$packProperties = "TargetFrameworkVersion=v4.6.1"
+$packProperties = "TargetFrameworkVersion=v4.6.2"
 
 # Specify any NuGet Pack options to pass to nuget.exe.
 #	e.g. $packOptions = "-Symbols"
