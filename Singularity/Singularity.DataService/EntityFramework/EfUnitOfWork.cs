@@ -77,7 +77,9 @@ namespace Singularity.DataService
 			return result;
 		}
 
-		public void LoadReferenceIfRequired<TEntity>(TEntity entity, Expression<Func<TEntity, TEntity>> property) where TEntity : class
+		public void LoadReferenceIfRequired<TEntity, TEntityReference>(TEntity entity, Expression<Func<TEntity, TEntityReference>> property) 
+			where TEntity : class
+			where TEntityReference : class
 		{
 			if (!Context.Entry(entity).Reference(property).IsLoaded)
 			{
@@ -85,7 +87,9 @@ namespace Singularity.DataService
 			}
 		}
 
-		public void LoadCollectionIfRequired<TEntity>(TEntity entity, Expression<Func<TEntity, ICollection<TEntity>>> collection) where TEntity : class 
+		public void LoadCollectionIfRequired<TEntity, TEntityCollection>(TEntity entity, Expression<Func<TEntity, ICollection<TEntityCollection>>> collection) 
+			where TEntity : class 
+			where TEntityCollection : class
 		{
 			if (!Context.Entry(entity).Collection(collection).IsLoaded)
 			{

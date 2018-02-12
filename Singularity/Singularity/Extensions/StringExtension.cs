@@ -10,7 +10,9 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
+using System.Security;
 using System.Security.Cryptography;
+using System.Security.Permissions;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -1922,6 +1924,31 @@ namespace Singularity
 			return regex.IsMatch(val);
 		}
 
+		public static Boolean HavePermissionsOnRegistryKey(this String key, RegistryPermissionAccess accesslevel)
+		{
+			try
+			{
+				var registryPermission = new RegistryPermission(accesslevel, key);
+				registryPermission.Demand();
+			}
+			catch (SecurityException)
+			{
+				return false;
+			}
+
+			return true;
+		}
+
+		public static Boolean RegistryKeyCanWrite(this String key)
+		{
+			return key.HavePermissionsOnRegistryKey(RegistryPermissionAccess.Write);
+		}
+
+		public static Boolean RegistryKeyCanRead(this String key)
+		{
+			return key.HavePermissionsOnRegistryKey(RegistryPermissionAccess.Read);
+		}
+
 		/// <summary>
 		/// Checks if the string is a valid URI
 		/// Test Coverage: Included
@@ -1970,7 +1997,7 @@ namespace Singularity
 		public static Boolean IsPalindrome(this String val)
 		{
 			if (val.IsEmpty()) return false;
-			return val.ToLower() == val.ToString().ToLower().Reverse();
+			return val.ToLower() == val.ToLower().Reverse();
 		}
 
 		/// <summary>
@@ -1980,7 +2007,7 @@ namespace Singularity
 		/// <returns>Base 64 Encoded string</returns>
 		public static String ToBase64String(this String val)
 		{
-			Byte[] toEncodeAsBytes = ASCIIEncoding.ASCII.GetBytes(val);
+			Byte[] toEncodeAsBytes = Encoding.ASCII.GetBytes(val);
 			String returnValue = Convert.ToBase64String(toEncodeAsBytes);
 			return returnValue;
 		}
@@ -1993,7 +2020,7 @@ namespace Singularity
 		public static String FromBase64String(this String val)
 		{
 			Byte[] encodedDataAsBytes = Convert.FromBase64String(val);
-			String returnValue = ASCIIEncoding.ASCII.GetString(encodedDataAsBytes);
+			String returnValue = Encoding.ASCII.GetString(encodedDataAsBytes);
 			return returnValue;
 		}
 
@@ -2106,7 +2133,7 @@ namespace Singularity
 
 		public static String RemoveNoise(this String value)
 		{
-			String safeValue = value != null ? value : String.Empty;
+			String safeValue = value ?? String.Empty;
 			StringBuilder sb = new StringBuilder(safeValue.Length);
 			foreach (Char c in safeValue)
 			{
@@ -2125,7 +2152,7 @@ namespace Singularity
 		/// <returns></returns>
 		public static String ReplaceNoise(this String value)
 		{
-			String safeValue = value != null ? value : String.Empty;
+			String safeValue = value ?? String.Empty;
 			StringBuilder sb = new StringBuilder(safeValue.Length);
 			foreach (Char c in safeValue)
 			{
@@ -2163,10 +2190,8 @@ namespace Singularity
 			{
 				return String.Empty;
 			}
-			else
-			{
-				annulWords.ForEach(w => value = value.Replace(w, ValueLib.Space.StringValue));
-			}
+
+			annulWords.ForEach(w => value = value.Replace(w, ValueLib.Space.StringValue));
 			return value;
 		}
 
@@ -2207,7 +2232,6 @@ namespace Singularity
 		/// <returns>bool - if text is datetime return true, else return false</returns>
 		public static Boolean IsDateTime(this String text)
 		{
-			DateTime dateTime;
 			Boolean isDateTime = false;
 
 			// Check for empty string.
@@ -2216,15 +2240,14 @@ namespace Singularity
 				return false;
 			}
 
-			isDateTime = TryParse(text, out dateTime);
+			isDateTime = TryParse(text, out DateTime dateTime);
 
 			return isDateTime;
 		}
 
 		public static Boolean IsGuid(this String value)
 		{
-			Guid dummy;
-			return Guid.TryParse(value, out dummy);
+			return Guid.TryParse(value, out Guid dummy);
 		}
 
 		/// <summary>
@@ -2249,7 +2272,7 @@ namespace Singularity
 
 			time = time.Trim();
 
-			String pattern = @"^\d{1,2}:\d\d(:\d\d){0,1}$";
+			const String pattern = @"^\d{1,2}:\d\d(:\d\d){0,1}$";
 			Regex regex = new Regex(pattern);
 			Match match = regex.Match(time);
 			if (!match.Success)
@@ -2299,12 +2322,12 @@ namespace Singularity
 
 		public static String ToUpperSafe(this String value)
 		{
-			return value != null ? value.ToUpper() : null;
+			return value?.ToUpper();
 		}
 
 		public static String ToLowerSafe(this String value)
 		{
-			return value != null ? value.ToLower() : null;
+			return value?.ToLower();
 		}
 
 		/// <summary>
@@ -2337,6 +2360,7 @@ namespace Singularity
 
 			return (2.0 * intersection) / union;
 		}
+
 		/// <summary>
 		/// Gets all letter pairs for each
 		/// individual word in the string
@@ -2345,27 +2369,11 @@ namespace Singularity
 		/// <returns></returns>
 		private static IList<String> WordLetterPairs(String str)
 		{
-			IList<String> allPairs = new List<String>();
-
 			// Tokenize the string and put the tokens/words into an array
 			String[] words = Regex.Split(str, @"\s");
 
 			// For each word
-			for (Int32 w = 0; w < words.Length; w++)
-			{
-				if (!String.IsNullOrEmpty(words[w]))
-				{
-					// Find the pairs of characters
-					String[] pairsInWord = LetterPairs(words[w]);
-
-					for (Int32 p = 0; p < pairsInWord.Length; p++)
-					{
-						allPairs.Add(pairsInWord[p]);
-					}
-				}
-			}
-
-			return allPairs;
+			return words.Where(word => !String.IsNullOrEmpty(word)).SelectMany(LetterPairs).ToList();
 		}
 
 		/// <summary>
