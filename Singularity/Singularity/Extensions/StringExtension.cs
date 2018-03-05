@@ -28,9 +28,9 @@ namespace Singularity
 	public static class StringExtension
 	{
 		/// <summary>
-		/// Given a string in CamelCase, return the string by inserting a space between each captilised word. eg: "Camel Case"
+		/// Given a string in CamelCase, return the string by inserting a space between each capitalised word. eg: "Camel Case"
 		/// </summary>
-		/// <param name="pascelCaseToken">String with expected pascel casing eg: "PascelCased".</param>
+		/// <param name="pascelCaseToken">String with expected pascal casing eg: "PascelCased".</param>
 		/// <returns>A spaced out string of words.</returns>
 		public static String Humanise(this String pascelCaseToken)
 		{
@@ -56,7 +56,7 @@ namespace Singularity
 		/// </summary>
 		/// <param name="template">The string template to be processed</param>
 		/// <param name="model">A composite object to supply template parameters. Only public non-indexed properties</param>
-		/// <param name="beginTag">An optional string for the begining tag characters. Default is "{{"</param>
+		/// <param name="beginTag">An optional string for the beginning tag characters. Default is "{{"</param>
 		/// <param name="endTag">An optional string for the ending tag characters. Default is "}}"</param>
 		/// <returns></returns>
 		public static String FormatWith(this String template, Object model, String beginTag = "{{", String endTag = "}}")
@@ -257,8 +257,8 @@ namespace Singularity
 		/// <summary>
 		/// Split the current string into segments.
 		/// </summary>
-		/// <param name="segmentLength" type="int">Length of substrings to return.</param>
-		/// <returns>A list of substrings of given segment length.</returns>
+		/// <param name="segmentLength" type="int">Length of sub-strings to return.</param>
+		/// <returns>A list of sub-strings of given segment length.</returns>
 		public static IList<String> Split(this String input, Int32 segmentLength)
 		{
 			List<String> result = new List<String>();
@@ -273,7 +273,7 @@ namespace Singularity
 		/// <summary>
 		/// Split the delimited current string safely.
 		/// </summary>
-		/// <returns>A list of substrings of given segment length.</returns>
+		/// <returns>A list of sub-strings of given segment length.</returns>
 		public static IList<String> SplitSafe(this String input, params Char[] seperator)
 		{
 			List<String> result = new List<String>();
@@ -312,12 +312,12 @@ namespace Singularity
 		}
 
 		/// <summary>
-		/// Truncate a string from either the start or end upon the locating the first occurance of a given character.
+		/// Truncate a string from either the start or end upon the locating the first occurrence of a given character.
 		/// </summary>
 		/// <param name="value">String to truncate.</param>
 		/// <param name="firstOccuranceOf">Character to locate in the String to mark the truncation point.</param>
-		/// <param name="fromLeft">If true cut the beginning of the string when the first occurance of the character is located from the left, 
-		/// otherwise cut the end of the string when the first occurance of the character is located from the end.</param>
+		/// <param name="fromLeft">If true cut the beginning of the string when the first occurrence of the character is located from the left, 
+		/// otherwise cut the end of the string when the first occurrence of the character is located from the end.</param>
 		/// <returns>Truncated string if cutting length is shorter than the original string, otherwise an empty string is returned.</returns>
 		public static String Cut(this String value, Char firstOccuranceOf, Boolean fromLeft = true)
 		{
@@ -344,7 +344,7 @@ namespace Singularity
 		/// <summary>
 		/// Get the certain left most number of characters from a given string.
 		/// </summary>
-		/// <param name="value">String from which to extract a substring.</param>
+		/// <param name="value">String from which to extract a sub-string.</param>
 		/// <param name="length">The left most number of characters required.</param>
 		/// <returns>A string of <paramref name="length"/> characters if all arguments are valid, else an empty string is returned.</returns>
 		[DebuggerStepThrough]
@@ -356,7 +356,7 @@ namespace Singularity
 		/// <summary>
 		/// Get the certain right most number of characters from a given string.
 		/// </summary>
-		/// <param name="value">String from which to extract a substring.</param>
+		/// <param name="value">String from which to extract a sub-string.</param>
 		/// <param name="length">The right most number of characters required.</param>
 		/// <returns>A string of <paramref name="length"/> characters if all arguments are valid, else an empty string is returned.</returns>
 		[DebuggerStepThrough]
@@ -366,9 +366,9 @@ namespace Singularity
 		}
 
 		/// <summary>
-		/// Get a substring from within a given string.
+		/// Get a sub-string from within a given string.
 		/// </summary>
-		/// <param name="input">String from which to extract a substring.</param>
+		/// <param name="input">String from which to extract a sub-string.</param>
 		/// <param name="startIndex">The first character position of the given string to extract from.</param>
 		/// <returns>A string of <paramref name="startIndex"/> characters if all arguments are valid, else an empty string is returned.</returns>
 		[DebuggerStepThrough]
@@ -378,9 +378,9 @@ namespace Singularity
 		}
 
 		/// <summary>
-		/// Get a substring from within a given string.
+		/// Get a sub-string from within a given string.
 		/// </summary>
-		/// <param name="input">String from which to extract a substring.</param>
+		/// <param name="input">String from which to extract a sub-string.</param>
 		/// <param name="startIndex">The first character position of the given string to extract from.</param>
 		/// <param name="length">The number of characters required.</param>
 		/// <returns>A string of <paramref name="length"/> characters if all arguments are valid, else an empty string is returned.</returns>
@@ -391,7 +391,7 @@ namespace Singularity
 		}
 
 		/// <summary>
-		/// A substring of this instance, from the specified position (empty if beyond the end of the string), up to the specified maximum length.
+		/// A sub-string of this instance, from the specified position (empty if beyond the end of the string), up to the specified maximum length.
 		/// </summary>
 		private static String SubstringCore(String input, Int32 startIndex, Int32 length)
 		{
@@ -440,7 +440,7 @@ namespace Singularity
 		/// <param name="nullableValue">A nullable first preference integer.</param>
 		/// <param name="replacementValue">The absolute non nullable integer.</param>
 		/// <returns>A first or second preference integer that is NOT null.</returns>
-		/// <remarks>Simply nest this method call if you want multiple fallbacks like a tertiary 
+		/// <remarks>Simply nest this method call if you want multiple fall backs like a tertiary 
 		/// preference eg: FallbackOnNull(firstPreint?, FallbackOnNull(seondPreint?, finalInt)) </remarks>
 		public static String ValueOnNull(this String nullableValue, String replacementValue)
 		{
@@ -1625,7 +1625,7 @@ namespace Singularity
 		}
 
 		/// <summary>
-		/// Replaces all occurences of chars with separator. Contiguous chars are replaced with a single separator
+		/// Replaces all occurrences of chars with separator. Contiguous chars are replaced with a single separator
 		/// </summary>
 		/// <param name="src"></param>
 		/// <param name="chars"></param>
@@ -1792,10 +1792,10 @@ namespace Singularity
 		}
 
 		/// <summary>
-		/// Binary Serialization to a stream
+		/// Binary Serialisation to a stream
 		/// </summary>
 		/// <param name="value"></param>
-		/// <param name="stream">The file where serialized data has to be stored</param>
+		/// <param name="stream">The file where serialised data has to be stored</param>
 		public static void Serialize(this String value, Stream stream)
 		{
 			try
@@ -1854,7 +1854,7 @@ namespace Singularity
 		/// <summary>
 		/// Wraps the passed string onto a new line, when each line length exceeds a given total number of characters.
 		/// Wraps the passed string at the passed total number of characters (if cuttOff is true)
-		/// or at the next whitespace (if cutOff is false). 
+		/// or at the next white-space (if cutOff is false). 
 		/// </summary>
 		/// <param name="val"></param>
 		/// <param name="charCount">The maximum number of characters per line.  This value must be 1 or greater characters.</param>
@@ -2105,6 +2105,29 @@ namespace Singularity
 			memoryStream.Close();
 			cryptoStream.Close();
 			return Encoding.UTF8.GetString(plainTextBytes, 0, decryptedByteCount);
+		}
+
+		/// <summary>Determine if two strings start the same.</summary>
+		/// <returns>True if both strings start the same</returns>
+		public static Boolean StartsTheSameAs(this String primaryValue, String comparingValue)
+		{
+			var minLength = Math.Min(primaryValue.Length, comparingValue.Length);
+			var maxLength = Math.Min(primaryValue.Length, comparingValue.Length);
+			if (maxLength - minLength > 1 || minLength == 0)
+			{
+				return false;
+			}
+
+			var count = 0;
+			while (count < minLength)
+			{
+				if (primaryValue[count] != comparingValue[count])
+				{
+					break;
+				}
+				count++;
+			}
+			return (count == minLength && minLength == maxLength - 1) || (count == minLength - 1 && minLength == maxLength);
 		}
 
 		/// <summary>
