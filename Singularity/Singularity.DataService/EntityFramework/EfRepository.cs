@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Data.Entity;
+using System.Data.SqlClient;
 using System.Linq.Expressions;
 
 // ReSharper disable once CheckNamespace
@@ -195,6 +197,130 @@ namespace Singularity.DataService
 			return dbQuery.Count();
 		}
 
+		#region SqlCommand and DataReader support
+
+		/// <summary>
+		/// Begins a transaction
+		/// </summary>
+		/// <returns>The new SqlTransaction object</returns>
+		public SqlTransaction BeginSqlTransaction(IsolationLevel isolationLevel = IsolationLevel.Unspecified)
+		{
+			RollbackSqlTransaction();
+			_sqlTransaction = SqlConnection.BeginTransaction(isolationLevel);
+			return _sqlTransaction;
+		}
+
+		/// <summary>
+		/// Commits any transaction in effect.
+		/// </summary>
+		public void CommitSqlTransaction()
+		{
+			if (_sqlTransaction != null)
+			{
+				_sqlTransaction.Commit();
+				_sqlTransaction = null;
+			}
+		}
+
+		/// <summary>
+		/// Rolls back any transaction in effect.
+		/// </summary>
+		public void RollbackSqlTransaction()
+		{
+			if (_sqlTransaction != null)
+			{
+				_sqlTransaction.Rollback();
+				_sqlTransaction = null;
+			}
+		}
+
+		/// <summary>
+		/// Executes a query that returns no results
+		/// </summary>
+		/// <param name="qry">Query text</param>
+		/// <param name="args">Any number of parameter name/value pairs and/or SQLParameter arguments</param>
+		/// <returns>The number of rows affected</returns>
+		public Int32 SqlExecuteNonQuery(String qry, params Object[] args)
+		{
+			if (args == null) throw new ArgumentNullException(nameof(args));
+
+			using (SqlCommand cmd = CreateCommand(qry, CommandType.Text, args))
+			{
+				return cmd.ExecuteNonQuery();
+			}
+		}
+
+		/// <summary>
+		/// Executes a query that returns a single value
+		/// </summary>
+		/// <param name="qry">Query text</param>
+		/// <param name="args">Any number of parameter name/value pairs and/or SQLParameter arguments</param>
+		/// <returns>Value of first column and first row of the results</returns>
+		public object SqlExecuteScalar(String qry, params Object[] args)
+		{
+			using (SqlCommand cmd = CreateCommand(qry, CommandType.Text, args))
+			{
+				return cmd.ExecuteScalar();
+			}
+		}
+
+		/// <summary>
+		/// Executes a query and returns the results as a SqlDataReader
+		/// </summary>
+		/// <param name="qry">Query text</param>
+		/// <param name="args">Any number of parameter name/value pairs and/or SQLParameter arguments</param>
+		/// <returns>Results as a SqlDataReader</returns>
+		public SqlDataReader SqlExecuteReader(String qry, params Object[] args)
+		{
+			using (SqlCommand cmd = CreateCommand(qry, CommandType.Text, args))
+			{
+				return cmd.ExecuteReader();
+			}
+		}
+
+		private SqlCommand CreateCommand(String qry, CommandType type, params Object[] args)
+		{
+			SqlCommand cmd = new SqlCommand(qry, SqlConnection)
+			{
+				Transaction = SqlTransaction,
+				CommandType = type
+			};
+
+			// Construct SQL parameters
+			for (int i = 0; i <= args.Length - 1; i++)
+			{
+				if (args[i] is String && i < (args.Length - 1))
+				{
+					SqlParameter parm = new SqlParameter
+					{
+						ParameterName = (String)args[i],
+						Value = args[System.Threading.Interlocked.Increment(ref i)]
+					};
+					cmd.Parameters.Add(parm);
+				}
+				else if (args[i] is SqlParameter)
+				{
+					cmd.Parameters.Add((SqlParameter)args[i]);
+				}
+				else
+				{
+					throw new ArgumentException("Invalid number or type of arguments supplied");
+				}
+			}
+
+			cmd.CommandTimeout = _defaultCommandTimeout;
+
+			return cmd;
+		}
+
+		public SqlConnection SqlConnection => _sqlConnection ?? (_sqlConnection = new SqlConnection(Context.Database.Connection.ConnectionString));
+		private SqlConnection _sqlConnection;
+
+		public SqlTransaction SqlTransaction => _sqlTransaction;
+		private SqlTransaction _sqlTransaction;
+
+		#endregion
+
 		protected DbSet<TEntity> DbSet => _dbSet ?? (_dbSet = NewDbSet(Context.Set<TEntity>()));
 		private DbSet<TEntity> _dbSet;
 
@@ -203,5 +329,6 @@ namespace Singularity.DataService
 
 		protected EfDbContext Context;
 		private Expression<Func<TEntity, Boolean>> _filter;
+		private Int32 _defaultCommandTimeout = 30;
 	}
 }
