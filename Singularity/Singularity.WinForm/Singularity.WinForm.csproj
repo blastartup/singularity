@@ -49,6 +49,7 @@
     <Compile Include="Async\SingleExecutionAsyncActor.cs" />
     <Compile Include="Async\AsyncWorker.cs" />
     <Compile Include="Async\StartAsyncJobEventArgs.cs" />
+    <Compile Include="LayoutView.cs" />
     <Compile Include="BaseView.cs" />
     <Compile Include="Clock.cs" />
     <Compile Include="Async\Coworker.cs" />

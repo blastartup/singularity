@@ -41,10 +41,10 @@ namespace Singularity.DataService.SqlFramework
 			return AssembleClassList(SelectQuery(selectColumns, FromTables(), String.Empty, FilterIn(ids), null, orderBy, paging));
 		}
 
-		public virtual TSqlEntity GetEntity(String filter = "", SqlParameter[] filterParameters = null, String selectColumns = null)
+		public virtual TSqlEntity GetEntity(String filter = "", SqlParameter[] filterParameters = null, String selectColumns = null, String orderBy = null)
 		{
 			selectColumns = selectColumns ?? SelectAllColunms();
-			return ReadAndAssembleClass(SelectQuery(selectColumns, FromTables(), String.Empty, filter, filterParameters, null, new Paging(1)));
+			return ReadAndAssembleClass(SelectQuery(selectColumns, FromTables(), String.Empty, filter, filterParameters, orderBy, new Paging(1)));
 		}
 
 		public TSqlEntity GetById(Object id, String selectColumns = null)
