@@ -41,6 +41,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\VersionInfo.cs">
+      <Link>VersionInfo.cs</Link>
+    </Compile>
     <Compile Include="Enums\EFileTypes.cs" />
     <Compile Include="Enums\ParserState.cs" />
     <Compile Include="Extensions\DirectoryInfoExtension.cs" />

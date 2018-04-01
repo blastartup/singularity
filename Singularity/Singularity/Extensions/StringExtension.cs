@@ -2351,7 +2351,7 @@ namespace Singularity
 		/// <param name="replacement"></param>
 		/// <returns>Returns the original string with any found patterns replaced by the given replacement.</returns>
 		/// <remarks>Apparently faster than the Regex (ReplaceCaseInsensitive) version.</remarks>
-		public static String ReplaceEx(String original, String pattern, String replacement)
+		public static String ReplaceEx(this String original, String pattern, String replacement)
 		{
 			Int32 count;
 			Int32 position0;
