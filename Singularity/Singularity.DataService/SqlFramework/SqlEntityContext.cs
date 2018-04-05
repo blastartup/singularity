@@ -9,11 +9,27 @@ namespace Singularity.DataService.SqlFramework
 {
 	public class SqlEntityContext : IDisposable
 	{
+		// Parameterless constructor required for Generics even though not ever called.  Do not use.
+		protected SqlEntityContext()
+		{
+		}
+
 		public SqlEntityContext(SqlConnectionStringBuilder sqlConnectionStringBuilder)
 		{
 			_sqlConnectionStringBuilder = sqlConnectionStringBuilder;
 			_sqlConnection = new SqlConnection(sqlConnectionStringBuilder.ConnectionString);
-			_sqlConnection.OpenEx(sqlConnectionStringBuilder.ConnectTimeout * 100);
+			_sqlConnection.OpenEx(sqlConnectionStringBuilder.ConnectTimeout * 1000);
+			_transactionCounter = 0;
+		}
+
+		public SqlEntityContext(SqlConnection sqlConnection)
+		{
+			_sqlConnection = sqlConnection;
+			_sqlConnectionStringBuilder = new SqlConnectionStringBuilder(sqlConnection.ConnectionString);
+			if (_sqlConnection.State == ConnectionState.Closed)
+			{
+			_sqlConnection.OpenEx(_sqlConnectionStringBuilder.ConnectTimeout * 1000);
+			}
 			_transactionCounter = 0;
 		}
 

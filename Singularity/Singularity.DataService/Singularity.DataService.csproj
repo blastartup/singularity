@@ -55,6 +55,8 @@
       <Link>VersionInfo.cs</Link>
     </Compile>
     <Compile Include="Attributes\OriginallyKnownAsAttribute.cs" />
+    <Compile Include="DataServices\RowDataService.cs" />
+    <Compile Include="DataServices\TableDataService.cs" />
     <Compile Include="EntityFramework\EfDbContext.cs" />
     <Compile Include="EntityFramework\EfRepository.cs" />
     <Compile Include="EntityFramework\EfUnitOfWork.cs" />
