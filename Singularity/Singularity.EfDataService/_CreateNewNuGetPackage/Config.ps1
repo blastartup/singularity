@@ -32,7 +32,7 @@ $platform = ""
 #	e.g. $packProperties = "TargetFrameworkVersion=v3.5;Optimize=true"
 # Do not specify the "Configuration" or "Platform" here; use the $configuration and $platform variables above.
 # MsBuild Properties that can be specified: http://msdn.microsoft.com/en-us/library/vstudio/bb629394.aspx
-$packProperties = ""
+$packProperties = "TargetFrameworkVersion=v4.6.2"
 
 # Specify any NuGet Pack options to pass to nuget.exe.
 #	e.g. $packOptions = "-Symbols"
@@ -42,12 +42,12 @@ $packProperties = ""
 # Do not specify "-Build", as this may result in an infinite build loop.
 # NuGet Pack options that can be specified: http://docs.nuget.org/docs/reference/command-line-reference#Pack_Command_Options
 # Use "-Symbols" to also create a symbols package. When pushing your package, the symbols package will automatically be detected and pushed as well: https://www.symbolsource.org/Public/Wiki/Publishing
-$packOptions = ""
+$packOptions = "-OutputDirectory \NugetFeeds"
 
 # Specify $true if the generated .nupkg file should be renamed to include the Configuration and Platform that was used to build the project, $false if not.
 #	e.g. If $true, MyProject.1.1.5.6.nupkg might be renamed to MyProject.1.1.5.6.Debug.AnyCPU.nupkg
 #	e.g. If $true, MyProject.1.1.5.6-beta1.nupkg might re renamed to MyProject.1.1.5.6-beta1.Release.x86.nupkg
-$appendConfigurationAndPlatformToNuGetPackageFileName = $true
+$appendConfigurationAndPlatformToNuGetPackageFileName = $false
 
 
 #------------------------------------------------
