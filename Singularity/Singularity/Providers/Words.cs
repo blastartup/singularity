@@ -4,8 +4,8 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.Contracts;
 using System.Linq;
-using System.Text.RegularExpressions;
-
+using System.Text;
+// ReSharper disable InheritdocConsiderUsage
 // ReSharper disable once CheckNamespace
 
 namespace Singularity
@@ -17,7 +17,7 @@ namespace Singularity
 	public class Words : IEnumerable<String>, ICloneable<Words>, IStateEmpty
 	{
 		/// <summary>
-		/// Instantiate an empty word delemiter.
+		/// Instantiate an empty word delimiter.
 		/// </summary>
 		[DebuggerHidden]
 		public Words()
@@ -33,10 +33,21 @@ namespace Singularity
 		/// <param name="delimiter">The word delimiter which by default is a Space.</param>
 		[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed")]
 		[DebuggerHidden]
-		public Words(IEnumerable<String> collection, String delimiter = ValueLib.Space.StringValue) 
+		public Words(IEnumerable<String> collection, String delimiter = ValueLib.Space.StringValue)
 		{
 			_internalList = new List<String>(collection);
 			_delimiter = delimiter;
+		}
+
+		/// <summary>
+		/// Instantiate word handling of a given string List where the words are delimited by a space.
+		/// </summary>
+		/// <param name="collection">A string List of words.</param>
+		[DebuggerHidden]
+		public Words(List<String> collection)
+		{
+			_internalList = collection;
+			_delimiter = ValueLib.Space.StringValue;
 		}
 
 		/// <summary>
@@ -133,17 +144,44 @@ namespace Singularity
 		/// </summary>
 		/// <param name="commandLine"></param>
 		/// <returns></returns>
+		[DebuggerHidden]
 		public static Words FromCommandLine(String commandLine)
 		{
-			return new Words(Regex.Matches(commandLine, "(?<=\")[^\"]*(?=\")|[^\" ]+")
-				.Cast<Match>()
-				.Select(m => m.Value));
+			return new Words(Split(commandLine));
 		}
 
+		private static List<String> Split(String commandLine)
+		{
+			List<String> wordParts = new List<String>();
+			var partBuilder = new StringBuilder();
+			var insideDoubleQuotes = false;
+			foreach (Char c in commandLine)
+			{
+				if (c == ValueLib.DoubleQuotes.CharValue)
+				{
+					insideDoubleQuotes = !insideDoubleQuotes;
+					continue;
+				}
+
+				if (c == ValueLib.Space.CharValue && !insideDoubleQuotes)
+				{
+					wordParts.Add(partBuilder.ToString());
+					partBuilder = new StringBuilder();
+					continue;
+				}
+
+				partBuilder.Append(c);
+			}
+			wordParts.Add(partBuilder.ToString());
+			return wordParts;
+		}
+
+
 		/// <summary>
-		/// Add another word collection to this one.
+		/// Add another words collection to this one.
 		/// </summary>
-		/// <param name="anotherWordCollection">The word collection to add.  It can have a different delimiter than this one has.</param>
+		/// <param name="otherWords">The words collection to add.  It can have a different delimiter than this one has.</param>
+		[DebuggerHidden]
 		public void Add(Words otherWords)
 		{
 			_internalList.AddRange(otherWords);
@@ -155,6 +193,7 @@ namespace Singularity
 		/// <param name="leftWords"></param>
 		/// <param name="rightWords"></param>
 		/// <returns></returns>
+		[DebuggerHidden]
 		public static Words operator +(Words leftWords, Words rightWords)
 		{
 			return new Words
@@ -167,8 +206,9 @@ namespace Singularity
 		/// <summary>
 		/// Implicitly cast Words to a String.
 		/// </summary>
-		/// <param name="w"></param>
+		/// <param name="words">Word collection to implicitly cast to a String.</param>
 		/// <returns></returns>
+		[DebuggerHidden]
 		public static implicit operator String(Words words)
 		{
 			return words.ToString();
@@ -273,6 +313,7 @@ namespace Singularity
 			return result;
 		}
 
+		[DebuggerHidden]
 		public Words FormatWith(Object model, String beginTag = "{{", String endTag = "}}")
 		{
 			List<String> result = new List<String>(_internalList.Count);
@@ -348,6 +389,7 @@ namespace Singularity
 			return result;
 		}
 
+		[DebuggerHidden]
 		public Boolean InsertRange(Int32 index, Words words)
 		{
 			Contract.Requires(index >= 0);
@@ -365,17 +407,18 @@ namespace Singularity
 		[DebuggerHidden]
 		public String LastWord
 		{
-			get 
+			get
 			{
 				String result = String.Empty;
 				if (_internalList.Count > 0)
 				{
 					result = _internalList[_internalList.Count - 1];
 				}
-				return result; 
+				return result;
 			}
 		}
 
+		[DebuggerHidden]
 		public void Remove(Int32 index)
 		{
 			_internalList.RemoveAt(index);
@@ -476,17 +519,20 @@ namespace Singularity
 			InsertRange(originalRegion.StartLineIndex + 1, newWords);
 		}
 
+		[DebuggerHidden]
 		IEnumerator IEnumerable.GetEnumerator()
 		{
 			return _internalList.GetEnumerator();
 		}
 
+		[DebuggerHidden]
 		public String Delimiter
 		{
-			get { return _delimiter; }
-			set { _delimiter = value; }
+			get => _delimiter;
+			set => _delimiter = value;
 		}
 
+		[DebuggerHidden]
 		public Boolean IsEmpty => _internalList.IsEmpty();
 
 		private String _delimiter;
