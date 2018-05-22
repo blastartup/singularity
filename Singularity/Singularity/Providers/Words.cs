@@ -13,7 +13,7 @@ namespace Singularity
 	/// <summary>
 	/// A special class to handle worded text.
 	/// </summary>
-	//[DebuggerStepThrough]
+	[DebuggerStepThrough]
 	public class Words : IEnumerable<String>, ICloneable<Words>, IStateEmpty
 	{
 		/// <summary>
@@ -31,8 +31,9 @@ namespace Singularity
 		/// </summary>
 		/// <param name="collection">A string collection of words.</param>
 		/// <param name="delimiter">The word delimiter which by default is a Space.</param>
+		[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed")]
 		[DebuggerHidden]
-		public Words(ICollection<String> collection, String delimiter = ValueLib.Space.StringValue) 
+		public Words(IEnumerable<String> collection, String delimiter = ValueLib.Space.StringValue) 
 		{
 			_internalList = new List<String>(collection);
 			_delimiter = delimiter;
@@ -128,17 +129,38 @@ namespace Singularity
 		}
 
 		/// <summary>
+		/// Split a given command line type string where commands are separated by spaces, except when wrapped inside a double quoted command.
+		/// </summary>
+		/// <param name="commandLine"></param>
+		/// <returns></returns>
+		public static Words FromCommandLine(String commandLine)
+		{
+			return new Words(Regex.Matches(commandLine, "(?<=\")[^\"]*(?=\")|[^\" ]+")
+				.Cast<Match>()
+				.Select(m => m.Value));
+		}
+
+		/// <summary>
+		/// Add another word collection to this one.
+		/// </summary>
+		/// <param name="anotherWordCollection">The word collection to add.  It can have a different delimiter than this one has.</param>
+		public void Add(Words otherWords)
+		{
+			_internalList.AddRange(otherWords);
+		}
+
+		/// <summary>
 		/// Add to Word Handlers together, returning a new Words with combined set of words.
 		/// </summary>
-		/// <param name="a"></param>
-		/// <param name="b"></param>
+		/// <param name="leftWords"></param>
+		/// <param name="rightWords"></param>
 		/// <returns></returns>
-		public static Words operator +(Words a, Words b)
+		public static Words operator +(Words leftWords, Words rightWords)
 		{
 			return new Words
 			{
-				_delimiter = a._delimiter,
-				_internalList = new List<String>(a._internalList.Union(b._internalList))
+				_delimiter = leftWords._delimiter,
+				_internalList = new List<String>(leftWords._internalList.Union(rightWords._internalList))
 			};
 		}
 
@@ -147,9 +169,9 @@ namespace Singularity
 		/// </summary>
 		/// <param name="w"></param>
 		/// <returns></returns>
-		public static implicit operator String(Words w)
+		public static implicit operator String(Words words)
 		{
-			return w.ToString();
+			return words.ToString();
 		}
 
 		/// <remarks>This is exception safe if the index is invalid.</remarks>
@@ -280,6 +302,14 @@ namespace Singularity
 			return new Words(_internalList.GetRange(startIndex, count.GetValueOrDefault(_internalList.Count - startIndex).LimitMax(_internalList.Count - startIndex)), _delimiter);
 		}
 
+		[DebuggerHidden]
+		public static Words GetWords(String value, String delimiter, Int32 startIndex, Int32? count = null)
+		{
+			var words = new Words(value, delimiter);
+			return words.GetWords(startIndex, count);
+		}
+
+		[DebuggerHidden]
 		public Words GetRangeNonEmpty(Int32 startIndex, Int32? count = null)
 		{
 			Contract.Requires(startIndex >= 0);
@@ -439,6 +469,7 @@ namespace Singularity
 			return String.Join(_delimiter, _internalList.ToArray());
 		}
 
+		[DebuggerHidden]
 		public void UpdateRange(CodeRegion originalRegion, Words newWords)
 		{
 			RemoveRange(originalRegion.StartLineIndex + 1, (originalRegion.LineIndexCount - 2).LimitMin(1));

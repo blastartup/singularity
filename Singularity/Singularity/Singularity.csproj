@@ -49,7 +49,6 @@
       <Link>VersionInfo.cs</Link>
     </Compile>
     <Compile Include="Attributes\TimeSpanAttribute.cs" />
-    <Compile Include="Collections\WordCollection.cs" />
     <Compile Include="Converters\BaseNTypeConverter.cs" />
     <Compile Include="EnumAdditional\EnumAdditionalAttribute.cs" />
     <Compile Include="EnumAdditional\EnumAdditionalProvider.cs" />
@@ -126,8 +125,10 @@
     <Compile Include="Providers\RoundingProvider.cs" />
     <Compile Include="Providers\VerhoeffCheckDigit.cs" />
     <Compile Include="Types\AssemblyInfo.cs" />
-    <Compile Include="Types\CodeRegion.cs" />
+    <Compile Include="Types\Base\CodeRegion.cs" />
     <Compile Include="Types\ConciseAssembler.cs" />
+    <Compile Include="Types\VbCodeRegion.cs" />
+    <Compile Include="Types\CSharpCodeRegion.cs" />
     <Compile Include="Types\FixedResponse.cs" />
     <Compile Include="Types\MemoryCacher.cs" />
     <Compile Include="Types\StaticCache.cs" />

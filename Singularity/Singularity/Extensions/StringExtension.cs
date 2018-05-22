@@ -924,18 +924,18 @@ namespace Singularity
 		{
 			if (value.Length == 0) return String.Empty;
 
-			WordCollection ignoreWords = null;
+			Words ignoreWords = null;
 			if (ignoreShortWords)
 			{
 				AssemblyInfo current = new AssemblyInfo(Assembly.GetEntryAssembly());
 				using (TextReader reader = new StreamReader(current.GetEmbeddedResourceStream(Factory.CurrentCultureInfo.ResourceForShortNoTitleCaseWords())))
 				{
-					ignoreWords = new WordCollection(reader.ReadToEnd(), Environment.NewLine);
+					ignoreWords = new Words(reader.ReadToEnd(), Environment.NewLine);
 				}
 			}
 
 			StringBuilder result = new StringBuilder(value.Length);
-			WordCollection lWordCollection = new WordCollection(value);
+			Words lWordCollection = new Words(value);
 			foreach (String iWord in lWordCollection)
 			{
 				if (ignoreShortWords == true && iWord != lWordCollection[0] && ignoreWords.Contains(iWord.ToLower()))
@@ -1146,7 +1146,7 @@ namespace Singularity
 				delimiter = ValueLib.Space.StringValue;
 			}
 
-			WordCollection words = new WordCollection(value.Split(delimiter.ToCharArray()));
+			Words words = new Words(value.Split(delimiter.ToCharArray()));
 			if (wordCount.Equals(-1))
 			{
 				wordCount = words.Count;
@@ -1182,7 +1182,7 @@ namespace Singularity
 		/// <returns>Returns the last word of the string.</returns>
 		public static String LastWord(this String value, String delimiter)
 		{
-			WordCollection words = new WordCollection(value, delimiter, 1, -1);
+			Words words = new Words(value, delimiter, 1, -1);
 			return words.Count > 0 ? words[words.Count - 1] : String.Empty;
 		}
 
@@ -1892,7 +1892,7 @@ namespace Singularity
 			}
 			else
 			{
-				WordCollection wordCollection = new WordCollection(value);
+				Words wordCollection = new Words(value);
 				for (Int32 i = 0; i < wordCollection.Count - 1; i++)
 				{
 					// added one to represent the space.
