@@ -1,4 +1,5 @@
 ﻿using System;
+// ReSharper disable StaticMemberInitializerReferesToMemberBelow
 
 namespace Singularity
 {
@@ -45,8 +46,8 @@ namespace Singularity
 
 		public static class CommaSpace
 		{
-			public static Char[] CharValues = { ',', ' ' };
-			public static String StringValue = CharValues.ToString();
+			public static Char[] CharValues = StringValue.ToCharArray();
+			public static String StringValue = ", ";
 		}
 
 		public static class Cr
@@ -57,8 +58,8 @@ namespace Singularity
 
 		public static class CrLf
 		{
-			public static Char[] CharValues = { '\r', '\n' };
-			public static String StringValue = CharValues.ToString();
+			public static Char[] CharValues = StringValue.ToCharArray();
+			public static String StringValue = "\r\n";
 		}
 
 		public static class DbNullDescription
