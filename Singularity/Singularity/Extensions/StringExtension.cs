@@ -22,9 +22,7 @@ namespace Singularity
 	/// <summary>
 	/// Foundation default extension methods to the standard String object.
 	/// </summary>
-//#if !DEBUG
-//	[DebuggerStepThrough]
-//#endif
+	[DebuggerStepThrough]
 	public static class StringExtension
 	{
 		/// <summary>

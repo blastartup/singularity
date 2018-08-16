@@ -24,6 +24,11 @@
             Unflatteing level (a.b.c = level 2)
             </summary>
         </member>
+        <member name="T:Omu.ValueInjecter.Flat.TrailFinder">
+            <summary>
+            
+            </summary>
+        </member>
         <member name="M:Omu.ValueInjecter.Flat.TrailFinder.GetTrails(System.String,System.Collections.Generic.IEnumerable{System.Reflection.PropertyInfo},System.Func{System.String,System.Reflection.PropertyInfo,System.Boolean},System.StringComparison,System.Boolean)">
             <summary>
             Get all possible trails based on the property name
@@ -34,6 +39,11 @@
             <param name="comparison">StringComparison type used for building the flat trail</param>
             <param name="forFlattening">getting trails for flattening or unflattening, in the first case we need to make sure the properties are readable in the latter writeable</param>
             <returns>all possible trails</returns>
+        </member>
+        <member name="T:Omu.ValueInjecter.Flat.Tunnelier">
+            <summary>
+            
+            </summary>
         </member>
         <member name="M:Omu.ValueInjecter.Flat.Tunnelier.Digg(System.Collections.Generic.IList{System.String},System.Object,System.Func{System.Reflection.PropertyInfo,System.Object,System.Object})">
             <summary>

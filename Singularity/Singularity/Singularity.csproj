@@ -108,6 +108,7 @@
     <Compile Include="Interfaces\IFixedCondition.cs" />
     <Compile Include="Interfaces\INotification.cs" />
     <Compile Include="Interfaces\ICondition.cs" />
+    <Compile Include="Interfaces\IProgressCallback.cs" />
     <Compile Include="Interfaces\IReply.cs" />
     <Compile Include="Interfaces\IRoundingProvider.cs" />
     <Compile Include="Interfaces\IStateAged.cs" />
