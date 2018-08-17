@@ -278,5 +278,12 @@ namespace Singularity.Win32API
 		}
 
 		#endregion
+
+		#region Shell32.dll
+
+		[DllImport("shell32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+		public static extern void SHChangeNotify(UInt32 wEventId, UInt32 uFlags, IntPtr dwItem1, IntPtr dwItem2);
+
+		#endregion
 	}
 }

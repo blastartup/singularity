@@ -46,7 +46,7 @@ namespace Singularity
 
 		public static class CommaSpace
 		{
-			public static Char[] CharValues = StringValue.ToCharArray();
+			public static Char[] CharValues = { ',', ' ' };
 			public static String StringValue = ", ";
 		}
 
@@ -58,7 +58,7 @@ namespace Singularity
 
 		public static class CrLf
 		{
-			public static Char[] CharValues = StringValue.ToCharArray();
+			public static Char[] CharValues = {'\r', '\n'};
 			public static String StringValue = "\r\n";
 		}
 
