@@ -36,18 +36,18 @@ namespace Singularity.EfDataService
 				}
 				else
 				{
-					SqlException sqlException = (SqlException)ex.InnerException.InnerException;
+					var sqlException = (SqlException)ex.InnerException.InnerException;
 					foreach (SqlError sqlExceptionError in sqlException.Errors)
 					{
-						Int32 errorNumber = sqlExceptionError.Number;
-						String errorText;
+						var errorNumber = sqlExceptionError.Number;
+						String errorText = null;
 						if (_sqlErrorTextDict.TryGetValue(errorNumber, out errorText))
 						{
-							errorText = $"{errorText} ({errorNumber})";
+							errorText = $"{errorText} (#{errorNumber}).";
 						}
 						else
 						{
-							errorText = $"Unknown SQL error. ({errorNumber}).";
+							errorText = $"{sqlExceptionError.Message} (~{errorNumber}).";
 						}
 
 						_efValidationResults.Add(new EfValidationResult(errorText, ex.Entries.Select(f => f.Entity.GetType().Name)));
@@ -66,6 +66,12 @@ namespace Singularity.EfDataService
 					}
 				}
 			}
+			catch (EntityCommandCompilationException ex)
+			{
+				result = false;
+				_efValidationResults.Clear();
+				_efValidationResults.AddRange(AddExceptionMessage(ex));
+			}
 
 			if (clearContext)
 			{
@@ -74,6 +80,21 @@ namespace Singularity.EfDataService
 				ResetRepositories();
 			}
 			return result;
+		}
+
+		private IEnumerable<EfValidationResult> AddExceptionMessage(Exception exception)
+		{
+			var localResults = new List<EfValidationResult>()
+			{
+				new EfValidationResult(exception.Message, "DbContext"),
+			};
+
+			if (exception.InnerException != null)
+			{
+				localResults.AddRange(AddExceptionMessage(exception.InnerException));
+			}
+
+			return localResults;
 		}
 
 		public void LoadReferenceIfRequired<TEntity, TEntityReference>(TEntity entity, Expression<Func<TEntity, TEntityReference>> property) 
