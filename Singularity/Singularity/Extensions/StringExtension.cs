@@ -277,7 +277,7 @@ namespace Singularity
 			return startsWithValues.Any(input.StartsWith);
 		}
 
-		public static Int32 SequentialCountReversed(this String value, Int32 startIndex, Char lookupChar)
+		public static Int32 SequentialCountReversed(this String value, Int32 startIndex, Char lookupChar, Boolean untilNewLine = false)
 		{
 			startIndex--;
 			if (value.IsEmpty() || startIndex <= 0 || startIndex > value.Length)
@@ -291,6 +291,11 @@ namespace Singularity
 				if (value[idx] == lookupChar)
 				{
 					counter++;
+					continue;
+				}
+
+				if (untilNewLine && value[idx] != ValueLib.NewLine.CharValue)
+				{
 					continue;
 				}
 				break;
