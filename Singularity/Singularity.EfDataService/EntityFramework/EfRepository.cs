@@ -19,8 +19,15 @@ namespace Singularity.EfDataService
 			Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null, Paging paging = null,
 			params Expression<Func<TEntity, Object>>[] navigationProperties)
 		{
-			// As we don't know whether TEntity is IDeletable, it is up to the concrete class to override the the line below with this: return Get(filter, orderBy, paging, navigationProperties).Actives().ToList();
-			return Get(filter, orderBy, paging, navigationProperties).ToList();
+			return GetQuery(filter, orderBy, paging, navigationProperties).ToList();
+		}
+
+		public virtual IQueryable<TEntity> GetQuery(Expression<Func<TEntity, Boolean>> filter = null,
+			Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null, Paging paging = null,
+			params Expression<Func<TEntity, Object>>[] navigationProperties)
+		{
+			// As we don't know whether TEntity is IDeletable, it is up to the concrete class to override the line below with this: return Get(filter, orderBy, paging, navigationProperties).Actives().ToList();
+			return Get(filter, orderBy, paging, navigationProperties);
 		}
 
 		public virtual TEntity GetEntity(Expression<Func<TEntity, Boolean>> filter = null,
@@ -28,11 +35,7 @@ namespace Singularity.EfDataService
 			params Expression<Func<TEntity, Object>>[] navigationProperties)
 		{
 			TEntity entity = Get(filter, orderBy, null, navigationProperties).FirstOrDefault();
-			if (entity is IDeletable && ((IDeletable)entity).DeletedDate.HasValue)
-			{
-				return null;
-			}
-			return entity;
+			return ((entity as IDeletable)?.DeletedDate).HasValue ? null : entity;
 		}
 
 		protected IQueryable<TEntity> Get(Expression<Func<TEntity, Boolean>> filter = null,
@@ -141,10 +144,23 @@ namespace Singularity.EfDataService
 			Context.Entry(entityToDeactivate).State = EntityState.Modified;
 		}
 
-		public virtual void Delete(Object id)
+		public virtual void Deactivate(IEnumerable<TEntity> entitiesToDeactivate)
 		{
-			TEntity entityToDelete = DbSet.Find(id);
-			Delete(entityToDelete);
+			entitiesToDeactivate.ForEach(Deactivate);
+		}
+
+		public virtual void DeleteById(Object id, Boolean safely = true)
+		{
+			if (safely)
+			{
+				TEntity entityToDelete = DbSet.Find(id);
+				Delete(entityToDelete);
+			}
+			else
+			{
+				TEntity entityToDelete = DeleteEntity(id);
+				Context.Entry(entityToDelete).State = EntityState.Deleted;
+			}
 		}
 
 		public virtual void Delete(TEntity entityToDelete)
@@ -154,6 +170,15 @@ namespace Singularity.EfDataService
 				DbSet.Attach(entityToDelete);
 			}
 			DbSet.Remove(entityToDelete);
+		}
+
+		public virtual void Delete(IEnumerable<TEntity> entitiesToDelete)
+		{
+			entitiesToDelete.ForEach(Delete);
+		}
+
+		public void DeleteDirectlyById(Object id)
+		{
 		}
 
 		public virtual void Update(TEntity entityToUpdate)
@@ -198,6 +223,8 @@ namespace Singularity.EfDataService
 
 		protected DbSet<TEntity> DbSet => _dbSet ?? (_dbSet = NewDbSet(Context.Set<TEntity>()));
 		private DbSet<TEntity> _dbSet;
+
+		protected abstract TEntity DeleteEntity(Object id);
 
 		protected abstract DateTime NowDateTime { get; }
 		protected abstract DbSet<TEntity> NewDbSet(DbSet<TEntity> contextualDbSet);
