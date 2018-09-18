@@ -72,6 +72,12 @@ namespace Singularity.EfDataService
 				_efValidationResults.Clear();
 				_efValidationResults.AddRange(AddExceptionMessage(ex));
 			}
+			catch (Exception ex)
+			{
+				result = false;
+				_efValidationResults.Clear();
+				_efValidationResults.AddRange(AddExceptionMessage(ex));
+			}
 
 			if (clearContext)
 			{
@@ -125,8 +131,8 @@ namespace Singularity.EfDataService
 
 		public Boolean LazyLoadingEnabled
 		{
-			get { return Context.Configuration.LazyLoadingEnabled; }
-			set { Context.Configuration.LazyLoadingEnabled = value; }
+			get => Context.Configuration.LazyLoadingEnabled;
+			set => Context.Configuration.LazyLoadingEnabled = value;
 		}
 
 		public TDbContext Context => _context ?? (_context = NewDbContext());
