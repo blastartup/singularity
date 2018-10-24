@@ -108,15 +108,14 @@ namespace Singularity.EfDataService
 
 		public virtual void Insert(TEntity entity)
 		{
-			IModifiable modifiableEntity = entity as IModifiable;
-			if (modifiableEntity != null)
+			if (entity is IModifiable modifiableEntity)
 			{
 				modifiableEntity.CreatedDate = NowDateTime;
 				modifiableEntity.ModifiedDate = NowDateTime;
 			}
-			else if (entity is ICreatable)
+			else if (entity is ICreatable creatable)
 			{
-				((ICreatable)entity).CreatedDate = NowDateTime;
+				creatable.CreatedDate = NowDateTime;
 			}
 
 			DbSet.Add(entity);
