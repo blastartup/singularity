@@ -110,9 +110,7 @@
     <None Include="_CreateNewNuGetPackage\DoNotModify\UploadNuGetPackage.ps1" />
     <None Include="_CreateNewNuGetPackage\RunMeToUploadNuGetPackage.cmd" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="UniqueCodeService\CodeServices\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <ProjectReference Include="..\Singularity\Singularity.csproj">
       <Project>{350f5c90-f18f-41a9-8b84-92e0ca74d619}</Project>

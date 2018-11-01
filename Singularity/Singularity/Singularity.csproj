@@ -128,11 +128,12 @@
     <Compile Include="Types\AssemblyInfo.cs" />
     <Compile Include="Types\Base\CodeRegion.cs" />
     <Compile Include="Types\ConciseAssembler.cs" />
+    <Compile Include="Types\StringCache.cs" />
     <Compile Include="Types\VbCodeRegion.cs" />
     <Compile Include="Types\CSharpCodeRegion.cs" />
     <Compile Include="Types\FixedResponse.cs" />
     <Compile Include="Types\MemoryCacher.cs" />
-    <Compile Include="Types\StaticCache.cs" />
+    <Compile Include="Types\StaticCacher.cs" />
     <Compile Include="Replies\Reply.cs" />
     <Compile Include="Replies\ReplyErrorMessage.cs" />
     <Compile Include="Replies\ReplyInteger.cs" />

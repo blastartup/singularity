@@ -7,7 +7,7 @@ using System.Linq;
 namespace Singularity
 {
 	//[DebuggerStepThrough]
-	public class StaticCache<TKey, TValue> : Cacher<TKey, TValue> where TValue : class, new()
+	public class StaticCacher<TKey, TValue> : Cacher<TKey, TValue> where TValue : class, new()
 	{
 		protected override IDictionary<TKey, TValue> InitCache()
 		{
