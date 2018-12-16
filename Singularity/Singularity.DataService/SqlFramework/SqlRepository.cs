@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
-using System.Linq.Expressions;
-using System.Runtime.InteropServices;
 using System.Text;
 
 namespace Singularity.DataService.SqlFramework
@@ -291,6 +289,11 @@ namespace Singularity.DataService.SqlFramework
 
 			String query = $"select {orderByWithPk} from {FromTables()} o inner join (select {ColumnsOfUniqueness} from {FromTables()} group by {ColumnsOfUniqueness} having count(*) > 1) dupes on {dupeToOuterJoin} {filter} order by {orderByWithPk}";
 			return AssembleClassList(Context.ExecuteDataReader(query, filterParameters));
+		}
+
+		public List<TSqlEntity> GetListByQuery(String sqlQuery)
+		{
+			return AssembleClassList(Context.ExecuteDataReader(sqlQuery));
 		}
 
 		public Boolean TableExists()
