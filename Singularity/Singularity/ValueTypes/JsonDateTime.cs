@@ -21,34 +21,19 @@ namespace Singularity
 		}
 
 		[DebuggerStepThrough]
-		public JsonDateTime(DateTime dateTime)
-		{
-			this._dateTime = SafeJsonDateTime(dateTime);
-		}
+		public JsonDateTime(DateTime dateTime) => this._dateTime = SafeJsonDateTime(dateTime);
 
 		[DebuggerStepThrough]
-		public JsonDateTime(DateTime? dateTime)
-		{
-			this._dateTime = SafeJsonDateTime(dateTime);
-		}
+		public JsonDateTime(DateTime? dateTime) => this._dateTime = SafeJsonDateTime(dateTime);
 
 		[DebuggerStepThrough]
-		public JsonDateTime(String jsonDateTime)
-		{
-			this._dateTime = GetDateTime(jsonDateTime);
-		}
+		public JsonDateTime(String jsonDateTime) => this._dateTime = GetDateTime(jsonDateTime);
 
 		[DebuggerStepThrough]
-		public static DateTime SafeJsonDateTime(DateTime dateTime)
-		{
-			return (!dateTime.IsEmpty() ? dateTime : DateTimeExtension.MinJsonValue);
-		}
+		public static DateTime SafeJsonDateTime(DateTime dateTime) => (!dateTime.IsEmpty() ? dateTime : DateTimeExtension.MinJsonValue);
 
 		[DebuggerStepThrough]
-		public static DateTime? SafeJsonDateTime(DateTime? dateTime)
-		{
-			return dateTime != null ? (DateTime?)SafeJsonDateTime(dateTime.Value) : null;
-		}
+		public static DateTime? SafeJsonDateTime(DateTime? dateTime) => dateTime != null ? (DateTime?)SafeJsonDateTime(dateTime.Value) : null;
 
 		[DebuggerStepThrough]
 		public static DateTime? GetDateTime(String jsonDateTime)
@@ -68,7 +53,7 @@ namespace Singularity
 		[DebuggerStepThrough]
 		public override String ToString()
 		{
-			String result = null;
+			String result = DateTimeExtension.MinJsonValue.ToString(UtcFormat);
 			if (_dateTime != null && !_dateTime.Value.IsEmpty() && _dateTime != DateTimeExtension.MinJsonValue)
 			{
 				result = _dateTime.Value.ToString(UtcFormat);
@@ -77,40 +62,22 @@ namespace Singularity
 		}
 
 		[DebuggerStepThrough]
-		public static implicit operator String(JsonDateTime source)
-		{
-			return source.ToString();
-		}
+		public static implicit operator String(JsonDateTime source) => source.ToString();
 
 		[DebuggerStepThrough]
-		public static implicit operator JsonDateTime(String source)
-		{
-			return new JsonDateTime(source);
-		}
+		public static implicit operator JsonDateTime(String source) => new JsonDateTime(source);
 
 		[DebuggerStepThrough]
-		public static implicit operator DateTime?(JsonDateTime source)
-		{
-			return source._dateTime;
-		}
+		public static implicit operator DateTime? (JsonDateTime source) => source._dateTime;
 
 		[DebuggerStepThrough]
-		public static implicit operator DateTime(JsonDateTime source)
-		{
-			return source._dateTime.ValueOnNull(DateTimeExtension.MinJsonValue);
-		}
+		public static implicit operator DateTime(JsonDateTime source) => source._dateTime.ValueOnNull(DateTimeExtension.MinJsonValue);
 
 		[DebuggerStepThrough]
-		public static implicit operator JsonDateTime(DateTime? source)
-		{
-			return new JsonDateTime(source);
-		}
+		public static implicit operator JsonDateTime(DateTime? source) => new JsonDateTime(source);
 
 		[DebuggerStepThrough]
-		public static implicit operator JsonDateTime(DateTime source)
-		{
-			return new JsonDateTime(source);
-		}
+		public static implicit operator JsonDateTime(DateTime source) => new JsonDateTime(source);
 
 		private DateTime? _dateTime;
 		private const String UtcFormat = "u";

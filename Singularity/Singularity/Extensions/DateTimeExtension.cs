@@ -40,8 +40,8 @@ namespace Singularity
 		/// </summary>
 		/// <remarks>
 		/// According to the JavaScript <a href="http://ecma-international.org/ecma-262/5.1/#sec-15.9.1.1" >ECMA specifications</a> date time 0 is
-		/// midnight 1 Janauray 1970, yet it can support dates 100,000,000 days less which is below the minimun Microsft DateTime value.
-		/// So, in order to determine the differnece between a MS datatime min value and a JSON equivelant, I've declared that within the Microsft
+		/// midnight 1 January 1970, yet it can support dates 100,000,000 days less which is below the minimum Microsoft DateTime value.
+		/// So, in order to determine the difference between a MS datatime min value and a JSON equivalent, I've declared that within the Microsoft
 		/// world, that the minimum JSON date time value with be the MS DateTime.MinValue + 1 millisecond.
 		/// </remarks>
 		public static readonly DateTime MinJsonValue = DateTime.MinValue.AddMilliseconds(1);
