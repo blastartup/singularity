@@ -1,9 +1,9 @@
-﻿using System;
+﻿using Singularity.DataService;
+using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using System.Linq.Expressions;
-using Singularity.DataService;
 
 // ReSharper disable once CheckNamespace
 namespace Singularity.EfDataService
@@ -45,7 +45,7 @@ namespace Singularity.EfDataService
 			IQueryable<TEntity> dbQuery = DbSet;
 			_filter = filter;
 
-			IncludeNavigation(navigationProperties, dbQuery);
+			IncludeNavigation(navigationProperties, ref dbQuery);
 
 			if (orderBy != null)
 			{
@@ -65,11 +65,15 @@ namespace Singularity.EfDataService
 			return dbQuery;
 		}
 
-		protected virtual void IncludeNavigation(Expression<Func<TEntity, Object>>[] navigationProperties, IQueryable<TEntity> dbQuery)
+		protected virtual void IncludeNavigation(Expression<Func<TEntity, Object>>[] navigationProperties, ref IQueryable<TEntity> dbQuery)
 		{
-			foreach (Expression<Func<TEntity, Object>> navigationProperty in navigationProperties)
+			if (Context.NoTracking)
 			{
-				dbQuery = dbQuery.Include(navigationProperty).AsNoTracking();
+				dbQuery = navigationProperties.Aggregate(dbQuery, (current, navigationProperty) => current.Include(navigationProperty).AsNoTracking());
+			}
+			else
+			{
+				dbQuery = navigationProperties.Aggregate(dbQuery, (current, navigationProperty) => current.Include(navigationProperty));
 			}
 		}
 

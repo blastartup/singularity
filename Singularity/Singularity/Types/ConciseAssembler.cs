@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 // ReSharper disable once CheckNamespace
 
@@ -24,9 +20,13 @@ namespace Singularity
 				return null;
 			}
 
-			TOut output = new TOut();
+			TOut output = NewOutput();
 			Populate(output, input);
 			return output;
+		}
+		protected virtual TOut NewOutput()
+		{
+			return new TOut();
 		}
 
 		protected abstract void Populate(TOut output, TIn input);

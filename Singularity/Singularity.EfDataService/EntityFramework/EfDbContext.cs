@@ -227,8 +227,8 @@ namespace Singularity.EfDataService
 				cmd.CommandText = $"SELECT {pkColumnName} From {tableName} WHERE {pkColumnName} >= {nextId} and {pkColumnName} <= {lastId}";
 				SqlDataReader reader = cmd.ExecuteReader();
 				Object[] ids = (from IDataRecord r in reader
-							  let pk = r[pkColumnName]
-							  select pk)
+									 let pk = r[pkColumnName]
+									 select pk)
 								.OrderBy(i => i)
 								.ToArray();
 				if (ids.Length != entities.Count) throw new ArgumentException("More id values generated than we had entities. Something went wrong, try again.");
@@ -385,6 +385,7 @@ namespace Singularity.EfDataService
 		public SqlConnection SqlConnection => _sqlConnection ?? (_sqlConnection = new SqlConnection(Database.Connection.ConnectionString));
 		private SqlConnection _sqlConnection;
 
+		public Boolean NoTracking { get; set; }
 		protected internal abstract DateTime Now { get; }
 	}
 }
