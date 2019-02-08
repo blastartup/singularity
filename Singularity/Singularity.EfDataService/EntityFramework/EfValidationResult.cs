@@ -7,14 +7,19 @@ namespace Singularity.EfDataService
 {
 	public class EfValidationResult : ValidationResult
 	{
-		public EfValidationResult(String errorMessage, IEnumerable<String> memberNames = null) : base(errorMessage, memberNames)
+		public EfValidationResult(String errorMessage) : base(errorMessage, null)
+		{ }
+
+		public EfValidationResult(String errorMessage, IEnumerable<String> memberNames, IEnumerable<Object> entities) : base(errorMessage, memberNames)
 		{
+			_entities = entities;
 		}
 
-		public EfValidationResult(String errorMessage, String memberName, String propertyName = null) : base(errorMessage, null)
+		public EfValidationResult(String errorMessage, String memberName, Object entity, String propertyName = null) : base(errorMessage, null)
 		{
-			MemberName = memberName;
-			PropertyName = propertyName;
+			_memberName = memberName;
+			_propertyName = propertyName;
+			_entities = new List<Object>() { entity };
 		}
 
 
@@ -35,7 +40,13 @@ namespace Singularity.EfDataService
 			return $"Error: {ErrorMessage}, Member Name: {MemberName}, Property: {PropertyName}, ";
 		}
 
-		public String MemberName { get; set; }
-		public String PropertyName { get; set; }
+		public String MemberName => _memberName;
+		private String _memberName;
+
+		public String PropertyName => _propertyName;
+		private String _propertyName;
+
+		public IEnumerable<Object> Entities => _entities;
+		private IEnumerable<Object> _entities;
 	}
 }

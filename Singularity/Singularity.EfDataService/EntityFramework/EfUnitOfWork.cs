@@ -24,15 +24,15 @@ namespace Singularity.EfDataService
 			Boolean result;
 			try
 			{
+				_efValidationResults.Clear();
 				result = Context.SaveChanges() > 0;
 			}
 			catch (DbUpdateException ex)
 			{
 				result = false;
-				_efValidationResults.Clear();
 				if (!(ex.InnerException is UpdateException) || !(ex.InnerException.InnerException is SqlException))
 				{
-					_efValidationResults.Add(new EfValidationResult(ex.Message));
+					_efValidationResults.Add(new EfValidationResult(ex.Message, null, ex.Entries));
 				}
 				else
 				{
@@ -50,14 +50,13 @@ namespace Singularity.EfDataService
 							errorText = $"{sqlExceptionError.Message} (~{errorNumber}).";
 						}
 
-						_efValidationResults.Add(new EfValidationResult(errorText, ex.Entries.Select(f => f.Entity.GetType().Name)));
+						_efValidationResults.Add(new EfValidationResult(errorText, ex.Entries.Select(f => f.Entity.GetType().Name), ex.Entries.Select(f => f.Entity)));
 					}
 				}
 			}
 			catch (DbEntityValidationException ex)
 			{
 				result = false;
-				_efValidationResults.Clear();
 				foreach (DbEntityValidationResult validationErrors in ex.EntityValidationErrors)
 				{
 					foreach (DbValidationError validationError in validationErrors.ValidationErrors)
@@ -69,13 +68,11 @@ namespace Singularity.EfDataService
 			catch (EntityCommandCompilationException ex)
 			{
 				result = false;
-				_efValidationResults.Clear();
 				_efValidationResults.AddRange(AddExceptionMessage(ex));
 			}
 			catch (Exception ex)
 			{
 				result = false;
-				_efValidationResults.Clear();
 				_efValidationResults.AddRange(AddExceptionMessage(ex));
 			}
 
@@ -92,7 +89,7 @@ namespace Singularity.EfDataService
 		{
 			var localResults = new List<EfValidationResult>()
 			{
-				new EfValidationResult(exception.Message, "DbContext"),
+				new EfValidationResult(exception.Message),
 			};
 
 			if (exception.InnerException != null)
@@ -103,7 +100,7 @@ namespace Singularity.EfDataService
 			return localResults;
 		}
 
-		public void LoadReferenceIfRequired<TEntity, TEntityReference>(TEntity entity, Expression<Func<TEntity, TEntityReference>> property) 
+		public void LoadReferenceIfRequired<TEntity, TEntityReference>(TEntity entity, Expression<Func<TEntity, TEntityReference>> property)
 			where TEntity : class
 			where TEntityReference : class
 		{
@@ -113,8 +110,8 @@ namespace Singularity.EfDataService
 			}
 		}
 
-		public void LoadCollectionIfRequired<TEntity, TEntityCollection>(TEntity entity, Expression<Func<TEntity, ICollection<TEntityCollection>>> collection) 
-			where TEntity : class 
+		public void LoadCollectionIfRequired<TEntity, TEntityCollection>(TEntity entity, Expression<Func<TEntity, ICollection<TEntityCollection>>> collection)
+			where TEntity : class
 			where TEntityCollection : class
 		{
 			if (!Context.Entry(entity).Collection(collection).IsLoaded)
@@ -140,7 +137,7 @@ namespace Singularity.EfDataService
 
 		protected virtual TDbContext NewDbContext()
 		{
-			return new TDbContext();	
+			return new TDbContext();
 		}
 
 		protected virtual TDbContext ResetDbContext()
