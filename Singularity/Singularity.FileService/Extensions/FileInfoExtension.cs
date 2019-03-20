@@ -1,7 +1,9 @@
-﻿using System;
-using System.Diagnostics;
+﻿using ICSharpCode.SharpZipLib.Core;
+using ICSharpCode.SharpZipLib.Zip;
+using System;
 using System.IO;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 // ReSharper disable once CheckNamespace
@@ -13,6 +15,168 @@ namespace Singularity.FileService
 	/// </summary>
 	public static class FileInfoExtension
 	{
+		public static FileInfo GetUniqueName(this FileInfo fileInfo)
+		{
+			if (fileInfo.Exists)
+			{
+				FileInfo uniqueFileInfo;
+				var fileVersionCounter = 1;
+				do
+				{
+					uniqueFileInfo = new FileInfo(Path.Combine(fileInfo.DirectoryName, $"{fileInfo.NameSansExtension()} ({fileVersionCounter}){fileInfo.Extension}"));
+					fileVersionCounter++;
+				} while (uniqueFileInfo.Exists);
+
+				return uniqueFileInfo;
+			}
+
+			return fileInfo;
+		}
+
+		public static Boolean CopyToRetry(this FileInfo sourceFileInfo, String destinationFileName)
+		{
+			var retryCounter = 0;
+			var exitRetry = false;
+			do
+			{
+				try
+				{
+					sourceFileInfo.CopyTo(destinationFileName);
+					return true;
+				}
+				catch (IOException e)
+				{
+					if (e.HResult == -2147024864)
+					{
+						retryCounter++;
+						if (retryCounter < 4)
+						{
+							Thread.Sleep(60);
+							continue;
+						}
+					}
+
+					exitRetry = true;
+				}
+
+			} while (!exitRetry);
+
+			return false;
+		}
+
+		public static Boolean MoveToRetry(this FileInfo sourceFileInfo, String destinationFileName)
+		{
+			var retryCounter = 0;
+			var exitRetry = false;
+			do
+			{
+				try
+				{
+					sourceFileInfo.MoveTo(destinationFileName);
+					return true;
+				}
+				catch (IOException e)
+				{
+					if (e.HResult == -2147024864)
+					{
+						retryCounter++;
+						if (retryCounter < 4)
+						{
+							Thread.Sleep(60);
+							continue;
+						}
+					}
+
+					exitRetry = true;
+				}
+
+			} while (!exitRetry);
+
+			return false;
+		}
+
+		public static Boolean DeleteRetry(this FileInfo sourceFileInfo)
+		{
+			var retryCounter = 0;
+			var exitRetry = false;
+			do
+			{
+				try
+				{
+					sourceFileInfo.Delete();
+					return true;
+				}
+				catch (IOException e)
+				{
+					if (e.HResult == -2147024864)
+					{
+						retryCounter++;
+						if (retryCounter < 4)
+						{
+							Thread.Sleep(60);
+							continue;
+						}
+					}
+
+					exitRetry = true;
+				}
+
+			} while (!exitRetry);
+
+			return false;
+		}
+
+		public static Int32 Unzip(this FileInfo zipFileInfo, DirectoryInfo destinationDirectoryInfo, Action<String> addIssue)
+		{
+			ZipFile zipFile;
+			try
+			{
+				zipFile = new ZipFile(zipFileInfo.FullName);
+			}
+			catch (ZipException e)
+			{
+				addIssue?.Invoke(e.Message);
+				return 0;
+			}
+
+			var unzippedFileCounter = 0;
+			FileInfo zipEntryFileInfo;
+			foreach (ZipEntry zipEntry in zipFile)
+			{
+				if (zipEntry.IsFile)
+				{
+					zipEntryFileInfo = new FileInfo(zipEntry.Name.Left(100));
+					zipEntryFileInfo = GetUniqueName(new FileInfo(Path.Combine(destinationDirectoryInfo.FullName, zipEntryFileInfo.Name)));
+					if (!zipEntryFileInfo.Directory.Exists)
+					{
+						zipEntryFileInfo.Directory.CreateSafely();
+					}
+
+					var buffer = new Byte[4096];
+					Stream zipStream;
+					FileStream streamWriter = null;
+					try
+					{
+						zipStream = zipFile.GetInputStream(zipEntry);
+						streamWriter = File.Create(zipEntryFileInfo.FullName);
+						StreamUtils.Copy(zipStream, streamWriter, buffer);
+						unzippedFileCounter++;
+					}
+					catch (Exception e)
+					{
+						addIssue?.Invoke(e.Message);
+						continue;
+					}
+					finally
+					{
+						streamWriter?.Dispose();
+					}
+				}
+			}
+
+			return unzippedFileCounter;
+		}
+
 		public static async Task CopyToAsync(this FileInfo sourceFileInfo, FileInfo targetFileInfo)
 		{
 			using (FileStream sourceStream = System.IO.File.Open(sourceFileInfo.FullName, FileMode.Open))

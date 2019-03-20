@@ -162,7 +162,7 @@ namespace Singularity.FileService
     /// <remarks>
     /// This enumerator is substantially faster than using <see cref="Directory.GetFiles(string)"/>
     /// and then creating a new FileInfo object for each path.  Use this version when you 
-    /// will need to look at the attibutes of each file returned (for example, you need
+    /// will need to look at the attributes of each file returned (for example, you need
     /// to check each file in a directory to see if it was modified after a specific date).
     /// </remarks>
     public static class FastDirectoryEnumerator
