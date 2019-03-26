@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
 
+// ReSharper disable once CheckNamespace
 namespace Singularity
 {
 	/// <summary>

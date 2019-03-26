@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Diagnostics.Contracts;
 
+// ReSharper disable once CheckNamespace
 namespace Singularity
 {
 	[DebuggerStepThrough]
