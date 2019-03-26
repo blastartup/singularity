@@ -63,6 +63,9 @@
     <Compile Include="Interfaces\IAsyncService.cs" />
     <Compile Include="LayoutView.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="UserControls\RoundedButton.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="VersionInfo.cs" />
   </ItemGroup>
   <ItemGroup>
