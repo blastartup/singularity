@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
+using System.Threading;
 
 // ReSharper disable once CheckNamespace
 namespace Singularity
@@ -18,7 +19,7 @@ namespace Singularity
 		/// <returns>Whether or not the folder was created rather than the mere fact the folder exists.</returns>
 		public static Boolean CreateSafely(this DirectoryInfo folder)
 		{
-			Boolean created = false;
+			var created = false;
 			Byte attemptCounter = 0;
 			while (!folder.Exists)
 			{
@@ -37,6 +38,7 @@ namespace Singularity
 						{
 							break;
 						}
+						Thread.Sleep(60);
 					}
 					else
 					{
@@ -45,6 +47,44 @@ namespace Singularity
 				}
 			}
 			return created;
+		}
+
+		/// <summary>
+		/// Create the given folder capturing any exceptions but retrying up to 3 times maximum.
+		/// </summary>
+		/// <param name="folder">The folder you wish to create.</param>
+		/// <param name="recursive">True to delete this folder, it's subfolders and all files otherwise false. </param>
+		/// <returns>Whether or not the folder was created rather than the mere fact the folder exists.</returns>
+		public static Boolean DeleteSafely(this DirectoryInfo folder, Boolean recursive = false)
+		{
+			var deleted = false;
+			Byte attemptCounter = 0;
+			while (!folder.Exists)
+			{
+				attemptCounter++;
+				try
+				{
+					folder.Delete(recursive);
+					deleted = true;
+					break;
+				}
+				catch (IOException ex)
+				{
+					if (attemptCounter < 4)
+					{
+						if (!ex.Message.ToLower().Contains("network"))
+						{
+							break;
+						}
+						Thread.Sleep(60);
+					}
+					else
+					{
+						throw;
+					}
+				}
+			}
+			return deleted;
 		}
 
 		/// <summary>
