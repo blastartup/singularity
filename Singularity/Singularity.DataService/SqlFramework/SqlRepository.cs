@@ -436,6 +436,7 @@ namespace Singularity.DataService.SqlFramework
 		}
 
 		public Boolean SaveChangesTransactionally { get; set; }
+		public DateTime? SchemaModifiedDateTime => Context.TableSchemaModifiedDateTime(TableName);
 
 		protected abstract List<TSqlEntity> AssembleClassList(SqlDataReader dataReader);
 		protected abstract TSqlEntity ReadAndAssembleClass(SqlDataReader dataReader);

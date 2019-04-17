@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Singularity.DataService;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -379,6 +380,10 @@ namespace Singularity.EfDataService
 		}
 
 		#endregion
+		public DateTime? SchemaModifiedDateTime => SqlServerSystem.SchemaModifiedDateTime();
+
+		internal DateTime? TableSchemaModifiedDateTime(String tableName) => SqlServerSystem.SchemaModifiedDateTime(tableName);
+
 
 		public Func<DbEntityEntry, IDictionary<Object, Object>, DbEntityValidationResult> ValidateEntryFunc { get; set; }
 
@@ -387,5 +392,8 @@ namespace Singularity.EfDataService
 
 		public Boolean NoTracking { get; set; }
 		protected internal abstract DateTime Now { get; }
+		protected SqlServerSystem SqlServerSystem => _sqlServerSystem ?? (_sqlServerSystem = new SqlServerSystem(SqlConnection));
+		private SqlServerSystem _sqlServerSystem;
+
 	}
 }

@@ -199,12 +199,20 @@ namespace Singularity.DataService.SqlFramework
 			return true;
 		}
 
+
+		public DateTime? SchemaModifiedDateTime => SqlServerSystem.SchemaModifiedDateTime();
+
+		internal DateTime? TableSchemaModifiedDateTime(String tableName) => SqlServerSystem.SchemaModifiedDateTime(tableName);
+
 		public Boolean AutomaticTransactions { get; set; }
 		public String Name => _sqlConnectionStringBuilder.InitialCatalog;
 		public String ErrorMessage => _errorMessage;
 
 		public SqlConnection SqlConnection => _sqlConnection;
 		private SqlConnection _sqlConnection;
+
+		protected SqlServerSystem SqlServerSystem => _sqlServerSystem ?? (_sqlServerSystem = new SqlServerSystem(SqlConnection));
+		private SqlServerSystem _sqlServerSystem;
 
 		private const Int32 MaximumRetries = 3;
 		private const Int32 DelayOnError = 500;

@@ -98,6 +98,7 @@
     <Compile Include="SqlFramework\SqlEntityContext.cs" />
     <Compile Include="SqlFramework\SqlRepository.cs" />
     <Compile Include="SqlFramework\SqlUnitOfWork.cs" />
+    <Compile Include="SqlServerSystem.cs" />
     <Compile Include="UniqueCodeService\Strageties\CodeStrategy.cs" />
     <Compile Include="UniqueCodeService\Strageties\UniqueCodeWithNoPrefixStrategy.cs" />
     <Compile Include="WriteToTextFile.cs" />

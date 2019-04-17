@@ -1,3 +1,5 @@
 ﻿using System.Reflection;
 
-[assembly: AssemblyVersion("2.10.048")]
+[assembly: AssemblyProduct("Singularity")]
+[assembly: AssemblyCopyright("Copyright © 2019")]
+[assembly: AssemblyVersion("2.10.052")]

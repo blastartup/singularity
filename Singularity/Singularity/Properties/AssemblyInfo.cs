@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Reflection;
-using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 // General Information about an assembly is controlled through the following 
@@ -10,8 +9,6 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyDescription("Common Application Library and Extensions")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("https://github.com/blastartup/singularity")]
-[assembly: AssemblyProduct("Singularity")]
-[assembly: AssemblyCopyright("Copyright © 2017")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 [assembly: CLSCompliant(true)]

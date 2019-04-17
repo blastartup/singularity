@@ -9,8 +9,8 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyDescription("Common Application Library and Extensions")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("https://github.com/blastartup/singularity")]
-[assembly: AssemblyProduct("Singularity.Test")]
-[assembly: AssemblyCopyright("Copyright ©  2017")]
+//[assembly: AssemblyProduct("Singularity.Test")]
+//[assembly: AssemblyCopyright("Copyright ©  2017")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

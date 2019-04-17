@@ -16,12 +16,12 @@ namespace Singularity
 		/// Create the given folder capturing any exceptions but retrying up to 3 times maximum.
 		/// </summary>
 		/// <param name="folder">The folder you wish to create.</param>
-		/// <returns>Whether or not the folder was created rather than the mere fact the folder exists.</returns>
+		/// <returns>False if the folder couldn't be created, otherwise true if created or already existed.</returns>
 		public static Boolean CreateSafely(this DirectoryInfo folder)
 		{
-			var created = false;
+			var created = folder.Exists;
 			Byte attemptCounter = 0;
-			while (!folder.Exists)
+			while (!created)
 			{
 				attemptCounter++;
 				try
@@ -59,7 +59,7 @@ namespace Singularity
 		{
 			var deleted = false;
 			Byte attemptCounter = 0;
-			while (!folder.Exists)
+			while (folder.Exists)
 			{
 				attemptCounter++;
 				try

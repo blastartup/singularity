@@ -224,6 +224,8 @@ namespace Singularity.EfDataService
 			return dbQuery.Count();
 		}
 
+		public DateTime? SchemaModifiedDateTime => Context.TableSchemaModifiedDateTime(typeof(TEntity).Name);
+
 		protected DbSet<TEntity> DbSet => _dbSet ?? (_dbSet = NewDbSet(Context.Set<TEntity>()));
 		private DbSet<TEntity> _dbSet;
 
