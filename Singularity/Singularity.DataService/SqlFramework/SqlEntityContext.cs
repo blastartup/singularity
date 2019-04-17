@@ -222,7 +222,7 @@ namespace Singularity.DataService.SqlFramework
 		private Boolean _disposed;
 		private String _errorMessage;
 		private readonly SqlConnectionStringBuilder _sqlConnectionStringBuilder;
-		private const String TableExistsPattern = "If Exists (SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = N'{0}') Begin Print 1 End Else Begin Print 0 End";
+		private const String TableExistsPattern = "If Exists (SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = N'{0}') Begin Select 1 'Any' End Else Begin Select 0 'Any' End";
 
 	}
 }
