@@ -6,14 +6,30 @@ using System.Text;
 
 namespace Singularity.DataService.SqlFramework
 {
-	public abstract class SqlRepository<TSqlEntity> : ISqlGeneratable
+	public abstract class SqlRepository<TSqlEntity, TIdentity> : ISqlGeneratable
 		where TSqlEntity : class
+		where TIdentity : struct
 	{
 		protected SqlEntityContext Context;
 
 		protected SqlRepository(SqlEntityContext context)
 		{
 			Context = context;
+		}
+
+		public SqlTransaction BeginTransaction()
+		{
+			return Context.BeginTransaction();
+		}
+
+		public Boolean Commit()
+		{
+			return Context.Commit();
+		}
+
+		public void Rollback()
+		{
+			Context.Rollback();
 		}
 
 		public virtual TSqlEntity GetEntity(String filter = "", SqlParameter[] filterParameters = null, String selectColumns = null, String orderBy = null)
@@ -52,12 +68,7 @@ namespace Singularity.DataService.SqlFramework
 
 		public IEnumerable<String> GenerateInsertSql(Object sqlEntity)
 		{
-			return GenerateInsertSqlCore((TSqlEntity)sqlEntity);
-		}
-
-		private IEnumerable<String> GenerateInsertSqlCore(TSqlEntity sqlEntity)
-		{
-			return new[] { InsertColumnsPatternSansIdentity.FormatX(TableName, InsertColumns(), GetInsertValues(sqlEntity)), "GO", "" };
+			return new[] { InsertColumnsPatternSansIdentity.FormatX(TableName, InsertColumns(), GetInsertValues((TSqlEntity)sqlEntity)), "GO", "" };
 		}
 
 		public TSqlEntity GetById(Object id, String selectColumns = null)
@@ -72,13 +83,8 @@ namespace Singularity.DataService.SqlFramework
 		//	return SelectQuery(selectColumns, filter, filterParameters, null, new Paging(1)).HasRows;
 		//}
 
-		public void Insert(TSqlEntity sqlEntity)
+		public Boolean Insert(TSqlEntity sqlEntity)
 		{
-			if (SaveChangesTransactionally)
-			{
-				Context.BeginTransaction();
-			}
-
 			if (sqlEntity is IModifiable modifiableEntity)
 			{
 				modifiableEntity.CreatedDate = NowDateTime;
@@ -89,65 +95,62 @@ namespace Singularity.DataService.SqlFramework
 				creatable.CreatedDate = NowDateTime;
 			}
 
-			InsertCore(sqlEntity, InsertColumns(), GetInsertValues(sqlEntity));
+			return InsertCore(sqlEntity);
 		}
+
+		protected abstract Boolean InsertCore(TSqlEntity sqlEntity);
 
 		/// <summary>
 		/// An immediate identity insert with identity_insert on just for this single entity, unless queued is true.  Queued identity insert entities are inserted if nothing given.
 		/// </summary>
 		/// <param name="sqlEntity"></param>
-		public void IdentityInsert(TSqlEntity sqlEntity = null, Boolean queued = false)
-		{
-			if (sqlEntity == null)
-			{
-				FlushIdentityInserts();
-				return;
-			}
+		//public void IdentityInsert(TSqlEntity sqlEntity = null, Boolean queued = false)
+		//{
+		//	if (sqlEntity == null)
+		//	{
+		//		FlushIdentityInserts();
+		//		return;
+		//	}
 
-			// Queue identity insert...
-			if (sqlEntity is IModifiable modifiableEntity)
-			{
-				modifiableEntity.CreatedDate = NowDateTime;
-				modifiableEntity.ModifiedDate = NowDateTime;
-			}
-			else if (sqlEntity is ICreatable creatable)
-			{
-				creatable.CreatedDate = NowDateTime;
-			}
-			var insertColumns = $"{GetIdentityInsertColumns()},{InsertColumns()}";
-			var insertValues = $"{GetIdentityInsertValues(sqlEntity)},{GetInsertValues(sqlEntity)}";
-			QueuedIdentityInserts.Append(QueueIdentityInsertColumnsPattern.FormatX(TableName, insertColumns, insertValues));
+		//	// Queue identity insert...
+		//	if (sqlEntity is IModifiable modifiableEntity)
+		//	{
+		//		modifiableEntity.CreatedDate = NowDateTime;
+		//		modifiableEntity.ModifiedDate = NowDateTime;
+		//	}
+		//	else if (sqlEntity is ICreatable creatable)
+		//	{
+		//		creatable.CreatedDate = NowDateTime;
+		//	}
+		//	var insertColumns = $"{GetIdentityInsertColumns()},{InsertColumns()}";
+		//	var insertValues = $"{GetIdentityInsertValues(sqlEntity)},{GetInsertValues(sqlEntity)}";
+		//	QueuedIdentityInserts.Append(QueueIdentityInsertColumnsPattern.FormatX(TableName, insertColumns, insertValues));
 
-			if (!queued)
-			{
-				FlushIdentityInserts();
-			}
-		}
+		//	if (!queued)
+		//	{
+		//		FlushIdentityInserts();
+		//	}
+		//}
 
-		public void FlushIdentityInserts()
-		{
-			if (QueuedIdentityInserts.IsEmpty())
-			{
-				return;
-			}
+		//public void FlushIdentityInserts()
+		//{
+		//	if (QueuedIdentityInserts.IsEmpty())
+		//	{
+		//		return;
+		//	}
 
-			if (SaveChangesTransactionally)
-			{
-				Context.BeginTransaction();
-			}
+		//	if (SaveChangesTransactionally)
+		//	{
+		//		Context.BeginTransaction();
+		//	}
 
-			String insertStatement = IdentityInsertColumnsPattern.FormatX(QueuedIdentityInserts.ToString(), TableName);
-			_queuedIdentityInserts = null;
-			Context.ExecuteScalar(insertStatement, new SqlParameter[] { });
-		}
+		//	String insertStatement = IdentityInsertColumnsPattern.FormatX(QueuedIdentityInserts.ToString(), TableName);
+		//	_queuedIdentityInserts = null;
+		//	Context.ExecuteScalar(insertStatement, new SqlParameter[] { });
+		//}
 
 		public virtual void Update(TSqlEntity sqlEntity)
 		{
-			if (SaveChangesTransactionally)
-			{
-				Context.BeginTransaction();
-			}
-
 			if (sqlEntity is IModifiable modifiable)
 			{
 				modifiable.ModifiedDate = NowDateTime;
@@ -200,13 +203,6 @@ namespace Singularity.DataService.SqlFramework
 
 			query = "If Exists (Select * from {0}{1}) Then Print 1 Else Print 0".FormatX(FromTables(), filter);
 			return Context.ExecuteNonQuery(query, filterParameters) == 1;
-		}
-
-		public void Reseed(Int32 newPrimaryKey = 0)
-		{
-			newPrimaryKey--;
-			SqlCommand cmd = new SqlCommand($"DBCC CheckIdent ({TableName}, reseed, {newPrimaryKey})", Context.SqlConnection);
-			cmd.ExecuteNonQuery();
 		}
 
 		public void IdentityInsertOn()
@@ -350,14 +346,8 @@ namespace Singularity.DataService.SqlFramework
 			return Context.ExecuteDataReader(query, filterParameters);
 		}
 
-		protected void InsertCore(TSqlEntity sqlEntity, String insertColumns, String insertValues)
-		{
-			String insertStatement = InsertColumnsPattern.FormatX(TableName, insertColumns, insertValues);
-			SetEntityPrimaryKey(sqlEntity, Context.ExecuteScalar(insertStatement, new SqlParameter[] { }));
-		}
-
-		private StringBuilder QueuedIdentityInserts => _queuedIdentityInserts ?? (_queuedIdentityInserts = new StringBuilder());
-		private StringBuilder _queuedIdentityInserts;
+		//private StringBuilder QueuedIdentityInserts => _queuedIdentityInserts ?? (_queuedIdentityInserts = new StringBuilder());
+		//private StringBuilder _queuedIdentityInserts;
 
 		protected void UpdateCore(TSqlEntity sqlEntity, String updateColumnValuePairs, String updateKeyColumnValuePair)
 		{
@@ -435,7 +425,6 @@ namespace Singularity.DataService.SqlFramework
 			return result;
 		}
 
-		public Boolean SaveChangesTransactionally { get; set; }
 		public DateTime? SchemaModifiedDateTime => Context.TableSchemaModifiedDateTime(TableName);
 
 		protected abstract List<TSqlEntity> AssembleClassList(SqlDataReader dataReader);
@@ -450,20 +439,14 @@ namespace Singularity.DataService.SqlFramework
 			return $"[{PrimaryKeyName}]";
 		}
 
-		protected virtual String GetIdentityInsertValues(TSqlEntity sqlEntity)
-		{
-			return String.Empty;
-		}
+		protected abstract TIdentity GetPrimaryKey(TSqlEntity sqlEntity);
+		protected abstract void SetPrimaryKey(TSqlEntity sqlEntity, TIdentity newPrimaryKey);
 
 		protected abstract String GetInsertValues(TSqlEntity sqlEntity);
 		protected abstract String GetUpdateColumnValuePairs(TSqlEntity sqlEntity);
 		protected abstract String GetUpdateKeyColumnValuePair(TSqlEntity sqlEntity);
-		protected abstract void SetEntityPrimaryKey(TSqlEntity sqlEntity, Object newPrimaryKey);
 
 		protected const String UpdateColumnValuePattern = "{0} = {1}";
-		private const String QueueIdentityInsertColumnsPattern = "Insert [{0}] ({1}) Values({2}); ";
-		private const String IdentityInsertColumnsPattern = "Set Identity_Insert dbo.{1} On; {0} Set Identity_Insert dbo.{1} Off";
-		private const String InsertColumnsPattern = "Insert [{0}] ({1}) Values({2}) SELECT @@IDENTITY";
 		private const String InsertColumnsPatternSansIdentity = "Insert [{0}] ({1}) Values({2})";
 		private const String UpdateColumnsPattern = "Update [{0}] Set {1} Where {2}";
 		private const String StringValuePattern = "'{0}'";

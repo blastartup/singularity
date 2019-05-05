@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 // ReSharper disable once CheckNamespace
 
-namespace Singularity.Api
+namespace Singularity.Web
 {
 	public enum EControllerSearchable
 	{

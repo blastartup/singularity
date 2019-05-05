@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 // ReSharper disable CheckNamespace
 
-namespace Singularity.Api
+namespace Singularity.Web
 {
 	/// <summary>
 	/// Am attribute to implement or overrule how a property is generated in a DTO and/or used by a Controller class.

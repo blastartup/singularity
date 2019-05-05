@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Singularity.Api
+namespace Singularity.Web.Types
 {
 	public abstract class ApiAssembler
 	{

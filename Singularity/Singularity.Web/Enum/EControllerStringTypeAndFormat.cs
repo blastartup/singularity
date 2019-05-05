@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 // ReSharper disable once CheckNamespace
 
-namespace Singularity.Api
+namespace Singularity.Web
 {
 	/// <summary>
 	/// Mirror to an API end point a non-String data type as a string and optionally which format to use.

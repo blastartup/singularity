@@ -2,11 +2,10 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
-using System.Resources;
 using System.Text.RegularExpressions;
 using Singularity.Resources;
 
-namespace Singularity.Parsers
+namespace Singularity.WinForm
 {
 	/// <summary>
 	/// <para>Class CLAParser provides everything for easy and fast handling of command line arguments.</para>

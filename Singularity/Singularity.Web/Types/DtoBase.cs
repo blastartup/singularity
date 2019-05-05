@@ -3,7 +3,7 @@
 
 using System;
 
-namespace Singularity.Api
+namespace Singularity.Web.Types
 {
 	[CLSCompliant(true)]
 	public abstract class DtoBase

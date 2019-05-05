@@ -57,12 +57,12 @@ namespace Singularity.DataService.SqlFramework
 			}
 		}
 
-		public SqlTransaction BeginTransaction()
+		internal SqlTransaction BeginTransaction()
 		{
 			return _sqlTransaction ?? (_sqlTransaction = _sqlConnection.BeginTransaction());
 		}
 
-		public Boolean Commit()
+		internal Boolean Commit()
 		{
 			Boolean result = false;
 			if (_sqlTransaction != null)
@@ -85,7 +85,7 @@ namespace Singularity.DataService.SqlFramework
 			return result;
 		}
 
-		public void Rollback()
+		internal void Rollback()
 		{
 			if (_sqlTransaction != null)
 			{
@@ -224,5 +224,8 @@ namespace Singularity.DataService.SqlFramework
 		private readonly SqlConnectionStringBuilder _sqlConnectionStringBuilder;
 		private const String TableExistsPattern = "If Exists (SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = N'{0}') Begin Select 1 'Any' End Else Begin Select 0 'Any' End";
 
+		internal void AppendInsert(String insertStatement) => throw new NotImplementedException();
+
+		public void AppendIndentityInsert(String insertStatement) => throw new NotImplementedException();
 	}
 }

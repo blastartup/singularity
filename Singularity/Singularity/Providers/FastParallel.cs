@@ -12,7 +12,7 @@ namespace Singularity
 	/// </summary>
 	/// <typeparam name="T">Any type to pass into the action to process in parallel.</typeparam>
 	[DebuggerStepThrough]
-	public class ParallelProcessor<T>
+	public class FastParallel<T>
 	{
 		private readonly SlicedList<T>[] _listSlices;
 		private readonly Int32 _numberOfThreads;
@@ -20,7 +20,7 @@ namespace Singularity
 		private readonly ManualResetEvent[] _manualResetEvents;
 
 		[DebuggerStepThrough]
-		public ParallelProcessor(Int32 numberOfThreads, Action<T> action)
+		public FastParallel(Int32 numberOfThreads, Action<T> action)
 		{
 			this._numberOfThreads = numberOfThreads;
 			this._listSlices = new SlicedList<T>[_numberOfThreads];

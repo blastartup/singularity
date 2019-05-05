@@ -1,12 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Omu.ValueInjecter;
-using Singularity;
-using Singularity.Api;
-using Singularity.DataService;
 using Singularity.Injection.Ignores;
+using Singularity.Web.Types;
 
 namespace Singularity.DataInjectionService
 {

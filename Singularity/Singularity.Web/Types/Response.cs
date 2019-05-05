@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 // ReSharper disable once CheckNamespace
 
-namespace Singularity.Api
+namespace Singularity.Web.Types
 {
 	/// <summary>
 	/// A class to give us a neat response. Can have great extensibility in future.

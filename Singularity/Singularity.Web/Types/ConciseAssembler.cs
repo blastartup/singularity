@@ -1,12 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 // ReSharper disable once CheckNamespace
 
-namespace Singularity.Api
+namespace Singularity.Web.Types
 {
 	public abstract class ConciseAssembler
 	{

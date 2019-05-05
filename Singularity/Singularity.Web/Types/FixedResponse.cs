@@ -2,7 +2,7 @@
 
 // ReSharper disable once CheckNamespace
 
-namespace Singularity
+namespace Singularity.Web.Types
 {
 	public class FixedResponse : IFixedCondition
 	{
