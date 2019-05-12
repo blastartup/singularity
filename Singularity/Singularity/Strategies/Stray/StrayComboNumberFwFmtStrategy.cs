@@ -19,15 +19,7 @@ namespace Singularity
 		{
 		}
 
-		public override IReply Execute()
-		{
-			ReplyMessage result = new ReplyMessage
-			{
-				Message = ((ReplyInteger)base.Execute()).Value.ToString(),
-				Condition = true,
-			};
-			return result;
-		}
+		public override IReply Execute() => new ReplyMessage(((ReplyInteger)base.Execute()).Value.ToString(), true);
 
 		private String Format()
 		{

@@ -829,6 +829,12 @@ namespace Singularity
 			}
 		}
 
+		public static IEnumerable<T> ToEnumerable<T>(this T item)
+		{
+			return new T[] { item };
+		}
+
+
 		/// <summary>
 		/// Obtain the value of a property by supplying it's name as a string.
 		/// </summary>

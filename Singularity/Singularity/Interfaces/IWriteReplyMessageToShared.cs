@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Singularity.Interfaces
+﻿// ReSharper disable once CheckNamespace
+namespace Singularity
 {
-	interface IWriteReplyMessageToShared
+	public interface IWriteReplyMessageToShared
 	{
-		void SetValue(ReplyMessage value);
+		void SharedWrite(ReplyMessage value);
 	}
 }

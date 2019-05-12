@@ -22,15 +22,12 @@ namespace Singularity
 		[DebuggerStepThrough]
 		public override IReply Execute()
 		{
-			ReplyMessage reply = new ReplyMessage();
 			StringBuilder codeBuilder = new StringBuilder();
 			for (Int32 idx = 0; idx < Length - Prefix.Length; idx++)
 			{
 				codeBuilder.Append(ValueLib.AlphaNumeric[Random.Next(0, 36)]);
 			}
-			reply.Message = codeBuilder.ToString();
-			reply.Condition = true;
-			return reply;
+			return new ReplyMessage(codeBuilder.ToString(), true);
 		}
 
 		protected readonly String Prefix;

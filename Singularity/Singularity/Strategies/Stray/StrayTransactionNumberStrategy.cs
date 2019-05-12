@@ -15,8 +15,6 @@ namespace Singularity
 		[DebuggerStepThrough]
 		public override IReply Execute()
 		{
-			ReplyMessage reply = new ReplyMessage();
-
 			BaseN monthOfYear = DateTime.UtcNow.Month;
 			monthOfYear.Base = 16;
 
@@ -32,9 +30,7 @@ namespace Singularity
 
 			Int32 transactionNumber = _debitAccountCheckDigit * 100000000 + Random.Next(1, 9) * 10000000 + Random.Next(0, 999999) * 10;
 			transactionNumber += VerhoeffCheckDigit.CalculateCheckDigit(transactionNumber);
-			reply.Message = "{0}{1}".FormatX(transactionNumber, monthOfYear.ToString());
-			reply.Condition = true;
-			return reply;
+			return new ReplyMessage("{0}{1}".FormatX(transactionNumber, monthOfYear.ToString()), true);
 		}
 
 		private readonly Int32 _debitAccountCheckDigit;

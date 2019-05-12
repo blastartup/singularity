@@ -6,12 +6,9 @@ namespace Singularity
 {
 	public class ReplyMessage : ReplySimple
 	{
-		public ReplyMessage() : this(false)
+		public ReplyMessage(String message, Boolean condition = false) : base(condition)
 		{
-		}
-
-		public ReplyMessage(Boolean condition) : base(condition)
-		{
+			Message = message;
 		}
 
 		public String Message { get; set; }

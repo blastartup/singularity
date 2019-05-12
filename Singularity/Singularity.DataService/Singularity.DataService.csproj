@@ -53,11 +53,8 @@
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.configuration" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
-    <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
@@ -90,7 +87,8 @@
     <Compile Include="Interfaces\ICreatable.cs" />
     <Compile Include="Interfaces\IImportable.cs" />
     <Compile Include="Interfaces\IItemisable.cs" />
-    <Compile Include="Interfaces\ISqlGeneratable.cs" />
+    <Compile Include="Interfaces\IReadDataRowFromShared.cs" />
+    <Compile Include="Interfaces\IReadSqlCommandFromShared.cs" />
     <Compile Include="Interfaces\IVersionable.cs" />
     <Compile Include="Interfaces\IUsable.cs" />
     <Compile Include="Interfaces\IDeletable.cs" />
@@ -100,6 +98,8 @@
     <Compile Include="Interfaces\INamable.cs" />
     <Compile Include="Interfaces\IRevisable.cs" />
     <Compile Include="Interfaces\ISearchCriteria.cs" />
+    <Compile Include="Interfaces\IWriteDataRowToShared.cs" />
+    <Compile Include="Interfaces\IWriteSqlParameterToShared.cs" />
     <Compile Include="OleDbFramework\OleDbEntityContext.cs" />
     <Compile Include="OleDbFramework\OleDbAssembler.cs" />
     <Compile Include="OleDbFramework\OleDbRepository.cs" />
@@ -112,8 +112,8 @@
     <Compile Include="ReferenceType\Paging.cs" />
     <Compile Include="ReferenceType\TypeConverter.cs" />
     <Compile Include="Replies\ReplyDataTable.cs" />
-    <Compile Include="SqlFramework\GuidKeySqlRepository.cs" />
-    <Compile Include="SqlFramework\NumericKeySqlRepository.cs" />
+    <Compile Include="SqlFramework\AsyncDataTable.cs" />
+    <Compile Include="SqlFramework\AsyncSqlCommand.cs" />
     <Compile Include="SqlFramework\SqlAssembler.cs" />
     <Compile Include="SqlFramework\SqlEntityContext.cs" />
     <Compile Include="SqlFramework\SqlRepository.cs" />

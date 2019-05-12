@@ -15,26 +15,23 @@ namespace Singularity
 			{
 				throw new InvalidOperationException("Length exceeds boundary requires 4 =< length =< 30.");
 			}
-			this.CheckSumLength = checkSumLength;
-			this.Length = length - checkSumLength;
+			CheckSumLength = (Int16)checkSumLength.LimitMin(1);
+			Length = length - checkSumLength;
 		}
 
 		[DebuggerStepThrough]
 		public override IReply Execute()
 		{
-			ReplyMessage result = new ReplyMessage();
-			StringBuilder numberBuilder = new StringBuilder();
-			for (Int32 idx = 0; idx < Length; idx++)
+			var numberBuilder = new StringBuilder();
+			for (var idx = 0; idx < Length; idx++)
 			{
 				numberBuilder.Append(ValueLib.BarcodeAlphabet[Random.Next(0, 28)]);
 			}
 			numberBuilder.Append(numberBuilder.ToString().GetChecksum(CheckSumLength));
-			result.Message = numberBuilder.ToString();
-			result.Condition = true;
-			return result;
+			return new ReplyMessage(numberBuilder.ToString(), true);
 		}
 
 		protected readonly Int32 Length;
-		protected readonly Int16 CheckSumLength = 1;
+		protected readonly Int16 CheckSumLength;
 	}
 }

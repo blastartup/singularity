@@ -7,14 +7,16 @@ using System.Threading;
 
 namespace Singularity.DataService.SqlFramework
 {
-	public class SqlEntityContext : IDisposable
+	public abstract class SqlEntityContext : IDisposable
 	{
+		// Made class abstract, to force implementation to automatically cater for multiple contexts out of the box.
+
 		// Parameterless constructor required for Generics even though not ever called.  Do not use.
 		protected SqlEntityContext()
 		{
 		}
 
-		public SqlEntityContext(SqlConnectionStringBuilder sqlConnectionStringBuilder)
+		protected SqlEntityContext(SqlConnectionStringBuilder sqlConnectionStringBuilder)
 		{
 			_sqlConnectionStringBuilder = sqlConnectionStringBuilder;
 			_sqlConnection = new SqlConnection(sqlConnectionStringBuilder.ConnectionString);
@@ -22,13 +24,13 @@ namespace Singularity.DataService.SqlFramework
 			_transactionCounter = 0;
 		}
 
-		public SqlEntityContext(SqlConnection sqlConnection)
+		protected SqlEntityContext(SqlConnection sqlConnection)
 		{
 			_sqlConnection = sqlConnection;
 			_sqlConnectionStringBuilder = new SqlConnectionStringBuilder(sqlConnection.ConnectionString);
 			if (_sqlConnection.State == ConnectionState.Closed)
 			{
-			_sqlConnection.OpenEx(_sqlConnectionStringBuilder.ConnectTimeout * 1000);
+				_sqlConnection.OpenEx(_sqlConnectionStringBuilder.ConnectTimeout * 1000);
 			}
 			_transactionCounter = 0;
 		}
@@ -64,7 +66,7 @@ namespace Singularity.DataService.SqlFramework
 
 		internal Boolean Commit()
 		{
-			Boolean result = false;
+			var result = false;
 			if (_sqlTransaction != null)
 			{
 				try
@@ -76,29 +78,18 @@ namespace Singularity.DataService.SqlFramework
 				{
 					_sqlTransaction.Rollback();
 				}
-				finally
-				{
-					_sqlTransaction.Dispose();
-					_sqlTransaction = null;
-				}
 			}
 			return result;
 		}
 
-		internal void Rollback()
-		{
-			if (_sqlTransaction != null)
-			{
-				_sqlTransaction.Rollback();
-				_sqlTransaction.Dispose();
-				_sqlTransaction = null;
-			}
-		}
+		internal void Rollback() => _sqlTransaction?.Rollback();
 
 		public Boolean TableExists(String table)
 		{
-			return ExecuteScalar(TableExistsPattern.FormatX(table)).ToBool();
+			return ExecuteScalar(TableExistsQuery, new SqlParameter[]{ new SqlParameter("@TableName",  table)}).ToInt() == 1;
 		}
+
+
 
 		public void Dispose()
 		{
@@ -112,11 +103,11 @@ namespace Singularity.DataService.SqlFramework
 			{
 				if (disposing)
 				{
-					_sqlTransaction?.Dispose();
 					if (_sqlConnection != null)
 					{
 						_sqlConnection.Close();
 						_sqlConnection.Dispose();
+						_sqlConnection = null;
 					}
 
 					_disposed = true;
@@ -202,6 +193,7 @@ namespace Singularity.DataService.SqlFramework
 
 		public DateTime? SchemaModifiedDateTime => SqlServerSystem.SchemaModifiedDateTime();
 
+		internal DateTime? DatabaseSchemaModifiedDateTime() => SqlServerSystem.SchemaModifiedDateTime();
 		internal DateTime? TableSchemaModifiedDateTime(String tableName) => SqlServerSystem.SchemaModifiedDateTime(tableName);
 
 		public Boolean AutomaticTransactions { get; set; }
@@ -211,21 +203,22 @@ namespace Singularity.DataService.SqlFramework
 		public SqlConnection SqlConnection => _sqlConnection;
 		private SqlConnection _sqlConnection;
 
+		internal SqlTransaction SqlTransaction => _sqlTransaction;
+		private SqlTransaction _sqlTransaction;
+
 		protected SqlServerSystem SqlServerSystem => _sqlServerSystem ?? (_sqlServerSystem = new SqlServerSystem(SqlConnection));
+		protected internal virtual DateTime NowDateTime => DateTime.Now;
+
 		private SqlServerSystem _sqlServerSystem;
 
 		private const Int32 MaximumRetries = 3;
 		private const Int32 DelayOnError = 500;
 		private Int32 _transactionCounter;
 		private const Int32 MaximumTransactionsBeforeReconnect = 10000;
-		private SqlTransaction _sqlTransaction;
 		private Boolean _disposed;
 		private String _errorMessage;
 		private readonly SqlConnectionStringBuilder _sqlConnectionStringBuilder;
-		private const String TableExistsPattern = "If Exists (SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = N'{0}') Begin Select 1 'Any' End Else Begin Select 0 'Any' End";
+		private const String TableExistsQuery = "If Exists (SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = @TableName) Begin Select 1 'Any' End Else Begin Select 0 'Any' End";
 
-		internal void AppendInsert(String insertStatement) => throw new NotImplementedException();
-
-		public void AppendIndentityInsert(String insertStatement) => throw new NotImplementedException();
 	}
 }

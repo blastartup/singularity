@@ -36,6 +36,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Singularity.EfDataService", "Singularity.EfDataService\Singularity.EfDataService.csproj", "{FBA22897-9EBB-41BD-A845-15FEE41525A5}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Singularity.DataService.Test", "Singularity.DataService.Test\Singularity.DataService.Test.csproj", "{3F231D41-8D7D-4492-B371-622F0D073DF9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -153,6 +155,13 @@ Global
 		{FBA22897-9EBB-41BD-A845-15FEE41525A5}.Release|Any CPU.Build.0 = Release|Any CPU
 		{FBA22897-9EBB-41BD-A845-15FEE41525A5}.Release|x64.ActiveCfg = Release|x64
 		{FBA22897-9EBB-41BD-A845-15FEE41525A5}.Release|x64.Build.0 = Release|x64
+		{3F231D41-8D7D-4492-B371-622F0D073DF9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3F231D41-8D7D-4492-B371-622F0D073DF9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3F231D41-8D7D-4492-B371-622F0D073DF9}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{3F231D41-8D7D-4492-B371-622F0D073DF9}.Debug|x64.Build.0 = Debug|Any CPU
+		{3F231D41-8D7D-4492-B371-622F0D073DF9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3F231D41-8D7D-4492-B371-622F0D073DF9}.Release|x64.ActiveCfg = Release|Any CPU
+		{3F231D41-8D7D-4492-B371-622F0D073DF9}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

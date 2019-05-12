@@ -19,12 +19,12 @@ namespace Singularity
 			_shared = shared;
 		}
 
-		public void Read(Action<TIRead> functor)
+		public TValue Read<TValue>(Func<TIRead, TValue> functor)
 		{
 			_lock.EnterReadLock();
 			try
 			{
-				functor(_shared);
+				return functor.Invoke(_shared);
 			}
 			finally
 			{
@@ -43,6 +43,13 @@ namespace Singularity
 			{
 				_lock.ExitWriteLock();
 			}
+		}
+	}
+
+	public class ReplyMessageSynchronizer<TImpl> : Synchronizer<TImpl, IReadReplyMessageFromShared, IWriteReplyMessageToShared> where TImpl : IReadReplyMessageFromShared, IWriteReplyMessageToShared
+	{
+		public ReplyMessageSynchronizer(TImpl shared) : base(shared)
+		{
 		}
 	}
 }
