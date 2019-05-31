@@ -37,25 +37,88 @@ namespace Singularity.DataService.SqlFramework
 
 		public SqlDataReader ExecuteDataReader(String query, SqlParameter[] filterParameters = null)
 		{
-			using (SqlCommand cmd = CreateCommand(query, CommandType.Text, filterParameters))
+			SqlCommand sqlCommand = null;
+			try
 			{
-				return ExecuteWithRetry(cmd, cmd.ExecuteReader);
+				sqlCommand = CreateCommand(query, CommandType.Text, filterParameters);
+				return ExecuteWithRetry(sqlCommand, sqlCommand.ExecuteReader);
+			}
+			finally
+			{
+				sqlCommand?.Dispose();
 			}
 		}
 
 		public Object ExecuteScalar(String query, SqlParameter[] filterParameters = null)
 		{
-			using (SqlCommand cmd = CreateCommand(query, CommandType.Text, filterParameters))
+			SqlCommand sqlCommand = null;
+			try
 			{
-				return ExecuteWithRetry(cmd, cmd.ExecuteScalar);
+				sqlCommand = CreateCommand(query, CommandType.Text, filterParameters);
+				return ExecuteWithRetry(sqlCommand, sqlCommand.ExecuteScalar);
+			}
+			finally
+			{
+				sqlCommand?.Dispose();
 			}
 		}
 
 		public Int32 ExecuteNonQuery(String query, SqlParameter[] filterParameters = null)
 		{
-			using (SqlCommand cmd = CreateCommand(query, CommandType.Text, filterParameters))
+			SqlCommand sqlCommand = null;
+			try
 			{
-				return ExecuteWithRetry(cmd, cmd.ExecuteNonQuery);
+				sqlCommand = CreateCommand(query, CommandType.Text, filterParameters);
+				return ExecuteWithRetry(sqlCommand, sqlCommand.ExecuteNonQuery);
+			}
+			finally
+			{
+				sqlCommand?.Dispose();
+			}
+		}
+
+		public Boolean ExecuteSql(String singleLinedSqlStatement)
+		{
+			SqlCommand sqlCommand = null;
+			try
+			{
+				sqlCommand = CreateCommand(singleLinedSqlStatement, CommandType.Text, null);
+				ExecuteWithRetry(sqlCommand, sqlCommand.ExecuteNonQuery);
+				return true;
+			}
+			catch
+			{
+				return false;
+			}
+			finally
+			{
+				sqlCommand?.Dispose();
+			}
+		}
+
+		public Boolean ExecuteMultiLinedSql(String mulitLinedSqlScript)
+		{
+			SqlCommand sqlCommand = null;
+			try
+			{
+				sqlCommand = SqlConnection.CreateCommand();
+				sqlCommand.CommandType = CommandType.Text;
+				sqlCommand.Transaction = _sqlTransaction;
+				var commands = new Words(mulitLinedSqlScript.Replace(ValueLib.CrLf.StringValue + "GO", "|").Replace(ValueLib.CrLf.StringValue, ValueLib.Space.StringValue), "|");
+				foreach (var command in commands)
+				{
+					sqlCommand.CommandText = command;
+					ExecuteWithRetry(sqlCommand, sqlCommand.ExecuteNonQuery);
+				}
+				return true;
+			}
+			catch
+			{
+				return false;
+			}
+			finally
+			{
+				sqlCommand?.Dispose();
 			}
 		}
 
@@ -129,8 +192,13 @@ namespace Singularity.DataService.SqlFramework
 			return sqlCommand;
 		}
 
-		private T ExecuteWithRetry<T>(SqlCommand cmd, Func<T> executeSql)
+		private T ExecuteWithRetry<T>(NonNullable<SqlCommand> sqlCommand, Func<T> executeSql)
 		{
+			if (sqlCommand.Value.Connection == null)
+			{
+				throw new ArgumentException("Connection property of given sqlCommand argument cannot be null.");
+			}
+
 			_errorMessage = String.Empty;
 			Boolean reconnect = false;
 			for (Int32 idx = 0; idx < MaximumRetries; idx++)
@@ -144,7 +212,7 @@ namespace Singularity.DataService.SqlFramework
 							_sqlConnection.Close();
 							_sqlConnection = new SqlConnection(_sqlConnectionStringBuilder.ConnectionString);
 							_sqlConnection.Open();
-							cmd.Connection = _sqlConnection;
+							//cmd.Connection = _sqlConnection;  All cmd's passed in are already pointing to _sqlConnection.
 							_transactionCounter = 0;
 						}
 					}

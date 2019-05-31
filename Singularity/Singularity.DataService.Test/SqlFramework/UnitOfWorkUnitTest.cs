@@ -26,7 +26,7 @@ namespace Singularity.DataService.Test.SqlFramework
 			uow.CreateDatabase("crap");
 			Assert.IsTrue(uow.Context.ExecuteScalar("IF DB_ID('Singularity') IS NOT NULL select 1 else select 0").ToInt() == 1, "Database exists.");
 
-			uow.DeleteDatabase("crap");
+			uow.DeleteDatabase();
 			Assert.IsTrue(uow.Context.ExecuteScalar("IF DB_ID('Singularity') IS NOT NULL select 1 else select 0").ToInt() == 0, "Database deleted.");
 		}
 
@@ -48,13 +48,13 @@ namespace Singularity.DataService.Test.SqlFramework
 			Assert.IsTrue(uow.Context.ExecuteScalar("IF DB_ID('Singularity') IS NOT NULL select 1 else select 0").ToInt() == 1, "Database exists.");
 
 			Assert.IsFalse(uow.TeeProjectRepository.TableExists());
-			uow.TeeProjectRepository.CreateTable();
+			uow.CreateTables();
 			Assert.IsTrue(uow.TeeProjectRepository.TableExists());
 
-			uow.TeeProjectRepository.DeleteTable();
+			uow.Context.ExecuteSql(uow.TeeProjectRepository.DeleteTableQuery);
 			Assert.IsFalse(uow.TeeProjectRepository.TableExists());
 
-			uow.DeleteDatabase("crap");
+			uow.DeleteDatabase();
 			Assert.IsTrue(uow.Context.ExecuteScalar("IF DB_ID('Singularity') IS NOT NULL select 1 else select 0").ToInt() == 0, "Database deleted.");
 		}
 
@@ -76,7 +76,7 @@ namespace Singularity.DataService.Test.SqlFramework
 			Assert.IsTrue(uow.Context.ExecuteScalar("IF DB_ID('Singularity') IS NOT NULL select 1 else select 0").ToInt() == 1, "Database exists.");
 
 			Assert.IsFalse(uow.TeeProjectRepository.TableExists());
-			uow.TeeProjectRepository.CreateTable();
+			uow.CreateTables();
 			Assert.IsTrue(uow.TeeProjectRepository.TableExists());
 
 			Assert.IsTrue(uow.TeeProjectRepository.GetCount() == 0);
@@ -110,10 +110,10 @@ namespace Singularity.DataService.Test.SqlFramework
 			Assert.IsTrue(uow.TeeProjectRepository.DeleteEntity(teeProject3));
 			Assert.IsTrue(uow.TeeProjectRepository.GetCount() == 0);
 
-			uow.TeeProjectRepository.DeleteTable();
+			uow.Context.ExecuteSql(uow.TeeProjectRepository.DeleteTableQuery);
 			Assert.IsFalse(uow.TeeProjectRepository.TableExists());
 
-			uow.DeleteDatabase("crap");
+			uow.DeleteDatabase();
 			Assert.IsTrue(uow.Context.ExecuteScalar("IF DB_ID('Singularity') IS NOT NULL select 1 else select 0").ToInt() == 0, "Database deleted.");
 		}
 	}

@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Data;
 using System.Data.SqlClient;
+using System.Runtime.Remoting.Contexts;
+using System.Text;
 
 namespace Singularity.DataService.SqlFramework
 {
@@ -8,51 +10,40 @@ namespace Singularity.DataService.SqlFramework
 		where TSqlEntityContext : SqlEntityContext, new()
 	{
 		// A quick and dirty way to create a database.  Normally used for temporary databases that are dropped (deleted) often.
-		public virtual Boolean CreateDatabase(String projectName)
+		public virtual Boolean CreateDatabase(String databaseName = null, Boolean includeTables = false)
 		{
-			SqlCommand sqlCommand = null;
-			try
+			var scriptBuilder = new DelimitedStringBuilder();
+			scriptBuilder.AddIfNotEmpty(databaseName == null ? CreateDatabaseQuery : CreateDatabaseQuery.FormatX(databaseName));
+			if (includeTables)
 			{
-				sqlCommand = Context.SqlConnection.CreateCommand();
-				sqlCommand.CommandType = CommandType.Text;
-				var commands = new Words(CreateDatabaseQuery.Replace(ValueLib.CrLf.StringValue + "GO", "|").Replace(ValueLib.CrLf.StringValue, ValueLib.Space.StringValue), "|");
-				foreach(var command in commands)
-				{
-					sqlCommand.CommandText = command;
-					sqlCommand.ExecuteNonQuery();
-				}
+				scriptBuilder.AddIfNotEmpty(CreateDatabaseTablesQuery);
+				scriptBuilder.AddIfNotEmpty(AttachDatabaseTablesQuery);
+			}
 
-				return true;
-			}
-			finally
-			{
-				sqlCommand?.Dispose();
-			}
+			return Context.ExecuteMultiLinedSql(scriptBuilder.ToNewLineDelimitedString());
 		}
-		protected abstract String CreateDatabaseQuery { get; }
 
-		public virtual Boolean DeleteDatabase(String projectName)
+		public virtual Boolean CreateTables()
 		{
-			SqlCommand sqlCommand = null;
-			try
-			{
-				sqlCommand = Context.SqlConnection.CreateCommand();
-				sqlCommand.CommandType = CommandType.Text;
-				var commands = new Words(DeleteDatabaseQuery.Replace(ValueLib.CrLf.StringValue + "GO", "|").Replace(ValueLib.CrLf.StringValue, ValueLib.Space.StringValue), "|");
-				foreach (var command in commands)
-				{
-					sqlCommand.CommandText = command;
-					sqlCommand.ExecuteNonQuery();
-				}
+			var scriptBuilder = new DelimitedStringBuilder();
+			scriptBuilder.AddIfNotEmpty(CreateDatabaseTablesQuery);
+			scriptBuilder.AddIfNotEmpty(AttachDatabaseTablesQuery);
 
-				return true;
-			}
-			finally
-			{
-				sqlCommand?.Dispose();
-			}
+			return Context.ExecuteMultiLinedSql(scriptBuilder.ToNewLineDelimitedString());
 		}
-		protected abstract String DeleteDatabaseQuery { get; }
+
+		protected virtual String CreateDatabaseQuery => String.Empty;
+		protected virtual String CreateDatabaseTablesQuery => String.Empty;
+		protected virtual String AttachDatabaseTablesQuery => String.Empty;
+
+		public virtual Boolean DeleteDatabase(String databaseName = null)
+		{
+			return Context.ExecuteMultiLinedSql(databaseName == null ? DeleteDatabaseQuery : DeleteDatabaseQuery.FormatX(databaseName));
+		}
+		protected virtual String DeleteDatabaseQuery => String.Empty;  // Drop database.
+		protected virtual String DeleteDatabaseTablesQuery => String.Empty;  // Drop tables.
+		protected virtual String DetachDatabaseTablesQuery => String.Empty;  // Remove constraints, dependencies and indexes.
+
 
 		public Boolean Refresh(Boolean clearContext = false)
 		{

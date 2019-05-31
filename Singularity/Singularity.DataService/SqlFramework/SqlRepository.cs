@@ -8,13 +8,14 @@ using System.Threading.Tasks;
 
 namespace Singularity.DataService.SqlFramework
 {
-	public abstract class SqlRepository<TSqlEntity, TIdentity>
+	public abstract class SqlRepository<TSqlEntity, TIdentity, TSqlEntityContext>
 		where TSqlEntity : class
 		where TIdentity : struct
+		where TSqlEntityContext : SqlEntityContext, new()
 	{
-		protected SqlEntityContext Context;
+		protected TSqlEntityContext Context;
 
-		protected SqlRepository(SqlEntityContext context)
+		protected SqlRepository(TSqlEntityContext context) 
 		{
 			Context = context;
 		}
@@ -37,53 +38,6 @@ namespace Singularity.DataService.SqlFramework
 		}
 
 		#endregion
-
-		public Boolean CreateTable()
-		{
-			SqlCommand sqlCommand = null;
-			try
-			{
-				sqlCommand = Context.SqlConnection.CreateCommand();
-				sqlCommand.CommandType = CommandType.Text;
-				var commands = new Words(CreateTableQuery.Replace(ValueLib.CrLf.StringValue + "GO", "|").Replace(ValueLib.CrLf.StringValue, ValueLib.Space.StringValue), "|");
-				foreach (var command in commands)
-				{
-					sqlCommand.CommandText = command;
-					sqlCommand.ExecuteNonQuery();
-				}
-
-				return true;
-			}
-			finally
-			{
-				sqlCommand?.Dispose();
-			}
-		}
-		protected abstract String CreateTableQuery { get; }
-
-		public Boolean DeleteTable()
-		{
-			SqlCommand sqlCommand = null;
-			try
-			{
-				sqlCommand = Context.SqlConnection.CreateCommand();
-				sqlCommand.CommandType = CommandType.Text;
-				var commands = new Words(DeleteTableQuery.Replace(ValueLib.CrLf.StringValue + "GO", "|").Replace(ValueLib.CrLf.StringValue, ValueLib.Space.StringValue), "|");
-				foreach (var command in commands)
-				{
-					sqlCommand.CommandText = command;
-					sqlCommand.ExecuteNonQuery();
-				}
-
-				return true;
-			}
-			finally
-			{
-				sqlCommand?.Dispose();
-			}
-		}
-		protected abstract String DeleteTableQuery { get; }
-
 
 		#region Selecting
 
@@ -885,31 +839,13 @@ namespace Singularity.DataService.SqlFramework
 		//private const String DateTimeFormat = "yyyy-MM-dd HH:mm:ss.fff";
 
 
-		protected abstract String PrimaryKeyName { get; }
-		//protected abstract String InsertColumns();
-
-		//protected virtual String GetIdentityInsertColumns()
-		//{
-		//	return $"[{PrimaryKeyName}]";
-		//}
-
-
-		//protected abstract String GetInsertValues(TSqlEntity sqlEntity);
-		//protected abstract String GetUpdateColumnValuePairs(TSqlEntity sqlEntity);
-		//protected abstract String GetUpdateKeyColumnValuePair(TSqlEntity sqlEntity);
-
-		//protected const String UpdateColumnValuePattern = "{0} = {1}";
-
-		//private const String InsertColumnsPatternSansIdentity = "Insert [{0}] ({1}) Values({2})";
-		//private const String UpdateColumnsPattern = "Update [{0}] Set {1} Where {2}";
-
-
-
-
-
-		protected abstract String GetCountQuery { get; }
 		public DateTime? SchemaModifiedDateTime => Context.TableSchemaModifiedDateTime(TableName);
-
+		public virtual String CreateTableQuery => String.Empty;
+		public virtual String AttachTableQuery => String.Empty;
+		public String DeleteTableQuery => $"DROP TABLE [dbo].[{TableName}]";
+		public virtual String DetachTableQuery => String.Empty;
+		protected abstract String PrimaryKeyName { get; }
+		protected abstract String GetCountQuery { get; }
 		protected DateTime NowDateTime => Context.NowDateTime;
 
 		//eg: "select [PrimaryKeyName], [Col1Name], [Col2Name], [Col3Name] from dbo.[TableName] where dbo.[TableName].[PrimaryKeyName] = @pk";
@@ -982,10 +918,11 @@ namespace Singularity.DataService.SqlFramework
 		private const String PagingSubClause = " OFFSET (@Skip) ROWS FETCH NEXT (@Take) ROWS ONLY ";
 	}
 
-	public abstract class NumericKeySqlRepository<TSqlEntity> : SqlRepository<TSqlEntity, Int64>
+	public abstract class NumericKeySqlRepository<TSqlEntity, TSqlEntityContext> : SqlRepository<TSqlEntity, Int64, TSqlEntityContext>
 		where TSqlEntity : class
+		where TSqlEntityContext : SqlEntityContext, new()
 	{
-		protected NumericKeySqlRepository(SqlEntityContext context) : base(context)
+		protected NumericKeySqlRepository(TSqlEntityContext context) : base(context)
 		{
 		}
 
@@ -1007,12 +944,25 @@ namespace Singularity.DataService.SqlFramework
 		protected abstract void SetPrimaryKey(TSqlEntity sqlEntity, Int64 newPrimaryKey);
 	}
 
-	public abstract class GuidKeySqlRepository<TSqlEntity> : SqlRepository<TSqlEntity, Guid>
+	public abstract class GuidKeySqlRepository<TSqlEntity, TSqlEntityContext> : SqlRepository<TSqlEntity, Guid, TSqlEntityContext>
 		where TSqlEntity : class
+		where TSqlEntityContext : SqlEntityContext, new()
 	{
-		protected GuidKeySqlRepository(SqlEntityContext context) : base(context)
+		protected GuidKeySqlRepository(TSqlEntityContext context) : base(context)
 		{
 		}
+
+		protected override IEnumerable<SqlParameter> PopulateInsertParameters(TSqlEntity sqlEntity)
+		{
+			return PopulateParameters(sqlEntity);
+		}
+
+		protected override IEnumerable<SqlParameter> PopulateUpdateParameters(TSqlEntity sqlEntity)
+		{
+			return PopulateParameters(sqlEntity);
+		}
+
+		protected abstract IEnumerable<SqlParameter> PopulateParameters(TSqlEntity sqlEntity);
 
 	}
 

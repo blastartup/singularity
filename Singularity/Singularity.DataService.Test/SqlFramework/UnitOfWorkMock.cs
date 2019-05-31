@@ -114,6 +114,26 @@ IF NOT EXISTS (SELECT name FROM sys.filegroups WHERE is_default=1 AND name = N'P
 GO
 ";
 
+		protected override String CreateDatabaseTablesQuery
+		{
+			get
+			{
+				var multiLinedSqlQueryBuilder = new StringBuilder();
+				multiLinedSqlQueryBuilder.Append(TeeProjectRepository.CreateTableQuery);
+				return multiLinedSqlQueryBuilder.ToString();
+			}
+		}
+
+		protected override String AttachDatabaseTablesQuery
+		{
+			get
+			{
+				var multiLinedSqlQueryBuilder = new StringBuilder();
+				multiLinedSqlQueryBuilder.Append(TeeProjectRepository.AttachTableQuery);
+				return multiLinedSqlQueryBuilder.ToString();
+			}
+		}
+
 		protected override String DeleteDatabaseQuery => @"EXEC msdb.dbo.sp_delete_database_backuphistory @database_name = N'Singularity'
 GO
 USE [master]
@@ -124,9 +144,28 @@ DROP DATABASE [Singularity]
 GO
 ";
 
+		protected override String DeleteDatabaseTablesQuery
+		{
+			get
+			{
+				var multiLinedSqlQueryBuilder = new StringBuilder();
+				multiLinedSqlQueryBuilder.Append(TeeProjectRepository.DeleteTableQuery);
+				return multiLinedSqlQueryBuilder.ToString();
+			}
+		}
+
+		protected override String DetachDatabaseTablesQuery
+		{
+			get
+			{
+				var multiLinedSqlQueryBuilder = new StringBuilder();
+				multiLinedSqlQueryBuilder.Append(TeeProjectRepository.DetachTableQuery);
+				return multiLinedSqlQueryBuilder.ToString();
+			}
+		}
+
 		public TeeProjectRepository TeeProjectRepository => _teeProjectRepository ?? (_teeProjectRepository = new TeeProjectRepository(Context));
 		private TeeProjectRepository _teeProjectRepository;
-
 
 		protected override SqlEntityContextMock NewDbContext() => _sqlConnectionStringBuilder != null ? new SqlEntityContextMock(_sqlConnectionStringBuilder) : new SqlEntityContextMock(_sqlConnection);
 
