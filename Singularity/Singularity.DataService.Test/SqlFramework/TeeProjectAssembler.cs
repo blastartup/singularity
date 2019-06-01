@@ -1,6 +1,5 @@
 using System;
 using System.Data.SqlClient;
-using Singularity.DataService.SqlFramework;
 
 namespace Singularity.DataService.Test.SqlFramework
 {

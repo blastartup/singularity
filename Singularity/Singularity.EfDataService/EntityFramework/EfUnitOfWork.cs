@@ -7,6 +7,7 @@ using System.Data.Entity.Validation;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Linq.Expressions;
+using Singularity.DataService;
 
 // ReSharper disable once CheckNamespace
 namespace Singularity.EfDataService
@@ -16,7 +17,7 @@ namespace Singularity.EfDataService
 	{
 		protected EfUnitOfWork()
 		{
-			_efValidationResults = new List<EfValidationResult>();
+			_dataValidationResults = new List<DataValidationResult>();
 		}
 
 		public Boolean Save(Boolean clearContext = false)
@@ -24,7 +25,7 @@ namespace Singularity.EfDataService
 			Boolean result;
 			try
 			{
-				_efValidationResults.Clear();
+				_dataValidationResults.Clear();
 				result = Context.SaveChanges() > 0;
 			}
 			catch (DbUpdateException ex)
@@ -32,7 +33,7 @@ namespace Singularity.EfDataService
 				result = false;
 				if (!(ex.InnerException is UpdateException) || !(ex.InnerException.InnerException is SqlException))
 				{
-					_efValidationResults.Add(new EfValidationResult(ex.Message, null, ex.Entries));
+					_dataValidationResults.Add(new DataValidationResult(ex.Message, null, ex.Entries));
 				}
 				else
 				{
@@ -50,7 +51,7 @@ namespace Singularity.EfDataService
 							errorText = $"{sqlExceptionError.Message} (~{errorNumber}).";
 						}
 
-						_efValidationResults.Add(new EfValidationResult(errorText, ex.Entries.Select(f => f.Entity.GetType().Name), ex.Entries.Select(f => f.Entity)));
+						_dataValidationResults.Add(new DataValidationResult(errorText, ex.Entries.Select(f => f.Entity.GetType().Name), ex.Entries.Select(f => f.Entity)));
 					}
 				}
 			}
@@ -61,19 +62,19 @@ namespace Singularity.EfDataService
 				{
 					foreach (DbValidationError validationError in validationErrors.ValidationErrors)
 					{
-						_efValidationResults.Add(new EfValidationResult(validationError.ErrorMessage, validationErrors.Entry.Entity.GetType().Name, validationError.PropertyName));
+						_dataValidationResults.Add(new DataValidationResult(validationError.ErrorMessage, validationErrors.Entry.Entity.GetType().Name, validationError.PropertyName));
 					}
 				}
 			}
 			catch (EntityCommandCompilationException ex)
 			{
 				result = false;
-				_efValidationResults.AddRange(AddExceptionMessage(ex));
+				_dataValidationResults.AddRange(AddExceptionMessage(ex));
 			}
 			catch (Exception ex)
 			{
 				result = false;
-				_efValidationResults.AddRange(AddExceptionMessage(ex));
+				_dataValidationResults.AddRange(AddExceptionMessage(ex));
 			}
 
 			if (clearContext)
@@ -85,11 +86,11 @@ namespace Singularity.EfDataService
 			return result;
 		}
 
-		private IEnumerable<EfValidationResult> AddExceptionMessage(Exception exception)
+		private IEnumerable<DataValidationResult> AddExceptionMessage(Exception exception)
 		{
-			var localResults = new List<EfValidationResult>()
+			var localResults = new List<DataValidationResult>()
 			{
-				new EfValidationResult(exception.Message),
+				new DataValidationResult(exception.Message),
 			};
 
 			if (exception.InnerException != null)
@@ -164,8 +165,8 @@ namespace Singularity.EfDataService
 		 {2601, "One of the properties is marked as Unique index and there is already an entry with that value."}
 		};
 
-		public List<EfValidationResult> EfValidationResults => _efValidationResults;
-		private readonly List<EfValidationResult> _efValidationResults;
+		public List<DataValidationResult> DataValidationResults => _dataValidationResults;
+		private readonly List<DataValidationResult> _dataValidationResults;
 
 		protected abstract void ResetRepositories();
 		private Boolean _disposed = false;

@@ -5,7 +5,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Singularity.DataService.SqlFramework
+// ReSharper disable once CheckNamespace
+namespace Singularity.DataService
 {
 	public sealed class AsyncSqlCommandAction : IReadSqlCommandFromShared, IWriteSqlParametersToShared
 	{

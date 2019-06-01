@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Data;
 
-namespace Singularity.DataService.SqlFramework
+// ReSharper disable once CheckNamespace
+namespace Singularity.DataService
 {
 	public sealed class AsyncDataTableAction : IReadDataRowFromShared, IWriteDataRowToShared
 	{

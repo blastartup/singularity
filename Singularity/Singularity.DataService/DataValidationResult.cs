@@ -2,20 +2,19 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
-// ReSharper disable once CheckNamespace
-namespace Singularity.EfDataService
+namespace Singularity.DataService
 {
-	public class EfValidationResult : ValidationResult
+	public class DataValidationResult : ValidationResult
 	{
-		public EfValidationResult(String errorMessage) : base(errorMessage, null)
+		public DataValidationResult(String errorMessage) : base(errorMessage, null)
 		{ }
 
-		public EfValidationResult(String errorMessage, IEnumerable<String> memberNames, IEnumerable<Object> entities) : base(errorMessage, memberNames)
+		public DataValidationResult(String errorMessage, IEnumerable<String> memberNames, IEnumerable<Object> entities) : base(errorMessage, memberNames)
 		{
 			_entities = entities;
 		}
 
-		public EfValidationResult(String errorMessage, String memberName, Object entity, String propertyName = null) : base(errorMessage, null)
+		public DataValidationResult(String errorMessage, String memberName, Object entity, String propertyName = null) : base(errorMessage, null)
 		{
 			_memberName = memberName;
 			_propertyName = propertyName;

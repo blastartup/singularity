@@ -4,7 +4,8 @@ using System.Data.SqlClient;
 using System.Runtime.Remoting.Contexts;
 using System.Text;
 
-namespace Singularity.DataService.SqlFramework
+// ReSharper disable once CheckNamespace
+namespace Singularity.DataService
 {
 	public abstract class SqlUnitOfWork<TSqlEntityContext> : IDisposable
 		where TSqlEntityContext : SqlEntityContext, new()

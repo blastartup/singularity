@@ -62,8 +62,10 @@
       <Link>VersionInfo.cs</Link>
     </Compile>
     <Compile Include="Attributes\OriginallyKnownAsAttribute.cs" />
-    <Compile Include="DataServices\RowDataService.cs" />
-    <Compile Include="DataServices\TableDataService.cs" />
+    <Compile Include="DataValidationResult.cs" />
+    <Compile Include="Interfaces\IValidatable.cs" />
+    <Compile Include="RowDataService.cs" />
+    <Compile Include="TableDataService.cs" />
     <Compile Include="CsvWriter.cs" />
     <Compile Include="DalException.cs" />
     <Compile Include="Extensions\CsvWriterExtension.cs" />
@@ -107,27 +109,24 @@
     <Compile Include="OleDbFramework\SelectStrategy\VfpSelectStrategy.cs" />
     <Compile Include="OleDbFramework\SelectStrategy\CommonSelectStrategy.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Providers\ConfigValueHelper.cs" />
+    <Compile Include="ConfigValueHelper.cs" />
     <Compile Include="QueryExtractraction.cs" />
-    <Compile Include="ReferenceType\Paging.cs" />
-    <Compile Include="ReferenceType\TypeConverter.cs" />
-    <Compile Include="Replies\ReplyDataTable.cs" />
+    <Compile Include="Paging.cs" />
+    <Compile Include="TypeConverter.cs" />
+    <Compile Include="ReplyDataTable.cs" />
     <Compile Include="SqlFramework\AsyncDataTable.cs" />
     <Compile Include="SqlFramework\AsyncSqlCommand.cs" />
     <Compile Include="SqlFramework\SqlAssembler.cs" />
     <Compile Include="SqlFramework\SqlEntityContext.cs" />
     <Compile Include="SqlFramework\SqlRepository.cs" />
     <Compile Include="SqlFramework\SqlUnitOfWork.cs" />
-    <Compile Include="SqlServerSystem.cs" />
-    <Compile Include="UniqueCodeService\Strageties\CodeStrategy.cs" />
-    <Compile Include="UniqueCodeService\Strageties\UniqueCodeWithNoPrefixStrategy.cs" />
+    <Compile Include="SqlFramework\SqlServerSystem.cs" />
     <Compile Include="WriteToTextFile.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\Config.ps1">
       <Link>_CreateNewNuGetPackage\Config.ps1</Link>
     </None>
-    <None Include="App.config" />
     <None Include="packages.config" />
     <None Include="_CreateNewNuGetPackage\DoNotModify\CreateNuGetPackage.ps1" />
     <None Include="_CreateNewNuGetPackage\DoNotModify\New-NuGetPackage.ps1" />
@@ -142,6 +141,9 @@
       <Project>{350f5c90-f18f-41a9-8b84-92e0ca74d619}</Project>
       <Name>Singularity</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="UniqueCodeService\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

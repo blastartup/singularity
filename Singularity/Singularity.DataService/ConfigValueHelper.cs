@@ -1,7 +1,5 @@
 ﻿using System;
 
-// ReSharper disable once CheckNamespace
-
 namespace Singularity.DataService
 {
 	public abstract class ConfigValueHelper<T> where T : IConvertible

@@ -75,7 +75,6 @@
     <Compile Include="EntityFramework\EfDbContext.cs" />
     <Compile Include="EntityFramework\EfRepository.cs" />
     <Compile Include="EntityFramework\EfUnitOfWork.cs" />
-    <Compile Include="EntityFramework\EfValidationResult.cs" />
     <Compile Include="Extensions\DbCollectionEntryExtension.cs" />
     <Compile Include="Extensions\DbReferenceEntryExtension.cs" />
     <Compile Include="Extensions\EntityCollectionExtension.cs" />

@@ -5,7 +5,8 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Threading;
 
-namespace Singularity.DataService.SqlFramework
+// ReSharper disable once CheckNamespace
+namespace Singularity.DataService
 {
 	public abstract class SqlEntityContext : IDisposable
 	{

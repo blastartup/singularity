@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Singularity.DataService.SqlFramework
+// ReSharper disable once CheckNamespace
+namespace Singularity.DataService
 {
 	public abstract class SqlRepository<TSqlEntity, TIdentity, TSqlEntityContext>
 		where TSqlEntity : class
@@ -439,6 +441,19 @@ namespace Singularity.DataService.SqlFramework
 				var asyncSqlCommand = new AsyncSqlCommand(sqlCommand);
 				Parallel.ForEach(sqlEntities.AsParallel(), (e, loopState) =>
 				{
+
+
+
+					if (e is IModifiable modifiableEntity)
+					{
+						modifiableEntity.CreatedDate = NowDateTime;
+						modifiableEntity.ModifiedDate = NowDateTime;
+					}
+					else if (e is ICreatable creatable)
+					{
+						creatable.CreatedDate = NowDateTime;
+					}
+
 					results++;
 					asyncSqlCommand.Write(x => x.SharedWrite(PopulateInsertParameters(e)));
 
@@ -554,6 +569,11 @@ namespace Singularity.DataService.SqlFramework
 		public Boolean UpdateEntity(TSqlEntity sqlEntity)
 		{
 			Boolean result;
+			if (sqlEntity is IModifiable modifiable)
+			{
+				modifiable.ModifiedDate = NowDateTime;
+			}
+
 			SqlCommand sqlCommand = Context.SqlConnection.CreateCommand();
 			try
 			{
@@ -561,7 +581,7 @@ namespace Singularity.DataService.SqlFramework
 				sqlCommand.CommandText = UpdateQuery;
 				sqlCommand.Parameters.AddRange(PopulateUpdateParameters(sqlEntity).ToArray());
 
-				result = sqlCommand.ExecuteNonQuery() == 1;
+				result = UpdateCore(sqlCommand);
 			}
 			finally
 			{
@@ -589,7 +609,7 @@ namespace Singularity.DataService.SqlFramework
 
 					var innerSqlCommand = asyncSqlCommand.Read(x => x.SharedRead());
 					innerSqlCommand.Prepare();
-					if (!InsertCore(innerSqlCommand))
+					if (!UpdateCore(innerSqlCommand))
 					{
 						results *= -1;
 						loopState.Stop();
@@ -602,6 +622,37 @@ namespace Singularity.DataService.SqlFramework
 			}
 
 			return results;
+		}
+
+		protected virtual Boolean UpdateCore(SqlCommand sqlCommand, TSqlEntity sqlEntity = null)
+		{
+			return sqlCommand.ExecuteNonQuery() == 1;
+		}
+
+		#endregion
+
+		#region Deactiviate
+
+		public Boolean Deactivate(IDeletable deletableSqlEntity)
+		{
+			Boolean result;
+			deletableSqlEntity.DeletedDate = NowDateTime;
+
+			SqlCommand sqlCommand = Context.SqlConnection.CreateCommand();
+			try
+			{
+				sqlCommand.CommandType = CommandType.Text;
+				sqlCommand.CommandText = UpdateQuery;
+				sqlCommand.Parameters.AddRange(PopulateUpdateParameters((TSqlEntity)deletableSqlEntity).ToArray());
+
+				result = sqlCommand.ExecuteNonQuery() == 1;
+			}
+			finally
+			{
+				sqlCommand.Dispose();
+			}
+
+			return result;
 		}
 
 		#endregion
