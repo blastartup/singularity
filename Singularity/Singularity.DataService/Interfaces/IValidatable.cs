@@ -1,7 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
-namespace Singularity.DataService.Interfaces
+// ReSharper disable once CheckNamespace
+namespace Singularity.DataService
 {
 	public interface IValidatable
 	{

@@ -2,4 +2,4 @@
 
 [assembly: AssemblyProduct("Singularity")]
 [assembly: AssemblyCopyright("Copyright © 2019")]
-[assembly: AssemblyVersion("2.14.3")]
+[assembly: AssemblyVersion("2.14.4")]
