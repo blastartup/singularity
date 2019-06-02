@@ -729,6 +729,26 @@ namespace Singularity.DataService
 
 		#endregion
 
+		#region Referencing
+
+		public virtual void LoadReferences(TSqlEntity sqlEntity)
+		{
+			// Intentionally left blank.
+
+			/* LoadReference example...
+			 * var referenceRepository = new ReferenceRepository(Context);
+			 *	sqlEntity.Reference = referenceRepository.GetById(sqlEntity.ReferenceId);
+			 *
+			 *	ICollection<TSqlEntity> testCollection = new HashSet<TSqlEntity>();
+			 * foreach (TSqlEntity findEntity in FindEntities("", null))
+			 *	{
+			 *		testCollection.Add(findEntity);
+			 *	}
+			 */
+		}
+
+		#endregion
+
 		public Boolean TableExists() => Context.TableExists(TableName);
 
 		public Int64 GetCount()
@@ -780,31 +800,6 @@ namespace Singularity.DataService
 			cmd.ExecuteNonQuery();
 		}
 
-
-
-		//public virtual void Deactivate(Object id)
-		//{
-		//	TEntity entityToDeactivate = DbSet.Find(id);
-		//	Deactivate(entityToDeactivate);
-		//}
-
-		//public virtual void Deactivate(TEntity entityToDeactivate)
-		//{
-		//	var deletable = entityToDeactivate as IDeletable;
-		//	if (deletable != null)
-		//	{
-		//		deletable.IsDeleted = true;
-		//	}
-
-		//	var modifiable = entityToDeactivate as IModifiable;
-		//	if (modifiable != null)
-		//	{
-		//		modifiable.ModifiedDate = NowDateTime;
-		//	}
-
-		//	DbSet.Attach(entityToDeactivate);
-		//	Context.Entry(entityToDeactivate).State = EntityState.Modified;
-		//}
 
 		//public List<TSqlEntity> GetDuplicates(String filter = "", SqlParameter[] filterParameters = null)
 		//{

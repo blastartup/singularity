@@ -6,7 +6,7 @@ using System.IO;
 
 namespace Singularity.DataService
 {
-	public class QueryExtractraction 
+	public sealed class QueryExtractraction 
 	{
 		public QueryExtractraction(String connectionName, String sqlQuery, String folder, String filename)
 		{
