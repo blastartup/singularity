@@ -739,10 +739,9 @@ namespace Singularity.DataService
 			 * var referenceRepository = new ReferenceRepository(Context);
 			 *	sqlEntity.Reference = referenceRepository.GetById(sqlEntity.ReferenceId);
 			 *
-			 *	ICollection<TSqlEntity> testCollection = new HashSet<TSqlEntity>();
-			 * foreach (TSqlEntity findEntity in FindEntities("", null))
+			 * foreach (TSqlEntity findEntity in FindEntities("TestId = @TestId", new SqlParameter[]{ new SqlParameter("@TestId", SqlDbType.UniqueIdentity) { Value = sqlEntity.TestId }}))
 			 *	{
-			 *		testCollection.Add(findEntity);
+			 *		sqlEntity.TestCollection.Add(findEntity);
 			 *	}
 			 */
 		}
@@ -997,6 +996,19 @@ namespace Singularity.DataService
 		protected GuidKeySqlRepository(TSqlEntityContext context) : base(context)
 		{
 		}
+
+		protected void LoadRelatedEntities<TRelatedSqlEntity>(Func<String, IEnumerable<SqlParameter>, String, Paging, IEnumerable<TRelatedSqlEntity>> findEntities, Guid primaryKeyValue, ICollection<TRelatedSqlEntity> collection) where TRelatedSqlEntity : class
+		{
+			var relatedEntities = findEntities("{0} = @{0}".FormatX(PrimaryKeyName), new SqlParameter[]
+			{
+				new SqlParameter("@{0}".FormatX(PrimaryKeyName), SqlDbType.UniqueIdentifier) {Value = primaryKeyValue},
+			}, null, null);
+			foreach (TRelatedSqlEntity relatedEntity in relatedEntities)
+			{
+				collection.Add(relatedEntity);
+			}
+		}
+
 
 		protected override IEnumerable<SqlParameter> PopulateInsertParameters(TSqlEntity sqlEntity)
 		{

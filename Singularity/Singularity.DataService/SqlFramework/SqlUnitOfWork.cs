@@ -58,7 +58,6 @@ namespace Singularity.DataService
 			return true;
 		}
 
-
 		public void Dispose()
 		{
 			Dispose(true);
