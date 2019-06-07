@@ -46,7 +46,7 @@ namespace Singularity
 
 		public void Set(DateTime reflectionPoint)
 		{
-			Contract.Assert(reflectionPoint < DateTime.UtcNow);
+			if (reflectionPoint >= DateTime.UtcNow) throw new InvalidOperationException("Given reflectionPoint argument must be less than current UTC date time.");
 
 			_ignitionPoint = reflectionPoint;
 			_reflectionSpan = _ignitionPoint - reflectionPoint;

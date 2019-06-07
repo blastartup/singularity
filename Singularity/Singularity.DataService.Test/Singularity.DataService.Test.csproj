@@ -73,6 +73,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="SqlFramework\BaseGuidKeySqlRepositoryMock.cs" />
+    <Compile Include="SqlFramework\SqlAdministratorMock.cs" />
     <Compile Include="SqlFramework\SqlEntityContextMock.cs" />
     <Compile Include="SqlFramework\TeeProjectAssembler.cs" />
     <Compile Include="SqlFramework\TeeProjectDto.cs" />

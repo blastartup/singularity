@@ -795,7 +795,7 @@ namespace Singularity
 
 		public static ExpandoObject ToExpandoObject(this Object[] objects)
 		{
-			Contract.Requires(objects != null);
+			if (objects == null) throw new ArgumentException("Given objects argument cannot be null.", "objects");
 
 			ExpandoObject model = new ExpandoObject();
 			if (objects != null)

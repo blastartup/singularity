@@ -31,7 +31,7 @@ namespace Singularity.EmailService
 
 		public IStaticMessage PackageTemplate(IStaticMessage staticMessage, params Object[] contents)
 		{
-			Contract.Assert(staticMessage != null);
+			if (staticMessage.IsEmpty()) throw new ArgumentException("Given staticMessage argument cannot be empty.", "staticMessage");
 
 			ExpandoObject model = contents.ToExpandoObject();
 			return new StaticMessage

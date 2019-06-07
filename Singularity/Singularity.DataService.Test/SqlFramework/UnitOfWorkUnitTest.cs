@@ -10,70 +10,123 @@ namespace Singularity.DataService.Test.SqlFramework
 	public class UnitOfWorkUnitTest
 	{
 		[TestMethod]
-		public void TestCreateDatabase()
+		public void TestDatabaseExists()
 		{
+			var database = "TurbineEncore_Tee";
+			var masterSqlConnectionBuilder = new SqlConnectionStringBuilder()
+			{
+				InitialCatalog = "master",
+				DataSource = "DeanPc2\\FunKey",
+				IntegratedSecurity = true,
+			};
 			var sqlConnectionBuilder = new SqlConnectionStringBuilder()
 			{
-				//InitialCatalog = "singularity",
+				InitialCatalog = database,
 				DataSource = "DeanPc2\\FunKey",
 				IntegratedSecurity = false,
 				Password = "FunK3y20!!",
 				UserID = "sa"
 			};
-			var uow = new UnitOfWorkMock(sqlConnectionBuilder.ToSqlConnection());
-			Assert.IsTrue(uow.Context.ExecuteScalar("IF DB_ID('Singularity') IS NOT NULL select 1 else select 0").ToInt() == 0, "No database yet.");
 
-			uow.CreateDatabase("crap");
-			Assert.IsTrue(uow.Context.ExecuteScalar("IF DB_ID('Singularity') IS NOT NULL select 1 else select 0").ToInt() == 1, "Database exists.");
+			var sa = new SqlAdministratorMock(masterSqlConnectionBuilder.ToSqlConnection());
 
-			uow.DeleteDatabase();
-			Assert.IsTrue(uow.Context.ExecuteScalar("IF DB_ID('Singularity') IS NOT NULL select 1 else select 0").ToInt() == 0, "Database deleted.");
+			Assert.IsFalse(sa.DatabaseExists(database));
+			sa.CreateDatabase(database);
+			Assert.IsTrue(sa.DatabaseExists(sqlConnectionBuilder));
+		}
+
+		[TestMethod]
+		public void TestCreateDatabase()
+		{
+			var masterSqlConnectionBuilder = new SqlConnectionStringBuilder()
+			{
+				InitialCatalog = "master",
+				DataSource = "DeanPc2\\FunKey",
+				IntegratedSecurity = true,
+			};
+			var sqlConnectionBuilder = new SqlConnectionStringBuilder()
+			{
+				InitialCatalog = "singularity",
+				DataSource = "DeanPc2\\FunKey",
+				IntegratedSecurity = false,
+				Password = "FunK3y20!!",
+				UserID = "sa"
+			};
+
+			var sa = new SqlAdministratorMock(masterSqlConnectionBuilder.ToSqlConnection());
+
+			Assert.IsFalse(sa.DatabaseExists(sqlConnectionBuilder), "Database doesn't exist yet.");
+
+			sa.CreateDatabase(sqlConnectionBuilder.InitialCatalog);
+			Assert.IsTrue(sa.DatabaseExists(sqlConnectionBuilder), "Database exists.");
+
+			sa.DeleteDatabase("singularity");
+			Assert.IsTrue(sa.DatabaseExists(sqlConnectionBuilder), "Database deleted.");
 		}
 
 		[TestMethod]
 		public void TestCreateTable()
 		{
+			var masterSqlConnectionBuilder = new SqlConnectionStringBuilder()
+			{
+				InitialCatalog = "master",
+				DataSource = "DeanPc2\\FunKey",
+				IntegratedSecurity = true,
+			};
 			var sqlConnectionBuilder = new SqlConnectionStringBuilder()
 			{
-				//InitialCatalog = "singularity",
+				InitialCatalog = "singularity",
 				DataSource = "DeanPc2\\FunKey",
 				IntegratedSecurity = false,
 				Password = "FunK3y20!!",
 				UserID = "sa"
 			};
-			var uow = new UnitOfWorkMock(sqlConnectionBuilder.ToSqlConnection());
-			Assert.IsTrue(uow.Context.ExecuteScalar("IF DB_ID('Singularity') IS NOT NULL select 1 else select 0").ToInt() == 0, "No database yet.");
 
-			uow.CreateDatabase("crap");
-			Assert.IsTrue(uow.Context.ExecuteScalar("IF DB_ID('Singularity') IS NOT NULL select 1 else select 0").ToInt() == 1, "Database exists.");
+			var sa = new SqlAdministratorMock(masterSqlConnectionBuilder.ToSqlConnection());
+			
+			var uow = new UnitOfWorkMock(sqlConnectionBuilder.ToSqlConnection());
+			Assert.IsFalse(sa.DatabaseExists(sqlConnectionBuilder), "No database yet.");
+
+			Assert.IsTrue(sa.CreateDatabase("singularity"));
+			Assert.IsTrue(sa.DatabaseExists(sqlConnectionBuilder), "Database exists.");
 
 			Assert.IsFalse(uow.TeeProjectRepository.TableExists());
-			uow.CreateTables();
+			Assert.IsTrue(uow.CreateTables());
 			Assert.IsTrue(uow.TeeProjectRepository.TableExists());
 
-			uow.Context.ExecuteSql(uow.TeeProjectRepository.DeleteTableQuery);
+			Assert.IsTrue(uow.Context.ExecuteSql(uow.TeeProjectRepository.DeleteTableQuery));
 			Assert.IsFalse(uow.TeeProjectRepository.TableExists());
 
-			uow.DeleteDatabase();
-			Assert.IsTrue(uow.Context.ExecuteScalar("IF DB_ID('Singularity') IS NOT NULL select 1 else select 0").ToInt() == 0, "Database deleted.");
+			uow.Dispose();
+			Assert.IsTrue(sa.DeleteDatabase("singularity"));
+			Assert.IsFalse(sa.DatabaseExists(sqlConnectionBuilder), "Database now deleted.");
 		}
 
 		[TestMethod]
 		public void TestSimpleTableUsage()
 		{
+			var masterSqlConnectionBuilder = new SqlConnectionStringBuilder()
+			{
+				InitialCatalog = "master",
+				DataSource = "DeanPc2\\FunKey",
+				IntegratedSecurity = true,
+			};
 			var sqlConnectionBuilder = new SqlConnectionStringBuilder()
 			{
-				//InitialCatalog = "singularity",
+				InitialCatalog = "singularity",
 				DataSource = "DeanPc2\\FunKey",
 				IntegratedSecurity = false,
 				Password = "FunK3y20!!",
 				UserID = "sa"
 			};
-			var uow = new UnitOfWorkMock(sqlConnectionBuilder.ToSqlConnection());
-			Assert.IsTrue(uow.Context.ExecuteScalar("IF DB_ID('Singularity') IS NOT NULL select 1 else select 0").ToInt() == 0, "No database yet.");
 
-			uow.CreateDatabase("crap");
-			Assert.IsTrue(uow.Context.ExecuteScalar("IF DB_ID('Singularity') IS NOT NULL select 1 else select 0").ToInt() == 1, "Database exists.");
+			var sa = new SqlAdministratorMock(masterSqlConnectionBuilder.ToSqlConnection());
+
+			var uow = new UnitOfWorkMock(sqlConnectionBuilder.ToSqlConnection());
+			Assert.IsFalse(sa.DatabaseExists(sqlConnectionBuilder), "No database yet.");
+
+			sa.CreateDatabase("singularity");
+			Assert.IsTrue(sa.DatabaseExists(sqlConnectionBuilder), "Database exists.");
 
 			Assert.IsFalse(uow.TeeProjectRepository.TableExists());
 			uow.CreateTables();
@@ -113,8 +166,9 @@ namespace Singularity.DataService.Test.SqlFramework
 			uow.Context.ExecuteSql(uow.TeeProjectRepository.DeleteTableQuery);
 			Assert.IsFalse(uow.TeeProjectRepository.TableExists());
 
-			uow.DeleteDatabase();
-			Assert.IsTrue(uow.Context.ExecuteScalar("IF DB_ID('Singularity') IS NOT NULL select 1 else select 0").ToInt() == 0, "Database deleted.");
+			uow.Dispose();
+			Assert.IsTrue(sa.DeleteDatabase("singularity"));
+			Assert.IsFalse(sa.DatabaseExists(sqlConnectionBuilder), "Database deleted.");
 		}
 	}
 }

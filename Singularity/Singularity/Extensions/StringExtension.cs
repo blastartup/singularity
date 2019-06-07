@@ -154,8 +154,8 @@ namespace Singularity
 		[DebuggerStepperBoundary]
 		public static Int32 LastIndexOfIgnoringCase(this String input, String value, Int32 startIndex)
 		{
-			Contract.Requires(!value.IsEmpty());
-			Contract.Requires(startIndex >= 0);
+			if (value.IsEmpty()) throw new ArgumentException("Given value argument cannot be empty.", "value");
+			startIndex = startIndex.LimitMin(0);
 
 			if (startIndex <= (input.Length - 1).LimitMin(0))
 			{
@@ -176,7 +176,7 @@ namespace Singularity
 		[DebuggerStepperBoundary]
 		public static String Insert(this String input, Int32 startIndex, Char value)
 		{
-			Contract.Requires(startIndex >= 0);
+			startIndex = startIndex.LimitMin(0);
 
 			return InsertSafe(input, startIndex, value.ToString());
 		}
@@ -190,7 +190,8 @@ namespace Singularity
 		[DebuggerStepperBoundary]
 		public static String InsertSafe(this String input, Int32 startIndex, String value)
 		{
-			Contract.Requires(startIndex >= 0);
+			startIndex = startIndex.LimitMin(0);
+
 			var result = input;
 			if (!value.IsEmpty() && startIndex >= 0 && startIndex <= input.Length)
 			{
@@ -328,7 +329,7 @@ namespace Singularity
 		/// <returns>Truncated string if cutting length is shorter than the original string, otherwise an empty string is returned.</returns>
 		public static String CutEnd(this String value, Int32 cuttingLength)
 		{
-			Contract.Requires(cuttingLength > 0);
+			cuttingLength = cuttingLength.LimitMin(0);
 
 			if (value.IsEmpty()) return value;
 			return (cuttingLength >= value.Length) ? String.Empty : value.Substring(0, value.Length - cuttingLength);
@@ -737,11 +738,11 @@ namespace Singularity
 			return result;
 		}
 
-		public static Boolean ContainsAnyChar(this String value, String charValueacters)
+		public static Boolean ContainsAnyChar(this String value, String charValueActers)
 		{
-			Contract.Assert(!charValueacters.IsEmpty());
+			if (charValueActers.IsEmpty()) throw new ArgumentException("Given charValueActers argument shouldn't be empty.", "charValueActers");
 
-			foreach (var lChar in charValueacters)
+			foreach (var lChar in charValueActers)
 			{
 				if (value.Contains(lChar))
 				{
@@ -1126,8 +1127,8 @@ namespace Singularity
 		/// <modified Date="15 October 2009">Added post contracts.</modified>
 		public static String Word(this String value, String delimiter, Int32 positionOfFirstWord, Int32 wordCount)
 		{
-			Contract.Requires(positionOfFirstWord > 1);
-			Contract.Requires(wordCount >= -1);
+			positionOfFirstWord = positionOfFirstWord.LimitMin(1);
+			wordCount = wordCount.LimitMin(0);
 
 			var result = String.Empty;
 			if (String.IsNullOrEmpty(value) || wordCount.IsEmpty())
@@ -1199,7 +1200,7 @@ namespace Singularity
 		/// <returns>The copy of string with the mask applied</returns>
 		public static String MaskWords(this String value, Char mask, params String[] filterWords)
 		{
-			Contract.Requires(filterWords != null);
+			if (filterWords == null) throw new ArgumentException("Given filterWords argument shouldn't be empty.", "filterWords");
 
 			var result = value;
 			var stringMask = mask == Char.MinValue ? String.Empty : mask.ToString();
@@ -1296,7 +1297,7 @@ namespace Singularity
 		/// <returns></returns>
 		public static IList<String> Divide(this String value, Int16 elementCount, Int16 length)
 		{
-			Contract.Requires(elementCount > 0);
+			elementCount = (Int16)elementCount.LimitMin(1);
 
 			var internalValue = value;
 			var result = new List<String>(elementCount);
@@ -1840,7 +1841,7 @@ namespace Singularity
 		/// <returns>The formatted copy of the string after applying the line wrapping.</returns>
 		public static String WordWrap(this String value, Int32 charValueCount)
 		{
-			Contract.Requires(charValueCount >= 15);
+			charValueCount = charValueCount.LimitMin(15);
 
 			return WordCharWrap(value, charValueCount, false);
 		}
@@ -1855,7 +1856,7 @@ namespace Singularity
 		/// <returns></returns>
 		public static String CharWrap(this String value, Int32 charValueCount)
 		{
-			Contract.Requires(charValueCount >= 1);
+			charValueCount = charValueCount.LimitMin(1);
 
 			return WordCharWrap(value, charValueCount, true);
 		}

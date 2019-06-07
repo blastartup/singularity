@@ -47,7 +47,7 @@ namespace Singularity
 		/// <typeparam name="TOutput">The type of the elements of the target array.</typeparam><exception cref="T:System.ArgumentNullException"><paramref name="converter"/> is null.</exception>
 		public static List<TOutput> ConvertAll<TInput, TOutput>(this List<TInput> list, Converter<TInput, TOutput> converter) where TOutput : IComparable<TOutput>
 		{
-			Contract.Requires(converter != null);
+			if (converter == null) throw new ArgumentException("Given converter argument cannot be null.", "converter");
 
 			List<TOutput> result = new List<TOutput>(list.Count);
 			result.AddRange(list.ConvertAll(converter));
@@ -83,7 +83,7 @@ namespace Singularity
 		/// <param name="match">The <see cref="T:System.Predicate`1"/> delegate that defines the conditions of the elements to search for.</param><exception cref="T:System.ArgumentNullException"><paramref name="match"/> is null.</exception>
 		public static List<T> FindAll<T>(this List<T> list, Predicate<T> match)
 		{
-			Contract.Requires(match != null);
+			if (match == null) throw new ArgumentException("Given match argument cannot be null.", "match");
 
 			List<T> result = new List<T>(list.Count);
 			result.AddRange(list.FindAll(match));
@@ -104,7 +104,7 @@ namespace Singularity
 		/// <param name="match">The <see cref="T:System.Predicate`1"/> delegate that defines the conditions of the element to search for.</param><exception cref="T:System.ArgumentNullException"><paramref name="match"/> is null.</exception>
 		public static Int32 FindIndex<T>(this List<T> list, Predicate<T> match)
 		{
-			Contract.Requires(match != null);
+			if (match == null) throw new ArgumentException("Given match argument cannot be null.", "match");
 
 			return list.FindIndex(0, 1, match);
 		}
@@ -128,8 +128,8 @@ namespace Singularity
 		/// the range of valid indexes for the <see cref="T:System.Collections.Generic.List`1"/>.</exception>
 		public static Int32 FindIndex<T>(this List<T> list, Int32 startIndex, Predicate<T> match)
 		{
-			Contract.Requires(startIndex >= 0);
-			Contract.Requires(match != null);
+			if (match == null) throw new ArgumentException("Given match argument cannot be null.", "match");
+			startIndex = startIndex.LimitMin(0);
 
 			return list.FindIndex(startIndex, 1, match);
 		}
@@ -143,7 +143,7 @@ namespace Singularity
 		/// <returns></returns>
 		public static Int32 FindLastIndex<T>(this List<T> list, Predicate<T> match)
 		{
-			Contract.Requires(match != null);
+			if (match == null) throw new ArgumentException("Given match argument cannot be null.", "match");
 
 			return list.FindLastIndex(0, 1, match);
 		}
@@ -158,8 +158,8 @@ namespace Singularity
 		/// <returns>An integer indicating the index of the found item.</returns>
 		public static Int32 FindLastIndex<T>(this List<T> list, Int32 startIndex, Predicate<T> match)
 		{
-			Contract.Requires(startIndex > 0);
-			Contract.Requires(match != null);
+			startIndex = startIndex.LimitMin(0);
+			if (match == null) throw new ArgumentException("Given match argument cannot be null.", "match");
 
 			return list.FindLastIndex(startIndex, 1, match);
 		}
@@ -186,8 +186,8 @@ namespace Singularity
 		/// <returns>A list of non-empty items.  If the original list is empty, an empty list is returned.</returns>
 		public static List<T> GetRangeNonEmpty<T>(this List<T> list, Int32 index, Int32 count)
 		{
-			Contract.Requires(index >= 0);
-			Contract.Requires(count > 0);
+			index = index.LimitMin(0);
+			count = count.LimitMin(1);
 
 			List<T> result = new List<T>(list.Count);
 			if (list.Count > 0)
@@ -212,9 +212,9 @@ namespace Singularity
 		/// <returns></returns>
 		public static Int32 IndexOf<T>(this List<T> list, Predicate<T> predicate, Int32 index = 0, Int32 occurrence = 1)
 		{
-			Contract.Requires(predicate != null);
-			Contract.Requires(index >= 0);
-			Contract.Requires(occurrence > 0);
+			if (predicate == null) throw new ArgumentException("Given predicate argument cannot be null.", "predicate");
+			index = index.LimitMin(0);
+			occurrence = occurrence.LimitMin(1);
 
 			Int32 foundCounter = 0;
 			for (Int32 idx = index; idx < list.Count; idx++)
@@ -238,7 +238,7 @@ namespace Singularity
 		/// <param name="collection">An unsafe collection or items to insert.</param>
 		public static void InsertRangeSafely<T>(this List<T> list, Int32 index, IEnumerable<T> collection)
 		{
-			Contract.Requires(collection != null);
+			if (collection == null) throw new ArgumentException("Given predicate argument cannot be null.", "collection");
 
 			Collection<T> lSafeCollection = new Collection<T>();
 			foreach (T lItem in collection)

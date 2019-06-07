@@ -10,75 +10,75 @@ namespace Singularity
 	{
 		public static TimeSpan NewWeeks(this TimeSpan value, Int32 aWeeks)
 		{
-			Contract.Requires(value != null);
+			if (value == null) throw new ArgumentException("Given value argument shouldn't be null.", "value");
 			return new TimeSpan(DaysPerWeek * aWeeks, 0, 0, 0);
 		}
 
 		public static TimeSpan NewDays(this TimeSpan value, Int32 dDays)
 		{
-			Contract.Requires(value != null);
+			if (value == null) throw new ArgumentException("Given value argument shouldn't be null.", "value");
 			return new TimeSpan(dDays, 0, 0, 0);
 		}
 
 		public static TimeSpan NewYears(this TimeSpan value, Int32 years)
 		{
-			Contract.Requires(value != null);
+			if (value == null) throw new ArgumentException("Given value argument shouldn't be null.", "value");
 			return new TimeSpan(DaysPerYear * years, 0, 0, 0);
 		}
 
 		public static TimeSpan NewHours(this TimeSpan value, Int32 hours)
 		{
-			Contract.Requires(value != null);
+			if (value == null) throw new ArgumentException("Given value argument shouldn't be null.", "value");
 			return new TimeSpan(0, hours, 0, 0);
 		}
 
 		public static TimeSpan NewMinutes(this TimeSpan value, Int32 minutes)
 		{
-			Contract.Requires(value != null);
+			if (value == null) throw new ArgumentException("Given value argument shouldn't be null.", "value");
 			return new TimeSpan(0, 0, minutes, 0);
 		}
 
 		public static TimeSpan NewSeconds(this TimeSpan value, Int32 seconds)
 		{
-			Contract.Requires(value != null);
+			if (value == null) throw new ArgumentException("Given value argument shouldn't be null.", "value");
 			return new TimeSpan(0, 0, 0, seconds);
 		}
 
 		public static DateTime Ago(this TimeSpan value)
 		{
-			Contract.Requires(value != null);
+			if (value == null) throw new ArgumentException("Given value argument shouldn't be null.", "value");
 			return DateTime.Now - value;
 		}
 
 		public static DateTime FromNow(this TimeSpan value)
 		{
-			Contract.Requires(value != null);
+			if (value == null) throw new ArgumentException("Given value argument shouldn't be null.", "value");
 			return DateTime.Now + value;
 		}
 
 		public static DateTime AgoSince(this TimeSpan value, DateTime referenceDate)
 		{
-			Contract.Requires(value != null);
-			Contract.Requires(!referenceDate.IsEmpty());
+			if (value == null) throw new ArgumentException("Given value argument shouldn't be null.", "value");
+			if (referenceDate.IsEmpty()) throw new ArgumentException("Given referenceDate argument shouldn't be empty.", "referenceDate");
 			return referenceDate - value;
 		}
 
 		public static DateTime From(this TimeSpan value, DateTime referenceDate)
 		{
-			Contract.Requires(value != null);
-			Contract.Requires(!referenceDate.IsEmpty());
+			if (value == null) throw new ArgumentException("Given value argument shouldn't be null.", "value");
+			if (referenceDate.IsEmpty()) throw new ArgumentException("Given referenceDate argument shouldn't be empty.", "referenceDate");
 			return referenceDate + value;
 		}
 
 		public static String ToDescription(this TimeSpan value)
 		{
-			Contract.Requires(value != null);
+			if (value == null) throw new ArgumentException("Given value argument shouldn't be null.", "value");
 			return TimeSpanArticulator.Articulate(value);
 		}
 
 		public static String ToDescription(this TimeSpan value, ETemporalGroupFlag accuracy)
 		{
-			Contract.Requires(value != null);
+			if (value == null) throw new ArgumentException("Given value argument shouldn't be null.", "value");
 			return TimeSpanArticulator.Articulate(value, accuracy);
 		}
 

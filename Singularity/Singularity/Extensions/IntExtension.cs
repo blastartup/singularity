@@ -15,7 +15,7 @@ namespace Singularity
 		/// <returns>String representation of the Ordinal number</returns>
 		public static String ToOrdinalString(this Int32 value)
 		{
-			Contract.Requires(value > 0);
+			value = value.LimitMin(1);
 
 			String result = String.Empty;
 
@@ -45,8 +45,6 @@ namespace Singularity
 				lSuffix = "th";
 			}
 			result = "{0}{1}".FormatX(value, lSuffix);
-
-			//Contract.Ensures(!lResult.IsEmpty());
 
 			return result;
 		}

@@ -24,6 +24,9 @@ namespace Singularity.DataService
 			return sqlCommand.ExecuteScalar().ToNullableDateTime();
 		}
 
+		public String DatabaseName => _sqlConnection.Database;
+		public String DataSource => _sqlConnection.DataSource;
+
 		private readonly SqlConnection _sqlConnection;
 	}
 }

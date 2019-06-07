@@ -65,6 +65,7 @@
     <Compile Include="DataValidationResult.cs" />
     <Compile Include="Interfaces\IValidatable.cs" />
     <Compile Include="RowDataService.cs" />
+    <Compile Include="SqlFramework\SqlAdministrator.cs" />
     <Compile Include="TableDataService.cs" />
     <Compile Include="CsvWriter.cs" />
     <Compile Include="DalException.cs" />

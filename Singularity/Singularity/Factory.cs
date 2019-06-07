@@ -79,7 +79,7 @@ namespace Singularity
 		/// <param name="collection">A collection of T elements.</param>
 		public static List<T> NewList<T>(IEnumerable<T> collection)
 		{
-			Contract.Requires(collection != null);
+			if (collection == null) throw new ArgumentException("Given collection argument shouldn't be null.", "collection");
 
 			List<T> internalList = new List<T>((Int32)EListCapacityType.Minimum);
 			internalList.AddRange(collection);
@@ -92,7 +92,7 @@ namespace Singularity
 		/// <param name="collection">A collection of T elements.</param>
 		public static List<T> NewList<T>(ICollection<T> collection)
 		{
-			Contract.Requires(collection != null);
+			if (collection == null) throw new ArgumentException("Given collection argument shouldn't be null.", "collection");
 
 			List<T> internalList = new List<T>(collection.Count);
 			internalList.AddRange(collection);
@@ -106,7 +106,7 @@ namespace Singularity
 		/// <param name="collection">An array of T elements.</param>
 		public static List<T> NewList<T>(T[] collection)
 		{
-			Contract.Requires(collection != null);
+			if (collection == null) throw new ArgumentException("Given collection argument shouldn't be null.", "collection");
 
 			List<T> internalList = new List<T>(collection.Length);
 			internalList.AddRange(collection);
@@ -120,7 +120,7 @@ namespace Singularity
 		/// <param name="collection">An array of T elements.</param>
 		public static List<T> NewList<T>(EListCapacityType capacityChunk, IEnumerable<T> collection)
 		{
-			Contract.Requires(collection != null);
+			if (collection == null) throw new ArgumentException("Given collection argument shouldn't be null.", "collection");
 
 			List<T> internalList = new List<T>((Int32)capacityChunk);
 			internalList.AddRange(collection);

@@ -113,53 +113,57 @@ namespace Singularity
 		/// <summary>
 		/// Parses the supplied enum and string value to find an associated enum value.
 		/// </summary>
-		/// <param name="type">Type.</param>
+		/// <param name="enumType">Type.</param>
 		/// <param name="stringValue">String value.</param>
 		/// <param name="ignoreCase">Denotes whether to conduct a case-insensitive match on the supplied string value</param>
 		/// <returns>Enum value associated with the string value, or null if not found.</returns>
-		public static Object ParseCode(Type type, String code, Boolean ignoreCase)
+		public static Object ParseCode(Type enumType, String code, Boolean ignoreCase)
 		{
-			Contract.Requires(type.IsEnum);
-			Contract.Requires(!String.IsNullOrEmpty(code));
+			if (!enumType.IsEnum) throw new ArgumentException("Given enumType argument is not an enum.", "enumType");
+			if (String.IsNullOrEmpty(code)) throw new ArgumentException("Given code argument cannot be empty.", "code");
 
-			Object lOutput = null;
-			String lEnumStringCode = String.Empty;
+			Object output = null;
 
 			//Look for our string value associated with fields in this enum
-			foreach (FieldInfo fieldInfo in type.GetFields())
+			foreach (FieldInfo fieldInfo in enumType.GetFields())
 			{
 				//Check for our custom attribute
 				EnumAdditionalAttribute[] attributes = fieldInfo.GetCustomAttributes(typeof(EnumAdditionalAttribute), false) as EnumAdditionalAttribute[];
+				if (attributes == null)
+				{
+					break;
+				}
+
 				if (attributes.Length > 0)
 				{
-					lEnumStringCode = attributes[0].Code;
+					var enumStringCode = attributes[0].Code;
 
 					//Check for equality then select actual enum value.
-					if (String.Compare(lEnumStringCode, code, ignoreCase) == 0)
+					if (String.Compare(enumStringCode, code, ignoreCase) == 0)
 					{
-						lOutput = Enum.Parse(type, fieldInfo.Name);
+						output = Enum.Parse(enumType, fieldInfo.Name);
 						break;
 					}
 				}
 			}
-			return lOutput;
+			return output;
 		}
 
 		/// <summary>
 		/// Parses the supplied enum and string value to find an associated enum value.
 		/// </summary>
-		/// <param name="type">Type.</param>
+		/// <param name="enumType">Type.</param>
 		/// <param name="enumName">String value.</param>
 		/// <param name="ignoreCase">Denotes whether to conduct a case-insensitive match on the supplied string value</param>
 		/// <returns>Enum value associated with the string value, or null if not found.</returns>
-		public static Object ParseName(Type type, String enumName)
+		public static Object ParseName(Type enumType, String enumName)
 		{
-			Contract.Requires(type.IsEnum);
-			Contract.Requires(!String.IsNullOrEmpty(enumName));
+			if (!enumType.IsEnum) throw new ArgumentException("Given enumType argument is not an enum.", "enumType");
+			if (String.IsNullOrEmpty(enumName)) throw new ArgumentException("Given enumName argument cannot be empty.", "enumName");
 
-			return (from name in Enum.GetNames(type)
+			return (from name in Enum.GetNames(enumType)
 					  where enumName.Equals(name, StringComparison.OrdinalIgnoreCase)
-					  select Enum.Parse(type, name)).FirstOrDefault();
+					  select Enum.Parse(enumType, name)).FirstOrDefault();
 		}
 
 		/// <summary>
@@ -169,7 +173,7 @@ namespace Singularity
 		/// <returns>String Value associated via a <see cref="StringValueAttribute"/> attribute, or null if not found.</returns>
 		public static Int32 GetEnumInt(Enum enumValue)
 		{
-			Contract.Requires(enumValue != null);
+			if (enumValue == null) throw new ArgumentException("Given enumValue argument cannot be null.", "enumValue");
 
 			Int32 result = 0;
 			EnumAdditionalProvider<EnumAdditionalAttribute> provider = new EnumAdditionalProvider<EnumAdditionalAttribute>();
@@ -189,8 +193,8 @@ namespace Singularity
 		/// <returns>Enum value associated with the primary key, or null if not found.</returns>
 		public static Object GetEnum(Type enumType, Guid key)
 		{
-			Contract.Requires(enumType.IsEnum);
-			Contract.Requires(!key.IsEmpty());
+			if (!enumType.IsEnum) throw new ArgumentException("Given enumType argument is not an enum.", "enumType");
+			if (key == null) throw new ArgumentException("Given key argument is null.", "key");
 
 			Object lOutput = null;
 			Guid? lEnumKey = null;

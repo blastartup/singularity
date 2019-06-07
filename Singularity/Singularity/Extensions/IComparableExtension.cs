@@ -35,7 +35,7 @@ namespace Singularity
 		[DebuggerStepThrough]
 		public static Boolean IsInRange(this IComparable value, IComparable lowValue, IComparable highValue)
 		{
-			Contract.Assert(lowValue.CompareTo(highValue).In(-1, 0));
+			if (lowValue.CompareTo(highValue) == 0) throw new ArgumentException("Low value argument is greater than the high value one.");
 
 			return (value.CompareTo(lowValue).In(0, 1) && value.CompareTo(highValue).In(-1, 0));
 		}

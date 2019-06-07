@@ -106,8 +106,8 @@ namespace Singularity
 		[DebuggerHidden]
 		public Words(String value, String delimiter, Int32 positionOfFirstWord, Int32 wordCount)
 		{
-			Contract.Requires(positionOfFirstWord > 0);
-			Contract.Requires(wordCount >= -1);
+			positionOfFirstWord = positionOfFirstWord.LimitMin(1);
+			wordCount = wordCount.LimitMin(-1);
 
 			_internalList = new List<String>(wordCount > 0 ? wordCount : 50);
 
@@ -229,7 +229,7 @@ namespace Singularity
 			}
 			set
 			{
-				Contract.Requires(index >= 0);
+				index = index.LimitMin(0);
 
 				if (!index.IsOutOfRange(0, _internalList.Count - 1))
 				{
@@ -298,8 +298,8 @@ namespace Singularity
 		[DebuggerHidden]
 		public Words Extract(Int32 index, Int32 count = 1)
 		{
-			Contract.Requires(index >= 0);
-			Contract.Requires(count >= 1);
+			index = index.LimitMin(0);
+			count = count.LimitMin(1);
 
 			if (_internalList.Count.Equals(0))
 			{
@@ -333,7 +333,7 @@ namespace Singularity
 		[DebuggerHidden]
 		public Words GetWords(Int32 startIndex, Int32? count = null)
 		{
-			Contract.Requires(startIndex >= 0);
+			startIndex = startIndex.LimitMin(0);
 
 			if (startIndex > _internalList.Count - 1)
 			{
@@ -353,8 +353,7 @@ namespace Singularity
 		[DebuggerHidden]
 		public Words GetRangeNonEmpty(Int32 startIndex, Int32? count = null)
 		{
-			Contract.Requires(startIndex >= 0);
-			Contract.Requires(count >= 1);
+			startIndex = startIndex.LimitMin(0);
 
 			return new Words(_internalList.GetRangeNonEmpty(startIndex, count.GetValueOrDefault(_internalList.Count - startIndex)), _delimiter);
 		}
@@ -378,7 +377,7 @@ namespace Singularity
 		[DebuggerHidden]
 		public Boolean Insert(Int32 index, String word)
 		{
-			Contract.Requires(index >= 0);
+			index = index.LimitMin(0);
 
 			Boolean result = false;
 			if (index.IsInRange(0, _internalList.Count - 1))
@@ -392,7 +391,7 @@ namespace Singularity
 		[DebuggerHidden]
 		public Boolean InsertRange(Int32 index, Words words)
 		{
-			Contract.Requires(index >= 0);
+			index = index.LimitMin(0);
 
 			Boolean result = false;
 			if (index.IsInRange(0, _internalList.Count - 1))
@@ -468,8 +467,8 @@ namespace Singularity
 		[DebuggerHidden]
 		public Words RemoveRange(Int32 index, Int32 count)
 		{
-			Contract.Requires(index >= 0);
-			Contract.Requires(count >= 1);
+			index = index.LimitMin(0);
+			count = count.LimitMin(1);
 
 			Words result = null;
 			if (index.IsInRange(0, _internalList.Count - 1) && (count + index).IsInRange(1, _internalList.Count))

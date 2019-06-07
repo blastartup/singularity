@@ -33,7 +33,8 @@ namespace Singularity
 		/// </remarks>
 		public static void Sort<T>(this IList<T> list) where T : IComparable<T>
 		{
-			Contract.Requires(list != null);
+			if (list == null) throw new ArgumentException("Given list argument cannot be null.", "list");
+
 			if (list.Count == 0)
 			{
 				return;

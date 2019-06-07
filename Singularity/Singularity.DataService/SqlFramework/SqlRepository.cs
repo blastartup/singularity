@@ -417,6 +417,10 @@ namespace Singularity.DataService
 				sqlCommand.Parameters.AddRange(PopulateInsertParameters(sqlEntity).ToArray());
 
 				result = InsertCore(sqlCommand);
+				if (result)
+				{
+					result = InsertDependents(sqlEntity);
+				}
 			}
 			finally
 			{
@@ -424,6 +428,11 @@ namespace Singularity.DataService
 			}
 
 			return result;
+		}
+
+		protected virtual Boolean InsertDependents(TSqlEntity sqlEntity)
+		{
+			return true;
 		}
 
 		//eg: For Guid => "insert into dbo.[TableName] ([PrimaryKeyName], [Col1Name], [Col2Name], [Col3Name]) values (@pk, @Col1Name, @Col2Name, @Col3Name)"

@@ -13,7 +13,7 @@ namespace Singularity
 		/// </summary>
 		public static String Replicate(this Char value, Int32 count)
 		{
-			Contract.Requires(count >= 0);
+			count = count.LimitMin(0);
 
 			return String.Empty.PadRight(count, value);
 		}

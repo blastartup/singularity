@@ -10,18 +10,13 @@ namespace Singularity.DataService
 	public abstract class SqlUnitOfWork<TSqlEntityContext> : IDisposable
 		where TSqlEntityContext : SqlEntityContext, new()
 	{
-		// A quick and dirty way to create a database.  Normally used for temporary databases that are dropped (deleted) often.
-		public virtual Boolean CreateDatabase(String databaseName = null, Boolean includeTables = false)
+		protected SqlUnitOfWork()
 		{
-			var scriptBuilder = new DelimitedStringBuilder();
-			scriptBuilder.AddIfNotEmpty(databaseName == null ? CreateDatabaseQuery : CreateDatabaseQuery.FormatX(databaseName));
-			if (includeTables)
-			{
-				scriptBuilder.AddIfNotEmpty(CreateDatabaseTablesQuery);
-				scriptBuilder.AddIfNotEmpty(AttachDatabaseTablesQuery);
-			}
+		}
 
-			return Context.ExecuteMultiLinedSql(scriptBuilder.ToNewLineDelimitedString());
+		protected SqlUnitOfWork(SqlConnection sqlConnection)
+		{
+			_sqlConnection = sqlConnection;
 		}
 
 		public virtual Boolean CreateTables()
@@ -32,19 +27,6 @@ namespace Singularity.DataService
 
 			return Context.ExecuteMultiLinedSql(scriptBuilder.ToNewLineDelimitedString());
 		}
-
-		protected virtual String CreateDatabaseQuery => String.Empty;
-		protected virtual String CreateDatabaseTablesQuery => String.Empty;
-		protected virtual String AttachDatabaseTablesQuery => String.Empty;
-
-		public virtual Boolean DeleteDatabase(String databaseName = null)
-		{
-			return Context.ExecuteMultiLinedSql(databaseName == null ? DeleteDatabaseQuery : DeleteDatabaseQuery.FormatX(databaseName));
-		}
-		protected virtual String DeleteDatabaseQuery => String.Empty;  // Drop database.
-		protected virtual String DeleteDatabaseTablesQuery => String.Empty;  // Drop tables.
-		protected virtual String DetachDatabaseTablesQuery => String.Empty;  // Remove constraints, dependencies and indexes.
-
 
 		public Boolean Refresh(Boolean clearContext = false)
 		{
@@ -64,18 +46,12 @@ namespace Singularity.DataService
 			GC.SuppressFinalize(this);
 		}
 
-		public TSqlEntityContext Context => _context ?? (_context = NewDbContext());
-		private TSqlEntityContext _context;
-
-		protected virtual TSqlEntityContext NewDbContext()
-		{
-			return new TSqlEntityContext();	
-		}
-
 		protected virtual TSqlEntityContext ResetDbContext()
 		{
 			return NewDbContext();
 		}
+
+		protected abstract TSqlEntityContext NewDbContext();
 
 		protected virtual void Dispose(Boolean disposing)
 		{
@@ -89,7 +65,20 @@ namespace Singularity.DataService
 			}
 		}
 
+		protected virtual String CreateDatabaseTablesQuery => String.Empty;
+		protected virtual String AttachDatabaseTablesQuery => String.Empty;
+		protected virtual String DeleteDatabaseTablesQuery => String.Empty;  // Drop tables.
+		protected virtual String DetachDatabaseTablesQuery => String.Empty;  // Remove constraints, dependencies and indexes.
+
+		public TSqlEntityContext Context => _context ?? (_context = NewDbContext());
+		private TSqlEntityContext _context;
+
+		// This is used by concrete classes of this one.
+		protected SqlConnection SqlConnection => _sqlConnection;
+		private readonly SqlConnection _sqlConnection;
+	
 		protected abstract void ResetRepositories();
 		private Boolean _disposed = false;
+
 	}
 }

@@ -21,9 +21,9 @@ namespace Singularity
 		/// <returns>Guid primary key value associated via a attribute, or null if not found.</returns>
 		public static Guid? GetKey(this Enum enumValue)
 		{
-			Contract.Requires(enumValue != null);
+			if (enumValue == null) throw new ArgumentException("Given enumValue argument cannot be null.", "enumValue");
 
-			EnumAdditionalProvider<EnumAdditionalAttribute> provider = new EnumAdditionalProvider<EnumAdditionalAttribute>();
+			var provider = new EnumAdditionalProvider<EnumAdditionalAttribute>();
 			return provider.GetEnumResource(enumValue)?.Key;
 		}
 
@@ -34,9 +34,9 @@ namespace Singularity
 		/// <returns>String Value associated via a <see cref="EnumAdditionalAttribute"/> attribute, or null if not found.</returns>
 		public static String GetAlternateValue(this Enum enumValue)
 		{
-			Contract.Requires(enumValue != null);
+			if (enumValue == null) throw new ArgumentException("Given enumValue argument cannot be null.", "enumValue");
 
-			EnumAdditionalProvider<EnumAdditionalAttribute> provider = new EnumAdditionalProvider<EnumAdditionalAttribute>();
+			var provider = new EnumAdditionalProvider<EnumAdditionalAttribute>();
 			return provider.GetEnumResource(enumValue)?.AlternateValue;
 		}
 
@@ -47,9 +47,9 @@ namespace Singularity
 		/// <returns>String Value associated via a <see cref="EnumAdditionalAttribute"/> attribute, or null if not found.</returns>
 		public static String GetCode(this Enum enumValue)
 		{
-			Contract.Requires(enumValue != null);
+			if (enumValue == null) throw new ArgumentException("Given enumValue argument cannot be null.", "enumValue");
 
-			EnumAdditionalProvider<EnumAdditionalAttribute> provider = new EnumAdditionalProvider<EnumAdditionalAttribute>();
+			var provider = new EnumAdditionalProvider<EnumAdditionalAttribute>();
 			return provider.GetEnumResource(enumValue)?.Code ?? String.Empty;
 		}
 
@@ -60,9 +60,9 @@ namespace Singularity
 		/// <returns>String Value associated via a <see cref="EnumAdditionalAttribute"/> attribute, or null if not found.</returns>
 		public static String GetHumanisedName(this Enum enumValue)
 		{
-			Contract.Requires(enumValue != null);
+			if (enumValue == null) throw new ArgumentException("Given enumValue argument cannot be null.", "enumValue");
 
-			EnumAdditionalProvider<EnumAdditionalAttribute> provider = new EnumAdditionalProvider<EnumAdditionalAttribute>();
+			var provider = new EnumAdditionalProvider<EnumAdditionalAttribute>();
 			return provider.GetEnumResource(enumValue)?.HumanisedName ?? Enum.GetName(enumValue.GetType(), enumValue) ?? String.Empty;
 		}
 
@@ -73,7 +73,6 @@ namespace Singularity
 		///// <returns>String Value Name associated via a <see cref="EnumAdditionalAttribute"/> attribute, or null if not found.</returns>
 		//public static String GetValueName(this Enum enumValue)
 		//{
-		//	Contract.Requires(enumValue != null);
 
 		//	var provider = new EnumAdditionalProvider<EnumAdditionalAttribute>();
 		//	return provider.GetEnumResource(enumValue)?.ValueName ?? String.Empty;
@@ -86,9 +85,9 @@ namespace Singularity
 		/// <returns>String Value associated via a <see cref="EnumAdditionalAttribute"/> attribute, or null if not found.</returns>
 		public static String GetDescription(this Enum enumValue)
 		{
-			Contract.Requires(enumValue != null);
+			if (enumValue == null) throw new ArgumentException("Given enumValue argument cannot be null.", "enumValue");
 
-			EnumAdditionalProvider<EnumAdditionalAttribute> provider = new EnumAdditionalProvider<EnumAdditionalAttribute>();
+			var provider = new EnumAdditionalProvider<EnumAdditionalAttribute>();
 			EnumAdditionalAttribute resource = provider.GetEnumResource(enumValue);
 			return resource != null ? resource.Description : Enum.GetName(enumValue.GetType(), enumValue);
 		}

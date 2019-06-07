@@ -14,12 +14,9 @@ namespace Singularity.DataService.Test.SqlFramework
 		{
 		}
 
-		public SqlEntityContextMock(SqlConnectionStringBuilder sqlConnectionStringBuilder) : base(sqlConnectionStringBuilder)
-		{
-		}
-
 		public SqlEntityContextMock(SqlConnection sqlConnection) : base(sqlConnection)
 		{
 		}
+
 	}
 }

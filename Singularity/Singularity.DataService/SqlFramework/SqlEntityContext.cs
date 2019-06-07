@@ -4,6 +4,7 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Threading;
+using Singularity.DataService.SqlFramework;
 
 // ReSharper disable once CheckNamespace
 namespace Singularity.DataService
@@ -17,24 +18,16 @@ namespace Singularity.DataService
 		{
 		}
 
-		protected SqlEntityContext(SqlConnectionStringBuilder sqlConnectionStringBuilder)
-		{
-			_sqlConnectionStringBuilder = sqlConnectionStringBuilder;
-			_sqlConnection = new SqlConnection(sqlConnectionStringBuilder.ConnectionString);
-			_sqlConnection.OpenEx(sqlConnectionStringBuilder.ConnectTimeout * 1000);
-			_transactionCounter = 0;
-		}
-
 		protected SqlEntityContext(SqlConnection sqlConnection)
 		{
 			_sqlConnection = sqlConnection;
-			_sqlConnectionStringBuilder = new SqlConnectionStringBuilder(sqlConnection.ConnectionString);
 			if (_sqlConnection.State == ConnectionState.Closed)
 			{
-				_sqlConnection.OpenEx(_sqlConnectionStringBuilder.ConnectTimeout * 1000);
+				_sqlConnection.OpenEx(_sqlConnection.ConnectionTimeout * 1000);
 			}
 			_transactionCounter = 0;
 		}
+
 
 		public SqlDataReader ExecuteDataReader(String query, SqlParameter[] filterParameters = null)
 		{
@@ -99,28 +92,7 @@ namespace Singularity.DataService
 
 		public Boolean ExecuteMultiLinedSql(String mulitLinedSqlScript)
 		{
-			SqlCommand sqlCommand = null;
-			try
-			{
-				sqlCommand = SqlConnection.CreateCommand();
-				sqlCommand.CommandType = CommandType.Text;
-				sqlCommand.Transaction = _sqlTransaction;
-				var commands = new Words(mulitLinedSqlScript.Replace(ValueLib.CrLf.StringValue + "GO", "|").Replace(ValueLib.CrLf.StringValue, ValueLib.Space.StringValue), "|");
-				foreach (var command in commands)
-				{
-					sqlCommand.CommandText = command;
-					ExecuteWithRetry(sqlCommand, sqlCommand.ExecuteNonQuery);
-				}
-				return true;
-			}
-			catch
-			{
-				return false;
-			}
-			finally
-			{
-				sqlCommand?.Dispose();
-			}
+			return SqlAdministrator.ExecuteMultiLinedSql(SqlConnection, mulitLinedSqlScript, SqlTransaction);
 		}
 
 		internal SqlTransaction BeginTransaction()
@@ -148,12 +120,19 @@ namespace Singularity.DataService
 
 		internal void Rollback() => _sqlTransaction?.Rollback();
 
-		public Boolean TableExists(String table)
+		public Boolean TableExists(String tableName)
 		{
-			return ExecuteScalar(TableExistsQuery, new SqlParameter[]{ new SqlParameter("@TableName",  table)}).ToInt() == 1;
+			return ExecuteScalar(TableExistsQuery, new SqlParameter[]{ new SqlParameter("@TableName",  tableName)}).ToInt() == 1;
 		}
 
+		public Boolean CreateTables()
+		{
+			var scriptBuilder = new DelimitedStringBuilder();
+			scriptBuilder.AddIfNotEmpty(CreateDatabaseTablesQuery);
+			scriptBuilder.AddIfNotEmpty(AttachDatabaseTablesQuery);
 
+			return ExecuteMultiLinedSql(scriptBuilder.ToNewLineDelimitedString());
+		}
 
 		public void Dispose()
 		{
@@ -211,7 +190,7 @@ namespace Singularity.DataService
 						if (_sqlConnection != null)
 						{
 							_sqlConnection.Close();
-							_sqlConnection = new SqlConnection(_sqlConnectionStringBuilder.ConnectionString);
+							_sqlConnection = new SqlConnection(SqlConnection.ConnectionString);
 							_sqlConnection.Open();
 							//cmd.Connection = _sqlConnection;  All cmd's passed in are already pointing to _sqlConnection.
 							_transactionCounter = 0;
@@ -221,7 +200,7 @@ namespace Singularity.DataService
 					{
 						if (_sqlConnection.ConnectionString.IsEmpty())
 						{
-							_sqlConnection = new SqlConnection(_sqlConnectionStringBuilder.ConnectionString);
+							_sqlConnection = new SqlConnection(SqlConnection.ConnectionString);
 						}
 						_sqlConnection.Open();
 						_transactionCounter = 0;
@@ -261,12 +240,12 @@ namespace Singularity.DataService
 
 
 		public DateTime? SchemaModifiedDateTime => SqlServerSystem.SchemaModifiedDateTime();
-
 		internal DateTime? DatabaseSchemaModifiedDateTime() => SqlServerSystem.SchemaModifiedDateTime();
 		internal DateTime? TableSchemaModifiedDateTime(String tableName) => SqlServerSystem.SchemaModifiedDateTime(tableName);
 
 		public Boolean AutomaticTransactions { get; set; }
-		public String Name => _sqlConnectionStringBuilder.InitialCatalog;
+		public String ComputerName => SqlServerSystem.DataSource;
+		public String DatabaseName => SqlServerSystem.DatabaseName;
 		public String ErrorMessage => _errorMessage;
 
 		public SqlConnection SqlConnection => _sqlConnection;
@@ -276,9 +255,12 @@ namespace Singularity.DataService
 		private SqlTransaction _sqlTransaction;
 
 		protected SqlServerSystem SqlServerSystem => _sqlServerSystem ?? (_sqlServerSystem = new SqlServerSystem(SqlConnection));
-		protected internal virtual DateTime NowDateTime => DateTime.Now;
-
 		private SqlServerSystem _sqlServerSystem;
+
+		protected virtual String CreateDatabaseTablesQuery => String.Empty;
+		protected virtual String AttachDatabaseTablesQuery => String.Empty;
+
+		protected internal virtual DateTime NowDateTime => DateTime.Now;
 
 		private const Int32 MaximumRetries = 3;
 		private const Int32 DelayOnError = 500;
@@ -286,7 +268,6 @@ namespace Singularity.DataService
 		private const Int32 MaximumTransactionsBeforeReconnect = 10000;
 		private Boolean _disposed;
 		private String _errorMessage;
-		private readonly SqlConnectionStringBuilder _sqlConnectionStringBuilder;
 		private const String TableExistsQuery = "If Exists (SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = @TableName) Begin Select 1 'Any' End Else Begin Select 0 'Any' End";
 
 	}

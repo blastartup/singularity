@@ -50,10 +50,11 @@ namespace Singularity
 
 		public Byte Base
 		{
-			get { return _mBaseN; }
+			get => _mBaseN;
 			set
 			{
-				Contract.Requires(value >= MinBase && value <= MaxBase);
+				if (value < MinBase || value > MaxBase) throw new InvalidOperationException($"Given value {value} must be in range between {MinBase} and {MaxBase}.");
+
 				_mBaseN = value;
 			}
 		}
