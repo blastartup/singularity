@@ -794,7 +794,6 @@ namespace Singularity.DataService
 
 			return Context.ExecuteScalar(FindAnyQuery.FormatX(TableName, where), sqlParameters.ToArray()).ToInt() == 1;
 		}
-		private const String FindAnyQuery = "If Exists (Select Count(*) from {0} where {1}) select 1 Else select 0";
 
 		public void IdentityInsertOn()
 		{
@@ -901,6 +900,9 @@ namespace Singularity.DataService
 		protected abstract String PrimaryKeyName { get; }
 		protected abstract String GetCountQuery { get; }
 		protected DateTime NowDateTime => Context.NowDateTime;
+
+		protected virtual String FindAnyQuery => "If Exists (Select {0}Id from {0} where {1}) select 1 Else select 0";
+
 
 		//eg: "select [PrimaryKeyName], [Col1Name], [Col2Name], [Col3Name] from dbo.[TableName] where dbo.[TableName].[PrimaryKeyName] = @pk";
 		protected abstract String GetEntityQuery { get; }

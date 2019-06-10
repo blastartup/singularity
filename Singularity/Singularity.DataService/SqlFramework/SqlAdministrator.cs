@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Singularity.DataService.SqlFramework
 {
-	public class SqlAdministrator
+	public abstract class SqlAdministrator
 	{
 		public SqlAdministrator(SqlConnection masterSqlConnection)
 		{
@@ -76,7 +76,7 @@ namespace Singularity.DataService.SqlFramework
 				foreach (var command in commands)
 				{
 					sqlCommand.CommandText = command;
-					sqlCommand.ExecuteNonQuery();
+					FK_dbo.ControlPoco_dbosqlCommand.ExecuteNonQuery();
 				}
 				return true;
 			}
