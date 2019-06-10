@@ -76,7 +76,7 @@ namespace Singularity.DataService.SqlFramework
 				foreach (var command in commands)
 				{
 					sqlCommand.CommandText = command;
-					FK_dbo.ControlPoco_dbosqlCommand.ExecuteNonQuery();
+					sqlCommand.ExecuteNonQuery();
 				}
 				return true;
 			}
