@@ -406,7 +406,12 @@ namespace Singularity.DataService
 
 		//eg: For Guid => "insert into dbo.[TableName] ([PrimaryKeyName], [Col1Name], [Col2Name], [Col3Name]) values (@pk, @Col1Name, @Col2Name, @Col3Name)"
 		//    For Identity => "insert into dbo.[TableName] ([Col1Name], [Col2Name], [Col3Name]) values (@Col1Name, @Col2Name, @Col3Name)  select @@identity"
-		public Boolean Insert(TSqlEntity sqlEntity)
+		public Boolean InsertEntity(TSqlEntity sqlEntity)
+		{
+			return InsertIndividualEntitiesOf(sqlEntity) && InsertThis(sqlEntity) && InsertCollectionsOf(sqlEntity);
+		}
+
+		private Boolean InsertThis(TSqlEntity sqlEntity)
 		{
 			Boolean result;
 			SqlCommand sqlCommand = Context.SqlConnection.CreateCommand();
@@ -417,10 +422,6 @@ namespace Singularity.DataService
 				sqlCommand.Parameters.AddRange(PopulateInsertParameters(sqlEntity).ToArray());
 
 				result = InsertCore(sqlCommand);
-				if (result)
-				{
-					result = InsertDependents(sqlEntity);
-				}
 			}
 			finally
 			{
@@ -430,7 +431,15 @@ namespace Singularity.DataService
 			return result;
 		}
 
-		protected virtual Boolean InsertDependents(TSqlEntity sqlEntity)
+		// Preinsert
+		protected virtual Boolean InsertIndividualEntitiesOf(TSqlEntity sqlEntity)
+		{
+			// Setting any foreign keys on sqlEntity.
+			return true;
+		}
+
+		// Postinsert
+		protected virtual Boolean InsertCollectionsOf(TSqlEntity sqlEntity)
 		{
 			return true;
 		}

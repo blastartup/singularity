@@ -135,7 +135,7 @@ namespace Singularity.DataService.Test.SqlFramework
 			Assert.IsTrue(uow.TeeProjectRepository.GetCount() == 0);
 			var teeProject = new TeeProjectDto() {Name = "TestProject", EDomainType = 2};
 			Assert.IsTrue(teeProject.TeeProjectId != Guid.Empty);
-			Assert.IsTrue(uow.TeeProjectRepository.Insert(teeProject));
+			Assert.IsTrue(uow.TeeProjectRepository.InsertEntity(teeProject));
 			Assert.IsFalse(uow.TeeProjectRepository.GetCount() == 0);
 			Assert.IsTrue(uow.TeeProjectRepository.GetCount() == 1);
 
