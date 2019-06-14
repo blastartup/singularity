@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Singularity.DataService.Extensions;
 
 namespace Singularity.DataService.Test.SqlFramework
 {

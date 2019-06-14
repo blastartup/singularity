@@ -3,7 +3,9 @@ using System.Data.SqlClient;
 using System.Diagnostics;
 using System.Threading;
 
-namespace Singularity.DataService.Extensions
+// ReSharper disable once CheckNamespace
+
+namespace Singularity.DataService
 {
 	public static class SqlConnectionExtension
 	{

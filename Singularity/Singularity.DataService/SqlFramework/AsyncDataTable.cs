@@ -1,5 +1,4 @@
-﻿using System;
-using System.Data;
+﻿using System.Data;
 
 // ReSharper disable once CheckNamespace
 namespace Singularity.DataService

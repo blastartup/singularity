@@ -1,10 +1,8 @@
-﻿using Singularity.DataService.Extensions;
-using System;
+﻿using System;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Threading;
-using Singularity.DataService.SqlFramework;
 
 // ReSharper disable once CheckNamespace
 namespace Singularity.DataService

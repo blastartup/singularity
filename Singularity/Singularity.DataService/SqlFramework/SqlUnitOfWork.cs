@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Data;
 using System.Data.SqlClient;
-using System.Runtime.Remoting.Contexts;
-using System.Text;
 
 // ReSharper disable once CheckNamespace
 namespace Singularity.DataService
