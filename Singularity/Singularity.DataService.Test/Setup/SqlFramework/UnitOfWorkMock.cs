@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+// ReSharper disable once CheckNamespace
 namespace Singularity.DataService.Test.SqlFramework
 {
 	public class UnitOfWorkMock : SqlUnitOfWork<SqlEntityContextMock>

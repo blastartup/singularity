@@ -72,14 +72,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="SqlFramework\BaseGuidKeySqlRepositoryMock.cs" />
-    <Compile Include="SqlFramework\SqlAdministratorMock.cs" />
-    <Compile Include="SqlFramework\SqlEntityContextMock.cs" />
-    <Compile Include="SqlFramework\TeeProjectAssembler.cs" />
-    <Compile Include="SqlFramework\TeeProjectDto.cs" />
-    <Compile Include="SqlFramework\TeeProjectRepository.cs" />
-    <Compile Include="SqlFramework\UnitOfWorkMock.cs" />
-    <Compile Include="SqlFramework\UnitOfWorkUnitTest.cs" />
+    <Compile Include="Setup\SqlFramework\BaseGuidKeySqlRepositoryMock.cs" />
+    <Compile Include="Setup\SqlFramework\SqlAdministratorMock.cs" />
+    <Compile Include="Tests\SqlFramework\SqlAdministratorTest.cs" />
+    <Compile Include="Setup\SqlFramework\SqlEntityContextMock.cs" />
+    <Compile Include="Setup\SqlFramework\TeeProjectAssembler.cs" />
+    <Compile Include="Setup\SqlFramework\TeeProjectDto.cs" />
+    <Compile Include="Setup\SqlFramework\TeeProjectRepository.cs" />
+    <Compile Include="Setup\SqlFramework\UnitOfWorkMock.cs" />
+    <Compile Include="Tests\SqlFramework\UnitOfWorkUnitTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -98,6 +99,7 @@
   <ItemGroup>
     <WCFMetadata Include="Connected Services\" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets" Condition="Exists('$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets')" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

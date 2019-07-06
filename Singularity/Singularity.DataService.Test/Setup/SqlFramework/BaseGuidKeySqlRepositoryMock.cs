@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Singularity.DataService;
 
+// ReSharper disable once CheckNamespace
 namespace Singularity.DataService.Test.SqlFramework
 {
 	public abstract class BaseGuidKeySqlRepositoryMock<TSqlEntity> : GuidKeySqlRepository<TSqlEntity, SqlEntityContextMock>

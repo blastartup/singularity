@@ -3,6 +3,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Diagnostics;
 
+// ReSharper disable once CheckNamespace
 namespace Singularity.DataService.Test.SqlFramework
 {
 

@@ -1,6 +1,7 @@
 using System;
 using System.Data.SqlClient;
 
+// ReSharper disable once CheckNamespace
 namespace Singularity.DataService.Test.SqlFramework
 {
 
