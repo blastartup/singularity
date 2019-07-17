@@ -65,7 +65,13 @@
     <Compile Include="DataValidationResult.cs" />
     <Compile Include="Interfaces\IValidatable.cs" />
     <Compile Include="RowDataService.cs" />
+    <Compile Include="SqlFramework\Enums\ESqlDataTypes.cs" />
+    <Compile Include="SqlFramework\Models\SqlColumn.cs" />
+    <Compile Include="SqlFramework\Models\SqlDatabase.cs" />
+    <Compile Include="SqlFramework\Models\SqlTable.cs" />
+    <Compile Include="SqlFramework\Repositories\SqlTableRepository.cs" />
     <Compile Include="SqlFramework\SqlAdministrator.cs" />
+    <Compile Include="SqlFramework\SqlRepositoryMaster.cs" />
     <Compile Include="TableDataService.cs" />
     <Compile Include="CsvWriter.cs" />
     <Compile Include="DalException.cs" />

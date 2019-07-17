@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Data.SqlClient;
+using Singularity.DataService.SqlFramework.Repositories;
 
 // ReSharper disable once CheckNamespace
 namespace Singularity.DataService
@@ -43,6 +44,9 @@ namespace Singularity.DataService
 			GC.SuppressFinalize(this);
 		}
 
+		public SqlTableRepository<TSqlEntityContext> SqlTableRepository => _sqlTableRepository ?? (_sqlTableRepository = new SqlTableRepository<TSqlEntityContext>(Context));
+		private SqlTableRepository<TSqlEntityContext> _sqlTableRepository;
+
 		protected virtual TSqlEntityContext ResetDbContext()
 		{
 			return NewDbContext();
@@ -73,8 +77,12 @@ namespace Singularity.DataService
 		// This is used by concrete classes of this one.
 		protected SqlConnection SqlConnection => _sqlConnection;
 		private readonly SqlConnection _sqlConnection;
-	
-		protected abstract void ResetRepositories();
+
+		protected virtual void ResetRepositories()
+		{
+			_sqlTableRepository = null;
+		}
+
 		private Boolean _disposed = false;
 
 	}

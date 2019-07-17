@@ -67,7 +67,6 @@
       <Link>VersionInfo.cs</Link>
     </Compile>
     <Compile Include="Attributes\ControllerAdditionalAttribute.cs" />
-    <Compile Include="Attributes\ResponseCodesAttribute.cs" />
     <Compile Include="Browser.cs" />
     <Compile Include="Enum\EControllerAccess.cs" />
     <Compile Include="Enum\EControllerSearchable.cs" />

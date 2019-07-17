@@ -5,9 +5,9 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("Singularity.EfDataService")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("Common Application Library and Extensions")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
+[assembly: AssemblyCompany("https://github.com/blastartup/singularity")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
