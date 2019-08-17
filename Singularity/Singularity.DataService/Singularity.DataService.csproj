@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Singularity.DataService</RootNamespace>
     <AssemblyName>Singularity.DataService</AssemblyName>
-    <TargetFrameworkVersion>v4.7</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
   </PropertyGroup>
@@ -68,6 +68,7 @@
     <Compile Include="SqlFramework\Enums\ESqlDataTypes.cs" />
     <Compile Include="SqlFramework\Models\SqlColumn.cs" />
     <Compile Include="SqlFramework\Models\SqlDatabase.cs" />
+    <Compile Include="SqlFramework\Models\SqlServer.cs" />
     <Compile Include="SqlFramework\Models\SqlTable.cs" />
     <Compile Include="SqlFramework\Repositories\SqlTableRepository.cs" />
     <Compile Include="SqlFramework\SqlAdministrator.cs" />
