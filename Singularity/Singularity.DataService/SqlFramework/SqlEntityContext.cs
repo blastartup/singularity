@@ -88,7 +88,7 @@ namespace Singularity.DataService
 			}
 		}
 
-		public Boolean ExecuteMultiLinedSql(String mulitLinedSqlScript)
+		public IReply<Boolean> ExecuteMultiLinedSql(String mulitLinedSqlScript)
 		{
 			return SqlAdministrator.ExecuteMultiLinedSql(SqlConnection, mulitLinedSqlScript, SqlTransaction);
 		}
@@ -123,7 +123,7 @@ namespace Singularity.DataService
 			return ExecuteScalar(TableExistsQuery, new SqlParameter[]{ new SqlParameter("@TableName",  tableName)}).ToInt() == 1;
 		}
 
-		public Boolean CreateTables()
+		public IReply<Boolean> CreateTables()
 		{
 			var scriptBuilder = new DelimitedStringBuilder();
 			scriptBuilder.AddIfNotEmpty(CreateDatabaseTablesQuery);

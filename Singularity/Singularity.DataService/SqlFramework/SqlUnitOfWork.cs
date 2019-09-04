@@ -17,7 +17,7 @@ namespace Singularity.DataService
 			_sqlConnection = sqlConnection;
 		}
 
-		public virtual Boolean CreateTables()
+		public virtual IReply<Boolean> CreateTables()
 		{
 			var scriptBuilder = new DelimitedStringBuilder();
 			scriptBuilder.AddIfNotEmpty(CreateDatabaseTablesQuery);

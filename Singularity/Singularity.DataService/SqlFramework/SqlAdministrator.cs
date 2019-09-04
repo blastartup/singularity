@@ -14,7 +14,7 @@ namespace Singularity.DataService
 			_masterSqlConnection = masterSqlConnection;
 		}
 
-		public virtual Boolean CreateDatabase(String databaseName)
+		public virtual IReply<Boolean> CreateDatabase(String databaseName)
 		{
 			var scriptBuilder = new DelimitedStringBuilder();
 			scriptBuilder.AddIfNotEmpty(CreateDatabaseQuery.FormatX(databaseName));
@@ -24,9 +24,9 @@ namespace Singularity.DataService
 				_masterSqlConnection.Open();
 				return ExecuteMultiLinedSql(_masterSqlConnection, scriptBuilder.ToNewLineDelimitedString());
 			}
-			catch
+			catch (SystemException ex)
 			{
-				return false;
+				return new ReplyMessage(ex.Message);
 			}
 			finally
 			{
@@ -35,7 +35,7 @@ namespace Singularity.DataService
 
 		}
 
-		public virtual Boolean DeleteDatabase(String databaseName)
+		public virtual IReply<Boolean> DeleteDatabase(String databaseName)
 		{
 			var scriptBuilder = new DelimitedStringBuilder();
 			scriptBuilder.AddIfNotEmpty(DeleteDatabaseQuery.FormatX(databaseName));
@@ -45,9 +45,9 @@ namespace Singularity.DataService
 				_masterSqlConnection.Open();
 				return ExecuteMultiLinedSql(_masterSqlConnection, scriptBuilder.ToNewLineDelimitedString());
 			}
-			catch
+			catch (SystemException ex)
 			{
-				return false;
+				return new ReplyMessage(ex.Message);
 			}
 			finally
 			{
@@ -56,12 +56,12 @@ namespace Singularity.DataService
 
 		}
 
-		public Boolean DatabaseExists(SqlConnectionStringBuilder databaseConnectionString)
+		public IReply<Boolean> DatabaseExists(SqlConnectionStringBuilder databaseConnectionString)
 		{
 			return DatabaseExists(databaseConnectionString.InitialCatalog);
 		}
 
-		public Boolean DatabaseExists(String databaseName)
+		public IReply<Boolean> DatabaseExists(String databaseName)
 		{
 			try
 			{
@@ -71,11 +71,18 @@ namespace Singularity.DataService
 					CommandType = CommandType.Text,
 					Parameters = { new SqlParameter("@DatabaseName", databaseName) }
 				};
-				return sqlCommand.ExecuteScalar().ToInt() == 1;
+				if (sqlCommand.ExecuteScalar().ToInt() == 1)
+				{
+					return new ReplySimple(true);
+				}
+				else
+				{
+					return new ReplyMessage($"{databaseName} doesn't exist.");
+				}
 			}
-			catch
+			catch (SystemException ex)
 			{
-				return false;
+				return new ReplyMessage(ex.Message);
 			}
 			finally
 			{
@@ -84,13 +91,13 @@ namespace Singularity.DataService
 		}
 
 		/// <remarks> Backup fromDatabaseName (temporarily) and restore in the same folder but name it as cloneDatabaseName. </remarks>
-		public Boolean CloneDatabase(String databaseName, String cloneDatabaseName)
+		public IReply<Boolean> CloneDatabase(String databaseName, String cloneDatabaseName)
 		{
 			// eg: Clone Shexie to Shexie_Ab, using the same default database location.
 			var temporaryDatabaseBackupName = BackupDatabase(databaseName);
 			if (temporaryDatabaseBackupName.IsEmpty())
 			{
-				return false;
+				return new ReplyMessage($"Temporary database backup name ({temporaryDatabaseBackupName})");
 			}
 
 			return RestoreDatabase(temporaryDatabaseBackupName, cloneDatabaseName, DefaultBackupFolder());
@@ -115,7 +122,7 @@ namespace Singularity.DataService
 			try
 			{
 				_masterSqlConnection.Open();
-				if (ExecuteMultiLinedSql(_masterSqlConnection, scriptBuilder.ToNewLineDelimitedString()))
+				if (ExecuteMultiLinedSql(_masterSqlConnection, scriptBuilder.ToNewLineDelimitedString()).Condition)
 				{
 					return databaseFileInfo;
 				}
@@ -131,7 +138,7 @@ namespace Singularity.DataService
 			return null;
 		}
 
-		public Boolean RestoreDatabase(FileInfo backupFileInfo, String restoreAsDatabaseName, DirectoryInfo destinationFolder = null)
+		public IReply<Boolean> RestoreDatabase(FileInfo backupFileInfo, String restoreAsDatabaseName, DirectoryInfo destinationFolder = null)
 		{
 			if (backupFileInfo == null)
 			{
@@ -166,9 +173,9 @@ namespace Singularity.DataService
 						logicalNames.Add(dataReader["LogicalName"].ToString());
 					}
 				}
-				catch
+				catch (SystemException ex)
 				{
-					return false;
+					return new ReplyMessage(ex.Message);
 				}
 				finally
 				{
@@ -186,9 +193,9 @@ namespace Singularity.DataService
 				_masterSqlConnection.Open();
 				return ExecuteMultiLinedSql(_masterSqlConnection, scriptBuilder.ToNewLineDelimitedString());
 			}
-			catch
+			catch (SystemException ex)
 			{
-				return false;
+				return new ReplyMessage(ex.Message);
 			}
 			finally
 			{
@@ -207,23 +214,18 @@ namespace Singularity.DataService
 				};
 				return new DirectoryInfo(sqlCommand.ExecuteScalar().ToString());
 			}
-			catch
-			{
-				return null;
-			}
 			finally
 			{
 				_masterSqlConnection.Close();
 			}
 		}
 
-		internal static Boolean ExecuteMultiLinedSql(SqlConnection sqlConnection, String mulitLinedSqlScript, SqlTransaction sqlTransaction = null)
+		internal static IReply<Boolean> ExecuteMultiLinedSql(SqlConnection sqlConnection, String mulitLinedSqlScript, SqlTransaction sqlTransaction = null)
 		{
 			if (mulitLinedSqlScript.IsEmpty())
 			{
-				return false;
+				return new ReplyMessage("Given argument mulitLinedSqlScript cannot be empty.");
 			}
-
 
 			SqlCommand sqlCommand = null;
 			try
@@ -237,11 +239,11 @@ namespace Singularity.DataService
 					sqlCommand.CommandText = command;
 					sqlCommand.ExecuteNonQuery();
 				}
-				return true;
+				return new ReplySimple(true);
 			}
-			catch
+			catch (SystemException ex)
 			{
-				return false;
+				return new ReplyMessage(ex.Message);
 			}
 			finally
 			{
