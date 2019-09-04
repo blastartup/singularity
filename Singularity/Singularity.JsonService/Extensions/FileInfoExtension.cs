@@ -13,7 +13,7 @@ namespace Singularity.JsonService.Extensions
 	{
 		public static T ReadJsonFile<T>(this FileInfo sourceJsonFileInfo, Boolean rootedObject = false)
 		{
-			using (StreamReader reader = new StreamReader(sourceJsonFileInfo.FullName))
+			using (StreamReader reader = new StreamReader(sourceJsonFileInfo.FullName, Encoding.UTF8))
 			{
 				String jsonText = reader.ReadToEnd();
 				if (rootedObject)
@@ -25,10 +25,10 @@ namespace Singularity.JsonService.Extensions
 			}
 		}
 
-		public static void WriteJsonFile<T>(this FileInfo targetJsonFileInfo, T entity)
+		public static void WriteJsonFile<T>(this FileInfo targetJsonFileInfo, T entity, Boolean append = false)
 		{
 			JsonSerializer serializer = new JsonSerializer();
-			using (StreamWriter writer = new StreamWriter(targetJsonFileInfo.FullName))
+			using (StreamWriter writer = new StreamWriter(targetJsonFileInfo.FullName, append, Encoding.UTF8))
 			using (JsonTextWriter jsonWriter = new JsonTextWriter(writer))
 			{
 				serializer.Serialize(jsonWriter, entity);

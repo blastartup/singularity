@@ -177,6 +177,31 @@ namespace Singularity.FileService
 			return unzippedFileCounter;
 		}
 
+		public static Encoding GetEncoding(this FileInfo sourceFileInfo)
+		{
+			var bom = new byte[4];
+			using (var file = new FileStream(sourceFileInfo.FullName, FileMode.Open, FileAccess.Read))
+			{
+				file.Read(bom, 0, 4);
+			}
+
+			// Analyze the BOM
+			if (bom[0] == 0xfe && bom[1] == 0xff) return Encoding.BigEndianUnicode; //UTF-16BE
+			if (bom[0] == 0xff && bom[1] == 0xfe)
+			{
+				if (bom[2] != 0 || bom[3] != 0)
+				{
+					//UTF-16LE (I think).
+					return new UnicodeEncoding(false, true);
+				}
+				return new UTF32Encoding(false, true);
+			}
+			if (bom[0] == 0xef && bom[1] == 0xbb && bom[2] == 0xbf) return Encoding.UTF8;
+			if (bom[0] == 0 && bom[1] == 0 && bom[2] == 0xfe && bom[3] == 0xff) return Encoding.UTF32;
+			if (bom[0] == 0x2b && bom[1] == 0x2f && bom[2] == 0x76) return Encoding.UTF7;
+			return Encoding.ASCII;
+		}
+
 		public static async Task CopyToAsync(this FileInfo sourceFileInfo, FileInfo targetFileInfo)
 		{
 			using (FileStream sourceStream = System.IO.File.Open(sourceFileInfo.FullName, FileMode.Open))
