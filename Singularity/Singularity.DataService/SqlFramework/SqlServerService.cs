@@ -72,7 +72,7 @@ namespace Singularity.DataService
 		private SqlDatabase NewSqlDatabase()
 		{
 			var results = new SqlDatabase(DatabaseName);
-			var sqlQuery = "select o.type, s.name [Schema], t.name from sys.objects o inner join sys.tables t on o.object_id = t.object_id inner join sys.schemas s on o.Schema_id = s.schema_id where o.type in ('U','S','IT')";
+			var sqlQuery = "select o.[type], o.[create_date], o.[modify_date], s.name [Schema], t.name from sys.objects o inner join sys.tables t on o.object_id = t.object_id inner join sys.schemas s on o.Schema_id = s.schema_id where o.type in ('U','S','IT')";
 			var sqlCommand = new SqlCommand(sqlQuery, _sqlConnection);
 			SqlDataReader sqlDataReader = null;
 			try
