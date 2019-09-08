@@ -536,6 +536,7 @@ namespace Singularity.DataService
 		public virtual String AttachTableQuery => String.Empty;
 		public String DeleteTableQuery => $"DROP TABLE [dbo].[{TableName}]";
 		public virtual String DetachTableQuery => String.Empty;
+		public virtual String Schema => "[dbo]";
 		protected abstract String PrimaryKeyName { get; }
 		protected DateTime NowDateTime => Context.NowDateTime;
 
@@ -571,7 +572,6 @@ namespace Singularity.DataService
 		protected abstract String DeleteEntityQuery { get; }
 
 		protected abstract TIdentity GetPrimaryKeyValue(TSqlEntity entityToDelete);
-
 
 	}
 
