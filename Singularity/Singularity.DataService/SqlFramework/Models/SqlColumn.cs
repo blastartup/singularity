@@ -3,20 +3,17 @@
 // ReSharper disable once CheckNamespace
 namespace Singularity.DataService.SqlFramework
 {
-	public sealed class SqlColumn
+	public sealed class SqlColumn : SqlObject
 	{
-		public SqlColumn()
+		public SqlColumn() : base()
 		{
-			DefaultSchema = "dbo";
-			//RuleSchema = "dbo";
 		}
 
-		public SqlColumn(String name) : this()
+		public SqlColumn(String name) : base(name)
 		{
-			Name = name;
 		}
 
-		public SqlColumn(String name, ESqlDataTypes eSqlDataType) : this(name)
+		public SqlColumn(String name, ESqlDataTypes eSqlDataType) : base(name)
 		{
 			ESqlDataType = eSqlDataType;
 		}
@@ -65,62 +62,27 @@ namespace Singularity.DataService.SqlFramework
 		//	}
 		//}
 
-		public String Name { get; set; }
 		public Int32 OrdinalPosition { get; set; }
 
 		// if (ESqlDataType == ESqlDataTypes.UserDefinedDataType) return DataType.UserDefinedDataTypeToEnum(this.GetServerObject().Databases[this.GetDBName()].UserDefinedDataTypes[this.DataType.Name, this.DataType.Schema]);
 		public ESqlDataTypes ESqlDataType { get; set; }
 
-		public Boolean Nullable { get; set; }
-		public SqlDefaultConstraint SqlDefaultConstraint { get; set; }
-		public Int32 Length { get; set; }
-		public Int32 Precision { get; set; }
-		public Boolean IsPrimaryKey { get; set; }
+		public Boolean InPrimaryKey { get; set; }
 
-		public String Default
+		public SqlDefaultConstraint DefaultConstraint
 		{
-			get => _default ?? "";
+			get => _defaultConstraint ?? (_defaultConstraint = new SqlDefaultConstraint());
 			set
 			{
-				if (_default != null)
+				if (_defaultConstraint != null)
 				{
 					throw new InvalidOperationException("Default can only be set once.");
 				}
 
-				_default = value;
+				_defaultConstraint = value;
 			}
 		}
-		private String _default;
-
-		//public String DefaultConstraintName
-		//{
-		//	get => _defaultConstraintName ?? "";
-		//	set
-		//	{
-		//		if (_defaultConstraintName != null)
-		//		{
-		//			throw new InvalidOperationException("DefaultConstraintName can only be set once.");
-		//		}
-
-		//		_defaultConstraintName = value;
-		//	}
-		//}
-		//private String _defaultConstraintName;
-
-		public String DefaultSchema
-		{
-			get => _defaultSchema ?? "";
-			set
-			{
-				if (_defaultSchema != null)
-				{
-					throw new InvalidOperationException("DefaultSchema can only be set once.");
-				}
-
-				_defaultSchema = value;
-			}
-		}
-		private String _defaultSchema;
+		private SqlDefaultConstraint _defaultConstraint;
 
 		//public String RuleSchema
 		//{
@@ -309,7 +271,6 @@ namespace Singularity.DataService.SqlFramework
 		//public GeneratedAlwaysType GeneratedAlwaysType { get; set; }
 		//public GraphType GraphType { get; set; }
 		//public Int32 ID { get; set; }
-		//public Boolean InPrimaryKey { get; set; }
 		//public Boolean IsClassified { get; set; }
 
 		//public Boolean IsColumnSet { get; set; }
@@ -436,10 +397,18 @@ namespace Singularity.DataService.SqlFramework
 		//public DataTable EnumIndexes()
 	}
 
-	public class SqlDefaultConstraint
+	public sealed class SqlUserDefinedDataType
 	{
-		public String Text { get; set; }
-		public String Value { get; set; }
-	}
+		public SqlUserDefinedDataType(String name)
+		{
+			Name = name;
+		}
 
+		public String Name { get; internal set; }
+		public ESqlDataTypes ESqlDataType { get; internal set; }
+		public Int32 Length { get; internal set; }
+		public Int32 Precision { get; internal set; }
+		public Int32 Scale { get; internal set; }
+		public Boolean IsNullable { get; internal set; }
+	}
 }

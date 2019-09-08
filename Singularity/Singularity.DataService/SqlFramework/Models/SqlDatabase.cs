@@ -41,7 +41,6 @@ namespace Singularity.DataService.SqlFramework
 		//public DateTime CreateDate { get; set; }
 		//public Guid DatabaseGuid { get; set; }
 		//public Double DataSpaceUsage { get; set; }
-		//public String DefaultSchema { get; set; }
 		//public Int32 ID { get; set; }
 		//public Double IndexSpaceUsage { get; set; }
 		//public DateTime LastBackupDate { get; set; }
@@ -50,5 +49,10 @@ namespace Singularity.DataService.SqlFramework
 		//public Double Size { get; set; }
 		//public DatabaseStatus Status { get; set; }
 
+		public IList<SqlTable> SqlTables => _sqlTables ?? (_sqlTables = new List<SqlTable>());
+		private List<SqlTable> _sqlTables;
+
+		public SqlUserDefinedDataTypeCollection SqlUserDefinedDataTypes => _sqlUserDefinedDataTypes ?? (_sqlUserDefinedDataTypes = new SqlUserDefinedDataTypeCollection());
+		private SqlUserDefinedDataTypeCollection _sqlUserDefinedDataTypes;
 	}
 }

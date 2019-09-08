@@ -252,8 +252,8 @@ namespace Singularity.DataService
 		internal SqlTransaction SqlTransaction => _sqlTransaction;
 		private SqlTransaction _sqlTransaction;
 
-		protected SqlServerSystem SqlServerSystem => _sqlServerSystem ?? (_sqlServerSystem = new SqlServerSystem(SqlConnection));
-		private SqlServerSystem _sqlServerSystem;
+		protected SqlServerService SqlServerSystem => _sqlServerSystem ?? (_sqlServerSystem = new SqlServerService(SqlConnection));
+		private SqlServerService _sqlServerSystem;
 
 		protected virtual String CreateDatabaseTablesQuery => String.Empty;
 		protected virtual String AttachDatabaseTablesQuery => String.Empty;

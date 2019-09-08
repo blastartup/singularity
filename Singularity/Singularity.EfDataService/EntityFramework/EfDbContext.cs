@@ -392,8 +392,8 @@ namespace Singularity.EfDataService
 
 		public Boolean NoTracking { get; set; }
 		protected internal abstract DateTime Now { get; }
-		protected SqlServerSystem SqlServerSystem => _sqlServerSystem ?? (_sqlServerSystem = new SqlServerSystem(SqlConnection));
-		private SqlServerSystem _sqlServerSystem;
+		protected SqlServerService SqlServerSystem => _sqlServerSystem ?? (_sqlServerSystem = new SqlServerService(SqlConnection));
+		private SqlServerService _sqlServerSystem;
 
 	}
 }

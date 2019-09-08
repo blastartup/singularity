@@ -27,14 +27,18 @@ namespace Singularity.DataService.SqlFramework
 
 		public String Name { get; set; }
 		public SqlDatabase Database { get; set; }
-		public SqlColumn PrimaryKey { get; set; }
 		public ICollection<SqlColumn> Columns { get; set; }
 		public ICollection<SqlColumn> ForeignKeyColumns { get; set; }
 		public Int64 RowCount { get; set; }
 		public DateTime CreateDate { get; set; }
 		public DateTime ModifiedDate { get; set; }
 		public Double DataSpaceUsed { get; set; }
+		public String DefaultSchema { get; set; }
 
+		public IEnumerable<SqlColumn> PrimaryKeys
+		{
+			get => Columns.Where(f => f.InPrimaryKey);
+		}
 
 
 		//public bool AnsiNullsStatus { get; set; }
@@ -74,10 +78,10 @@ namespace Singularity.DataService.SqlFramework
 		//public bool IsExternal { get; set; }
 		//public bool IsFileTable { get; set; }
 		//public bool IsIndexable { get; set; }
-		//public bool IsMemoryOptimized { get; set; }
+		public bool IsMemoryOptimized { get; set; }
 		//public bool IsPartitioned { get; set; }
 		//public bool IsSchemaOwned { get; set; }
-		//public bool IsSystemObject { get; set; }
+		public bool IsSystemObject { get; set; }
 		//public bool IsSystemVersioned { get; set; }
 		//public string Location { get; set; }
 		//public LockEscalationType LockEscalation { get; set; }

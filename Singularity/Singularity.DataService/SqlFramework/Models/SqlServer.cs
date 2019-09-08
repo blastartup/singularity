@@ -1,13 +1,26 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Singularity.DataService.SqlFramework.Models
+// ReSharper disable once CheckNamespace
+namespace Singularity.DataService.SqlFramework
 {
 	public class SqlServer
 	{
+		public SqlServer()
+		{
+			Name = "Unknown";
+			InstanceName = "Unknown";
+			IsSqlServerExpress = false;
+			ServiceAccount = "Unknown";
+			ServiceName = "Unknown";
+			DisplayName = "Unknown";
+			Description = "Unknown";
+		}
+
 		// SELECT @@servername
 		public String Name { get; set; }
 

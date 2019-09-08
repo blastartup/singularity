@@ -68,8 +68,11 @@
     <Compile Include="SqlFramework\Enums\ESqlDataTypes.cs" />
     <Compile Include="SqlFramework\Models\SqlColumn.cs" />
     <Compile Include="SqlFramework\Models\SqlDatabase.cs" />
+    <Compile Include="SqlFramework\Models\SqlDefaultConstraint.cs" />
+    <Compile Include="SqlFramework\Models\SqlObject.cs" />
     <Compile Include="SqlFramework\Models\SqlServer.cs" />
     <Compile Include="SqlFramework\Models\SqlTable.cs" />
+    <Compile Include="SqlFramework\Models\SqlUserDefinedDataTypeCollection.cs" />
     <Compile Include="SqlFramework\Repositories\SqlTableRepository.cs" />
     <Compile Include="SqlFramework\SqlAdministrator.cs" />
     <Compile Include="SqlFramework\SqlRepositoryMaster.cs" />
@@ -128,7 +131,7 @@
     <Compile Include="SqlFramework\SqlEntityContext.cs" />
     <Compile Include="SqlFramework\SqlRepository.cs" />
     <Compile Include="SqlFramework\SqlUnitOfWork.cs" />
-    <Compile Include="SqlFramework\SqlServerSystem.cs" />
+    <Compile Include="SqlFramework\SqlServerService.cs" />
     <Compile Include="WriteToTextFile.cs" />
   </ItemGroup>
   <ItemGroup>
