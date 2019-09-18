@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 // ReSharper disable once CheckNamespace
 namespace Singularity.DataService
 {
+	[AttributeUsage(AttributeTargets.Property)]
 	public sealed class OriginallyKnownAsAttribute : Attribute
 	{
 		public OriginallyKnownAsAttribute(String name)

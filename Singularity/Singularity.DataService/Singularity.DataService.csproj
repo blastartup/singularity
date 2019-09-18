@@ -62,6 +62,7 @@
       <Link>VersionInfo.cs</Link>
     </Compile>
     <Compile Include="Attributes\OriginallyKnownAsAttribute.cs" />
+    <Compile Include="Attributes\SqlIndexAttribute.cs" />
     <Compile Include="DataValidationResult.cs" />
     <Compile Include="Interfaces\IValidatable.cs" />
     <Compile Include="RowDataService.cs" />
