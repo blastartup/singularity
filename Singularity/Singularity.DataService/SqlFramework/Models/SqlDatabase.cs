@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Singularity.DataService.SqlFramework.Models;
 
 // ReSharper disable once CheckNamespace
 namespace Singularity.DataService.SqlFramework
@@ -48,6 +49,8 @@ namespace Singularity.DataService.SqlFramework
 		//public Boolean ReadOnly { get; set; }
 		//public Double Size { get; set; }
 		//public DatabaseStatus Status { get; set; }
+
+		public SqlJobServer JobServer { get; set; }
 
 		public IList<SqlTable> SqlTables => _sqlTables ?? (_sqlTables = new List<SqlTable>());
 		private List<SqlTable> _sqlTables;

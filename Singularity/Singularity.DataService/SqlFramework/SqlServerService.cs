@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Data;
 using System.Data.SqlClient;
 using Singularity.DataService.SqlFramework;
 
@@ -43,28 +44,62 @@ namespace Singularity.DataService
 		private SqlServer NewSqlServer()
 		{
 			var results = new SqlServer();
+			results.State = _sqlConnection.State;
+			results.ServerVersion = _sqlConnection.ServerVersion;
 
-			var sqlQuery = "SELECT @@servername";
+			var sqlQuery = "select * from sys.dm_server_services";
 			var sqlCommand = new SqlCommand(sqlQuery, _sqlConnection);
-			results.Name = sqlCommand.ExecuteScalar().ToString();
+			SqlDataReader serviceDataReader = null;
+			try
+			{
+				serviceDataReader = sqlCommand.ExecuteReader(CommandBehavior.SingleRow);
+				serviceDataReader.Read();
+				if (serviceDataReader.HasRows)
+				{
+					results.ServiceFullName = serviceDataReader["servicename"].ToString();
+					results.ServiceAccount = serviceDataReader["service_account"].ToString();
+					results.ServiceStartupTypeDescription = serviceDataReader["startup_type_desc"].ToString();
+					results.ServiceStatusDescription = serviceDataReader["status_desc"].ToString();
+					results.ServiceProcessId = serviceDataReader["process_id"].ToString();
+					results.ServiceLastStatupTime = serviceDataReader["last_startup_time"].ToDateTime();
+				}
+			}
+			catch (SqlException e)
+			{
+				Console.WriteLine(e);
+				throw;
+			}
+			finally
+			{
+				serviceDataReader?.Dispose();
+			}
 
-			sqlQuery = "SELECT @@servicename";
+			sqlQuery = "select @@servername As ServerName, @@SERVICENAME As ServiceName, @@VERSION As [Version], SERVERPROPERTY('ProductLevel') AS ProductLevel, SERVERPROPERTY('Edition') AS Edition, SERVERPROPERTY('ProductVersion') AS ProductVersion";
 			sqlCommand = new SqlCommand(sqlQuery, _sqlConnection);
-			results.InstanceName = sqlCommand.ExecuteScalar().ToString();
-
-			sqlQuery = "SELECT serverproperty('Edition')";
-			sqlCommand = new SqlCommand(sqlQuery, _sqlConnection);
-			results.IsSqlServerExpress = sqlCommand.ExecuteScalar().ToString().StartsWith("Express");
-
-			sqlQuery = "select ServiceName from sys.dm_server_services";
-			sqlCommand = new SqlCommand(sqlQuery, _sqlConnection);
-			results.DisplayName = sqlCommand.ExecuteScalar().ToString();
-
-			sqlQuery = "select Service_Account from sys.dm_server_services";
-			sqlCommand = new SqlCommand(sqlQuery, _sqlConnection);
-			results.ServiceAccount = sqlCommand.ExecuteScalar().ToString();
-
-			results.ServiceName = new Words(results.ServiceAccount, ValueLib.ForwardSlash.StringValue)[1];
+			SqlDataReader serverDataReader = null;
+			try
+			{
+				serverDataReader = sqlCommand.ExecuteReader(CommandBehavior.SingleRow);
+				serverDataReader.Read();
+				if (serverDataReader.HasRows)
+				{
+					results.Name = serverDataReader["ServerName"].ToString();
+					results.ServiceName = serverDataReader["ServiceName"].ToString();
+					results.Edition = serverDataReader["Edition"].ToString();
+					results.IsSqlServerExpress = results.Edition.Contains("Express", StringComparison.OrdinalIgnoreCase);
+					results.ServerVersionDescription = serverDataReader["Version"].ToString();
+					results.ProductLevel = serverDataReader["ProductLevel"].ToString();
+				}
+			}
+			catch (SqlException e)
+			{
+				Console.WriteLine(e);
+				throw;
+			}
+			finally
+			{
+				serviceDataReader?.Dispose();
+			}
 
 			return results;
 		}
@@ -133,6 +168,10 @@ namespace Singularity.DataService
 			return results;
 		}
 
+		public SqlJobService SqlJobService => _sqlJobService ?? (_sqlJobService = new SqlJobService(this));
+		private SqlJobService _sqlJobService;
+
+		internal SqlConnection SqlConnection => _sqlConnection;
 		private readonly SqlConnection _sqlConnection;
 	}
 }

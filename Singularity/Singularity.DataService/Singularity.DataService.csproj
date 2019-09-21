@@ -70,11 +70,14 @@
     <Compile Include="SqlFramework\Models\SqlColumn.cs" />
     <Compile Include="SqlFramework\Models\SqlDatabase.cs" />
     <Compile Include="SqlFramework\Models\SqlDefaultConstraint.cs" />
+    <Compile Include="SqlFramework\Models\SqlJob.cs" />
+    <Compile Include="SqlFramework\Models\SqlJobServer.cs" />
     <Compile Include="SqlFramework\Models\SqlObject.cs" />
     <Compile Include="SqlFramework\Models\SqlServer.cs" />
     <Compile Include="SqlFramework\Models\SqlTable.cs" />
     <Compile Include="SqlFramework\Models\SqlUserDefinedDataTypeCollection.cs" />
     <Compile Include="SqlFramework\Repositories\SqlTableRepository.cs" />
+    <Compile Include="SqlFramework\SqlJobService.cs" />
     <Compile Include="SqlFramework\SqlAdministrator.cs" />
     <Compile Include="SqlFramework\SqlRepositoryMaster.cs" />
     <Compile Include="TableDataService.cs" />
