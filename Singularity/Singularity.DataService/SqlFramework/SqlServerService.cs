@@ -2,6 +2,7 @@
 using System.Data;
 using System.Data.SqlClient;
 using Singularity.DataService.SqlFramework;
+using Singularity.DataService.SqlFramework.Models;
 
 // ReSharper disable once CheckNamespace
 namespace Singularity.DataService
@@ -29,17 +30,105 @@ namespace Singularity.DataService
 		public String DatabaseName => _sqlConnection.Database;
 		public String DataSource => _sqlConnection.DataSource;
 
+		public void LoadColumns(SqlTable sqlTable)
+		{
+			var sqlQuery = @"SELECT s.name [Schema], c.column_id, c.Name, st.Name As SystemDataType, ut.Name AS UserDataType, 
+	Case When st.Name in ('nvarchar', 'nchar') THEN c.max_length / 2 Else c.max_length End [Length], 
+	ut.precision AS Precision, ut.scale, c.is_nullable, IsNull(pk.is_primary_key, 0) is_primary_key, IsNull(pk.is_unique, 0) is_unique, c.is_computed, 
+	Case When st.Name in ('nvarchar', 'varchar') Then 1 Else 0 End [IsVariableLength], dc.definition, dc.name constraint_Name,
+	pk.[Name] IndexName, ic.key_ordinal, ic.is_descending_key
+FROM sys.tables tbl
+	inner join sys.columns c on tbl.object_id = c.object_id
+	inner join sys.objects o ON o.object_id = c.object_id
+	left join  sys.types ut on ut.user_type_id  = c.user_type_id   
+	left join sys.types st on c.system_type_id = st.system_type_id and c.system_type_id = st.user_type_id
+	left join sys.index_columns ic on c.column_id = ic.column_id and c.object_id = ic.object_id
+	left join sys.indexes pk on ic.object_id = pk.object_id and ic.index_id = pk.index_id
+	inner join sys.schemas s on tbl.schema_id = s.schema_id
+	left join sys.default_constraints dc on c.column_id = dc.parent_column_id and tbl.object_id = dc.parent_object_id
+WHERE o.type = 'U' and o.Name = @TableName
+ORDER BY c.column_id";
+			var sqlCommand = new SqlCommand(sqlQuery, _sqlConnection);
+			sqlCommand.Parameters.Add(new SqlParameter("@TableName", sqlTable.Name));
+			SqlDataReader sqlDataReader = null;
+			try
+			{
+				sqlDataReader = sqlCommand.ExecuteReader();
+				var previousColumnId = -1;
+				var newSqlColumn = new SqlColumn();
+				while (sqlDataReader.Read())
+				{
+					var currentColumnId = sqlDataReader["column_id"].ToInt();
+					if (currentColumnId != previousColumnId)
+					{
+						newSqlColumn = new SqlColumn(sqlDataReader["name"].ToString())
+						{
+							Name = sqlDataReader["Name"].ToString(),
+							OrdinalPosition = currentColumnId,
+							Computed = sqlDataReader["is_computed"].ToBool(),
+							InPrimaryKey = sqlDataReader["is_primary_key"].ToBool(),
+							Length = sqlDataReader["Length"].ToInt(),
+							Precision = sqlDataReader["Precision"].ToInt(),
+							Scale = sqlDataReader["scale"].ToInt(),
+							Nullable = sqlDataReader["is_nullable"].ToBool(),
+							VariableLength = sqlDataReader["IsVariableLength"].ToBool(),
+							DefaultSchema = sqlDataReader["Schema"].ToString(),
+							UserDefinedDataTypeName = sqlDataReader["UserDataType"].ToString()
+						};
+						ESqlDataTypes result = ESqlDataTypes.NVarChar;
+						var systemDataType = sqlDataReader["SystemDataType"].ToString();
+						if (Enum.TryParse(systemDataType, true, out result))
+						{
+							newSqlColumn.ESqlDataType = result;
+						}
+
+						if (newSqlColumn.UserDefinedDataTypeName.Equals(systemDataType, StringComparison.OrdinalIgnoreCase))
+						{
+							newSqlColumn.UserDefinedDataTypeName = null;
+						}
+
+						var defaultConstraintName = sqlDataReader["constraint_name"].ToString();
+						if (!defaultConstraintName.IsEmpty())
+						{
+							newSqlColumn.DefaultConstraint = new SqlDefaultConstraint()
+							{
+								Name = defaultConstraintName,
+								Text = sqlDataReader["definition"].ToString(),
+							};
+							newSqlColumn.DefaultConstraint.Value = newSqlColumn.DefaultConstraint.Text;
+							while (newSqlColumn.DefaultConstraint.Value[0] == '(')
+							{
+								newSqlColumn.DefaultConstraint.Value = newSqlColumn.DefaultConstraint.Value.Desurround();
+							}
+						}
+
+						sqlTable.Columns.Add(newSqlColumn);
+						previousColumnId = currentColumnId;
+					}
+
+					if (sqlDataReader["IndexName"] != null)
+					{
+						var sqlIndex = new SqlIndex(sqlDataReader["IndexName"].ToString())
+						{
+							IsPrimaryKey = sqlDataReader["is_primary_key"].ToBool(),
+							Ordinal = sqlDataReader["key_ordinal"].ToByte(),
+							IsDescending = sqlDataReader["is_descending_key"].ToBool()
+						};
+						newSqlColumn.Indexes.Add(sqlIndex);
+					}
+				}
+			}
+			finally
+			{
+				sqlDataReader?.Dispose();
+			}
+		}
+
 		public SqlServer SqlServer()
 		{
 			return _sqlServer ?? (_sqlServer = NewSqlServer());
 		}
 		private SqlServer _sqlServer;
-
-		public SqlDatabase SqlDatabase()
-		{
-			return _sqlDatabase ?? (_sqlDatabase = NewSqlDatabase());
-		}
-		private SqlDatabase _sqlDatabase;
 
 		private SqlServer NewSqlServer()
 		{
@@ -163,10 +252,14 @@ namespace Singularity.DataService
 				sqlDataReader?.Dispose();
 			}
 
-
-
 			return results;
 		}
+
+		public SqlDatabase SqlDatabase()
+		{
+			return _sqlDatabase ?? (_sqlDatabase = NewSqlDatabase());
+		}
+		private SqlDatabase _sqlDatabase;
 
 		public SqlJobService SqlJobService => _sqlJobService ?? (_sqlJobService = new SqlJobService(this));
 		private SqlJobService _sqlJobService;

@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using Singularity.DataService.SqlFramework.Models;
 
 // ReSharper disable once CheckNamespace
 namespace Singularity.DataService.SqlFramework
@@ -7,10 +10,12 @@ namespace Singularity.DataService.SqlFramework
 	{
 		public SqlColumn() : base()
 		{
+			Indexes = new HashSet<SqlIndex>();
 		}
 
 		public SqlColumn(String name) : base(name)
 		{
+			Indexes = new HashSet<SqlIndex>();
 		}
 
 		public SqlColumn(String name, ESqlDataTypes eSqlDataType) : base(name)
@@ -64,7 +69,6 @@ namespace Singularity.DataService.SqlFramework
 
 		public Int32 OrdinalPosition { get; set; }
 
-		// if (ESqlDataType == ESqlDataTypes.UserDefinedDataType) return DataType.UserDefinedDataTypeToEnum(this.GetServerObject().Databases[this.GetDBName()].UserDefinedDataTypes[this.DataType.Name, this.DataType.Schema]);
 		public ESqlDataTypes ESqlDataType { get; set; }
 
 		public Boolean InPrimaryKey { get; set; }
@@ -395,6 +399,8 @@ namespace Singularity.DataService.SqlFramework
 
 		//public DataTable EnumForeignKeys()
 		//public DataTable EnumIndexes()
+
+		public ICollection<SqlIndex> Indexes { get; set; }
 	}
 
 	public sealed class SqlUserDefinedDataType

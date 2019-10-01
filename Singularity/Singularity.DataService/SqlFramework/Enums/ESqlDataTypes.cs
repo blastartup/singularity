@@ -38,8 +38,8 @@ namespace Singularity.DataService.SqlFramework
 		Timestamp = 21, // 0x00000015
 		TinyInt = 22, // 0x00000016
 		UniqueIdentifier = 23, // 0x00000017
-		UserDefinedDataType = 24, // 0x00000018
-		UserDefinedType = 25, // 0x00000019
+		//UserDefinedDataType = 24, // 0x00000018
+		//UserDefinedType = 25, // 0x00000019
 		VarBinary = 28, // 0x0000001C
 		VarBinaryMax = 29, // 0x0000001D
 		VarChar = 30, // 0x0000001E

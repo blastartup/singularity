@@ -70,6 +70,7 @@
     <Compile Include="SqlFramework\Models\SqlColumn.cs" />
     <Compile Include="SqlFramework\Models\SqlDatabase.cs" />
     <Compile Include="SqlFramework\Models\SqlDefaultConstraint.cs" />
+    <Compile Include="SqlFramework\Models\SqlIndex.cs" />
     <Compile Include="SqlFramework\Models\SqlJob.cs" />
     <Compile Include="SqlFramework\Models\SqlJobServer.cs" />
     <Compile Include="SqlFramework\Models\SqlObject.cs" />

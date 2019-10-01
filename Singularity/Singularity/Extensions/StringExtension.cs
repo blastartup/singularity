@@ -1224,71 +1224,6 @@ namespace Singularity
 		#endregion
 
 		/// <summary>
-		/// Ensure any original upper case characters are retained.
-		/// </summary>
-		/// <param name="translatedVersion"></param>
-		/// <param name="originalVersion"></param>
-		/// <returns></returns>
-		public static String MatchCase(this String translatedVersion, String originalVersion)
-		{
-			if (translatedVersion.Equals(originalVersion))
-			{
-				return translatedVersion;
-			}
-
-			var tvLength = translatedVersion.Length;
-			var ovLength = originalVersion.Length;
-			var matchVersionBuilder = new StringBuilder(tvLength);
-			var oIdx = 0;
-			for (var idx = 0; idx < tvLength; idx++)
-			{
-				var transalatedVersionCharacter = translatedVersion[idx];
-				var originalVersionCharacter = ' ';  // Just a default buffer value - not actually used.
-				while (oIdx < ovLength)
-				{
-					originalVersionCharacter = originalVersion[oIdx];
-
-					if (originalVersionCharacter.In(' ', '_'))
-					{
-						oIdx++;
-						continue;
-					}
-
-					var ovAsString = originalVersionCharacter.ToString();
-					var tvAsString = transalatedVersionCharacter.ToString();
-					if (!ovAsString.Equals(tvAsString, StringComparison.OrdinalIgnoreCase))
-					{
-						if (oIdx + 1 < ovLength - 1 && originalVersion[oIdx + 1].ToString().Equals(tvAsString, StringComparison.OrdinalIgnoreCase))
-						{
-							oIdx++;
-							continue;
-						}
-
-						if (oIdx + 2 < ovLength - 2 && originalVersion[oIdx + 2].ToString().Equals(tvAsString, StringComparison.OrdinalIgnoreCase))
-						{
-							oIdx += 2;
-							continue;
-						}
-
-						idx = tvLength;
-					}
-					break;
-				};
-
-				if (Char.IsLower(transalatedVersionCharacter) && Char.IsUpper(originalVersionCharacter))
-				{
-					matchVersionBuilder.Append(originalVersionCharacter.ToString().ToUpper());
-				}
-				else
-				{
-					matchVersionBuilder.Append(transalatedVersionCharacter);
-				}
-				oIdx++;
-			}
-			return matchVersionBuilder.ToString();
-		}
-
-		/// <summary>
 		/// Divide a very long string by a given length and return a given sized list.
 		/// </summary>
 		/// <param name="value">The very long string.</param>
@@ -1739,11 +1674,44 @@ namespace Singularity
 		/// Changes the String as title case.
 		/// </summary>
 		/// <returns>Copy of String with the title case applied</returns>
-		public static String ToTitleCaseAll(this String value)
+		public static String ToTitleCaseAll(this String value, Boolean acceptUnderscores = false)
 		{
 			if (value.IsEmpty()) return value;
-			//return ToTitleCaseCore(value, true);
-			return CultureInfo.CurrentCulture.TextInfo.ToTitleCase(value);
+			if (!acceptUnderscores)
+			{
+				return CultureInfo.CurrentCulture.TextInfo.ToTitleCase(value);
+			}
+
+			var resultBuilder = new StringBuilder(value.Length);
+			var wordBuilder = new StringBuilder(15);
+			var wordDelimiter = true;  // First word.
+			for (Int32 idx = 0; idx < value.Length; idx++)
+			{
+				if (value[idx].In(' ', '_'))
+				{
+					if (wordBuilder.Length > 0)
+					{
+						resultBuilder.Append(CultureInfo.CurrentCulture.TextInfo.ToTitleCase(wordBuilder.ToString()));
+						wordBuilder = new StringBuilder(15);
+					}
+
+					resultBuilder.Append(value[idx]);
+					wordDelimiter = true;
+				}
+				else
+				{
+					if (wordDelimiter)
+					{
+						resultBuilder.Append(value[idx].ToString().ToUpper());
+						wordDelimiter = false;
+					}
+					else
+					{
+						resultBuilder.Append(value[idx]);
+					}
+				}
+			}
+			return resultBuilder.ToString();
 		}
 
 		/// <summary>

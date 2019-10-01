@@ -185,6 +185,33 @@ namespace Singularity
 			return value?.ToString() ?? replacementValue;
 		}
 
+		#region ToByte
+
+		/// <summary>
+		/// Exception protected Object to Byte conversion.
+		/// </summary>
+		/// <param name="value">Given Object as an expected integer value.</param>
+		/// <returns>Either the correctly converted Int32 or 0 if the given value is invalid in any way.</returns>
+		[DebuggerStepThrough]
+		public static Byte ToByte(this Object value)
+		{
+			return ToByte(value, 0);
+		}
+
+		/// <summary>
+		/// Exception protected Object to Int32 conversion.
+		/// </summary>
+		/// <param name="value">Given Object as an expected integer value.</param>
+		/// <param name="defaultValue">Default value if the object is null or the conversion fails.</param>
+		/// <returns>Either the correctly converted Int32 or the default value if the given value is invalid in any way.</returns>
+		[DebuggerStepThrough]
+		public static Byte ToByte(this Object value, Byte defaultValue)
+		{
+			return (Byte)ToCore(value, defaultValue);
+		}
+
+		#endregion
+
 		#region ToInt
 
 		/// <summary>
@@ -215,7 +242,7 @@ namespace Singularity
 		#region ToInt64
 
 		/// <summary>
-		/// Exception protected Object to Int32 conversion.
+		/// Exception protected Object to Int64 conversion.
 		/// </summary>
 		/// <param name="value">Given Object as an expected integer value.</param>
 		/// <returns>Either the correctly converted Int32 or 0 if the given value is invalid in any way.</returns>
@@ -226,7 +253,7 @@ namespace Singularity
 		}
 
 		/// <summary>
-		/// Exception protected Object to Int32 conversion.
+		/// Exception protected Object to Int64 conversion.
 		/// </summary>
 		/// <param name="value">Given Object as an expected integer value.</param>
 		/// <param name="defaultValue">Default value if the object is null or the conversion fails.</param>
@@ -438,6 +465,10 @@ namespace Singularity
 					else if (result is Double)
 					{
 						result = Convert.ToDouble(value);
+					}
+					else if (result is Byte)
+					{
+						result = Convert.ToByte(value);
 					}
 					else if (result is Guid)
 					{
