@@ -30,9 +30,12 @@ namespace Singularity.DataService.Test.SqlFramework
 
 			var sa = new SqlAdministratorMock(masterSqlConnectionBuilder.ToSqlConnection());
 
-			Assert.IsFalse(sa.DatabaseExists(database));
-			sa.CreateDatabase(database);
-			Assert.IsTrue(sa.DatabaseExists(sqlConnectionBuilder));
+			if (!sa.DatabaseExists(database).Condition)
+			{
+				sa.CreateDatabase(database);
+			}
+			Assert.IsTrue(sa.DatabaseExists(database).Condition);
+			Assert.IsTrue(sa.DatabaseExists(sqlConnectionBuilder).Condition);
 		}
 
 		[TestMethod]
@@ -55,13 +58,13 @@ namespace Singularity.DataService.Test.SqlFramework
 
 			var sa = new SqlAdministratorMock(masterSqlConnectionBuilder.ToSqlConnection());
 
-			Assert.IsFalse(sa.DatabaseExists(sqlConnectionBuilder), "Database doesn't exist yet.");
+			Assert.IsFalse(sa.DatabaseExists(sqlConnectionBuilder).Condition, "Database doesn't exist yet.");
 
 			sa.CreateDatabase(sqlConnectionBuilder.InitialCatalog);
-			Assert.IsTrue(sa.DatabaseExists(sqlConnectionBuilder), "Database exists.");
+			Assert.IsTrue(sa.DatabaseExists(sqlConnectionBuilder).Condition, "Database exists.");
 
 			sa.DeleteDatabase("singularity");
-			Assert.IsTrue(sa.DatabaseExists(sqlConnectionBuilder), "Database deleted.");
+			Assert.IsTrue(!sa.DatabaseExists(sqlConnectionBuilder).Condition, "Database deleted.");
 		}
 
 		[TestMethod]
@@ -85,21 +88,21 @@ namespace Singularity.DataService.Test.SqlFramework
 			var sa = new SqlAdministratorMock(masterSqlConnectionBuilder.ToSqlConnection());
 			
 			var uow = new UnitOfWorkMock(sqlConnectionBuilder.ToSqlConnection());
-			Assert.IsFalse(sa.DatabaseExists(sqlConnectionBuilder), "No database yet.");
+			Assert.IsFalse(sa.DatabaseExists(sqlConnectionBuilder).Condition, "No database yet.");
 
-			Assert.IsTrue(sa.CreateDatabase("singularity"));
-			Assert.IsTrue(sa.DatabaseExists(sqlConnectionBuilder), "Database exists.");
+			Assert.IsTrue(sa.CreateDatabase("singularity").Condition);
+			Assert.IsTrue(sa.DatabaseExists(sqlConnectionBuilder).Condition, "Database exists.");
 
 			Assert.IsFalse(uow.TeeProjectRepository.TableExists());
-			Assert.IsTrue(uow.CreateTables());
+			Assert.IsTrue(uow.CreateTables().Condition);
 			Assert.IsTrue(uow.TeeProjectRepository.TableExists());
 
 			Assert.IsTrue(uow.Context.ExecuteSql(uow.TeeProjectRepository.DeleteTableQuery));
 			Assert.IsFalse(uow.TeeProjectRepository.TableExists());
 
 			uow.Dispose();
-			Assert.IsTrue(sa.DeleteDatabase("singularity"));
-			Assert.IsFalse(sa.DatabaseExists(sqlConnectionBuilder), "Database now deleted.");
+			Assert.IsTrue(sa.DeleteDatabase("singularity").Condition);
+			Assert.IsFalse(sa.DatabaseExists(sqlConnectionBuilder).Condition, "Database now deleted.");
 		}
 
 		[TestMethod]
@@ -123,10 +126,10 @@ namespace Singularity.DataService.Test.SqlFramework
 			var sa = new SqlAdministratorMock(masterSqlConnectionBuilder.ToSqlConnection());
 
 			var uow = new UnitOfWorkMock(sqlConnectionBuilder.ToSqlConnection());
-			Assert.IsFalse(sa.DatabaseExists(sqlConnectionBuilder), "No database yet.");
+			Assert.IsFalse(sa.DatabaseExists(sqlConnectionBuilder).Condition, "No database yet.");
 
 			sa.CreateDatabase("singularity");
-			Assert.IsTrue(sa.DatabaseExists(sqlConnectionBuilder), "Database exists.");
+			Assert.IsTrue(sa.DatabaseExists(sqlConnectionBuilder).Condition, "Database exists.");
 
 			Assert.IsFalse(uow.TeeProjectRepository.TableExists());
 			uow.CreateTables();
@@ -167,8 +170,8 @@ namespace Singularity.DataService.Test.SqlFramework
 			Assert.IsFalse(uow.TeeProjectRepository.TableExists());
 
 			uow.Dispose();
-			Assert.IsTrue(sa.DeleteDatabase("singularity"));
-			Assert.IsFalse(sa.DatabaseExists(sqlConnectionBuilder), "Database deleted.");
+			Assert.IsTrue(sa.DeleteDatabase("singularity").Condition);
+			Assert.IsFalse(sa.DatabaseExists(sqlConnectionBuilder).Condition, "Database deleted.");
 		}
 	}
 }

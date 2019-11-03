@@ -18,23 +18,20 @@ namespace Singularity
 
 		public String Word
 		{
-			get { return _word; }
-			set { _word = value; }
+			get => _word;
+			set => _word = value;
 		}
 
 		private String _word;
 
 		public ESearchTypes Type
 		{
-			get { return _searchType; }
-			set { _searchType = value; }
+			get => _searchType;
+			set => _searchType = value;
 		}
 
 		private ESearchTypes _searchType;
 
-		public Boolean IsEmpty
-		{
-			get { return Word.IsEmpty(); }
-		}
+		public Boolean IsEmpty => Word.IsEmpty();
 	}
 }

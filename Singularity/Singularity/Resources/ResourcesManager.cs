@@ -52,7 +52,7 @@ namespace Singularity.Resources
 				{
 					throw new Exception("Internal Exception: MissingManifestResourceException: Make sure NamespaceOfResX passed constructor CLAParser() is correct. If the resx-file is directly included to project, NamespaceOfResX must be the default namespace. In your main file Program.cs look for the line starting with \"namespace\" at top of file and try to pass the string which follows to constructor CLAParser().");
 				}
-				catch (Exception)
+				catch (InvalidOperationException)
 				{
 					result = resourceManagerString;
 				}

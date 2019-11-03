@@ -29,6 +29,7 @@ namespace Singularity.EmailService
 			return result;
 		}
 
+		[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", MessageId = "0")]
 		public IStaticMessage PackageTemplate(IStaticMessage staticMessage, params Object[] contents)
 		{
 			if (staticMessage.IsEmpty()) throw new ArgumentException("Given staticMessage argument cannot be empty.", "staticMessage");
@@ -42,9 +43,9 @@ namespace Singularity.EmailService
 				);
 		}
 
-		protected virtual String PackageTemplateCore(String template, ExpandoObject model)
+		protected virtual String PackageTemplateCore(String emailTemplate, ExpandoObject model)
 		{
-			return template.FormatWith(model);
+			return emailTemplate.FormatWith(model);
 		}
 
 		/*
@@ -68,21 +69,27 @@ namespace Singularity.EmailService
 
 		*/
 
-		public Boolean IsValidEmailAddress(String sEmail)
+		public Boolean IsValidEmailAddress(String emailAddress)
 		{
-			if (sEmail == null)
+			if (emailAddress == null)
 			{
 				return false;
 			}
 
-			return Regex.IsMatch(sEmail, @"^([a-zA-Z0-9_\-\.]+)@((\[[0-9]{1,3}" +
+			return Regex.IsMatch(emailAddress, @"^([a-zA-Z0-9_\-\.]+)@((\[[0-9]{1,3}" +
 				@"\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([a-zA-Z0-9\-]+\" +
 				@".)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$", RegexOptions.IgnorePatternWhitespace | RegexOptions.Compiled);
 		}
 
 		// Preferred method to send email.  Modify interface for new features...
+		[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", MessageId = "0")]
 		public SendEmailResponse<INotification> SendSmtpMail(IEmailMessage emailMessage)
 		{
+			if (emailMessage is null)
+			{
+				throw new ArgumentException("Argument emailMessage cannot be null.");
+			}
+
 			SendEmailResponse<INotification> result = new SendEmailResponse<INotification>();
 			try
 			{
@@ -106,6 +113,5 @@ namespace Singularity.EmailService
 			}
 			return result;
 		}
-
 	}
 }

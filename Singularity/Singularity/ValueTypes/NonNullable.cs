@@ -48,10 +48,8 @@ namespace Singularity
 
 		/// <summary>The wrapped value.</summary>
 		[DebuggerHidden]
-		public T Value
-		{
-			get { return _mValue; }
-		}
+		public T Value => _mValue;
+
 		private T _mValue;
 	}
 }

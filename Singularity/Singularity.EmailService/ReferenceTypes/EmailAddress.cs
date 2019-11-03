@@ -16,15 +16,20 @@ namespace Singularity.EmailService
 
 		public Int32 CompareTo(EmailAddress other)
 		{
-			return Address.CompareTo(other);
+			if (other == null)
+			{
+				throw new ArgumentNullException("Argument other cannot be null.");
+			}
+
+			return String.Compare(Address, other.Address, StringComparison.CurrentCulture);
 		}
 
-		public Int32 CompareTo(Object other)
+		public Int32 CompareTo(Object obj)
 		{
-			return Address.CompareTo(other);
+			return Address.CompareTo(obj);
 		}
 
-		public Int32 GetHashCode(EmailAddress obj)
+		public static Int32 GetHashCode(EmailAddress obj)
 		{
 			return obj?.GetHashCode() ?? 0;
 		}

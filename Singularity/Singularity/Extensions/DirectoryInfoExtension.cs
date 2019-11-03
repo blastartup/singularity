@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 using System.Threading;
 
@@ -34,7 +35,7 @@ namespace Singularity
 				{
 					if (attemptCounter < 4)
 					{
-						if (!ex.Message.ToLower().Contains("network"))
+						if (!ex.Message.ToLower(CultureInfo.CurrentCulture).Contains("network"))
 						{
 							break;
 						}
@@ -72,7 +73,7 @@ namespace Singularity
 				{
 					if (attemptCounter < 4)
 					{
-						if (!ex.Message.ToLower().Contains("network"))
+						if (!ex.Message.ToLower(CultureInfo.CurrentCulture).Contains("network"))
 						{
 							break;
 						}
@@ -91,11 +92,11 @@ namespace Singularity
 		/// Delete all the files and folders within the current folder but without deleting the current folder itself.
 		/// </summary>
 		/// <param name="folder">The folder you wish to clean.</param>
-		/// <param name="subFoldersOnly">Optionally choose to only delete sub folders and not files in this folder.  By default
+		/// <param name="subfoldersOnly">Optionally choose to only delete sub folders and not files in this folder.  By default
 		/// files and sub folders are deleted.</param>
-		public static void Clean(this DirectoryInfo folder, Boolean subFoldersOnly = false)
+		public static void Clean(this DirectoryInfo folder, Boolean subfoldersOnly = false)
 		{
-			if (!subFoldersOnly)
+			if (!subfoldersOnly)
 			{
 				folder.GetFiles().ForEach(f => f.Delete());
 			}

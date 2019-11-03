@@ -202,20 +202,22 @@ namespace Singularity.EfDataService
 				Type pkColumnType = Type.GetType(pkColumn.PrimitiveType.ClrEquivalentType.FullName);
 
 				// Get the number of existing rows in the table.
-				cmd.CommandText = $@"SELECT COUNT(*) FROM {tableName}";
+				cmd.CommandText = @"SELECT COUNT(*) FROM @TableName";
+				cmd.Parameters.AddWithValue("@TableName", tableName);
 				Object result = cmd.ExecuteScalar();
 				Int64 count = Convert.ToInt64(result);
 
 				// Get the identity increment value
-				cmd.CommandText = $"SELECT IDENT_INCR('{tableName}')";
+				cmd.CommandText = "SELECT IDENT_INCR(@TableName)";
+				cmd.Parameters.AddWithValue("@TableName", tableName);
 				result = cmd.ExecuteScalar();
 				dynamic identIncrement = Convert.ChangeType(result, pkColumnType);
 
 				// Get the last identity value generated for our table
-				cmd.CommandText = $"SELECT IDENT_CURRENT('{tableName}')";
+				cmd.CommandText = "SELECT IDENT_CURRENT(@TableName)";
+				cmd.Parameters.AddWithValue("@TableName", tableName);
 				result = cmd.ExecuteScalar();
 				dynamic identcurrent = Convert.ChangeType(result, pkColumnType);
-
 				dynamic nextId = identcurrent + (count > 0 ? identIncrement : 0);
 
 				bulkCopy.BulkCopyTimeout = 5 * 60;
@@ -225,7 +227,11 @@ namespace Singularity.EfDataService
 				result = cmd.ExecuteScalar();
 				dynamic lastId = Convert.ChangeType(result, pkColumnType);
 
-				cmd.CommandText = $"SELECT {pkColumnName} From {tableName} WHERE {pkColumnName} >= {nextId} and {pkColumnName} <= {lastId}";
+				cmd.CommandText = "SELECT @PkColumnName From @TableName WHERE @PkColumnName >= @NextId and @PkColumnName <= @LastId";
+				cmd.Parameters.AddWithValue("@PkColumnName", pkColumnName);
+				cmd.Parameters.AddWithValue("@TableName", tableName);
+				cmd.Parameters.AddWithValue("@NextId", nextId);
+				cmd.Parameters.AddWithValue("@LastId", lastId);
 				SqlDataReader reader = cmd.ExecuteReader();
 				Object[] ids = (from IDataRecord r in reader
 									 let pk = r[pkColumnName]

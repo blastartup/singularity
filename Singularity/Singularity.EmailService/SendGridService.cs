@@ -7,8 +7,8 @@ namespace Singularity.EmailService
 {
 	public class SendGridService
 	{
-		private static readonly String _username = "azure_77ec1b3446a7b3f453c4df97b8493aa0@azure.com";
-		private static readonly String _password = "yarwp6xx";
+		private const String _username = "azure_77ec1b3446a7b3f453c4df97b8493aa0@azure.com";
+		private const String _password = "yarwp6xx";
 		private MailMessage _mailMessage;
 
 		/// <summary>

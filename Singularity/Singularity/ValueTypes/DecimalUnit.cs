@@ -40,34 +40,19 @@ namespace Singularity
 		private readonly Decimal _value;
 		private readonly Func<Decimal, Decimal> _formatConversion;
 
-		public String UnitAbbreviation
-		{
-			get { return _abbreviation; }
-		}
+		public String UnitAbbreviation => _abbreviation;
 		private readonly String _abbreviation;
 
-		public String Mask
-		{
-			get { return _mask; }
-		}
+		public String Mask => _mask;
 		private readonly String _mask;
 
-		public String Name
-		{
-			get { return _name; }
-		}
+		public String Name => _name;
 		private readonly String _name;
 
-		public String Description
-		{
-			get { return _description; }
-		}
+		public String Description => _description;
 		private readonly String _description;
 
-		public Boolean IsEmpty
-		{
-			get { return _value.IsEmpty(); }
-		}
+		public Boolean IsEmpty => _value.IsEmpty();
 
 		#region Object Overrides
 
@@ -99,45 +84,45 @@ namespace Singularity
 		}
 
 		[DebuggerStepThrough]
-		public static implicit operator Decimal(DecimalUnit aValue)
+		public static implicit operator Decimal(DecimalUnit value)
 		{
-			return aValue._value;
+			return value._value;
 		}
 
 		[DebuggerStepThrough]
-		public static implicit operator DecimalUnit(Byte aValue)
+		public static implicit operator DecimalUnit(Byte value)
 		{
-			return new DecimalUnit(Convert.ToDecimal(aValue));
+			return new DecimalUnit(Convert.ToDecimal(value));
 		}
 
 		[DebuggerStepThrough]
-		public static implicit operator DecimalUnit(Int16 aValue)
+		public static implicit operator DecimalUnit(Int16 value)
 		{
-			return new DecimalUnit(Convert.ToDecimal(aValue));
+			return new DecimalUnit(Convert.ToDecimal(value));
 		}
 
 		[DebuggerStepThrough]
-		public static implicit operator DecimalUnit(Int32 aValue)
+		public static implicit operator DecimalUnit(Int32 value)
 		{
-			return new DecimalUnit(Convert.ToDecimal(aValue));
+			return new DecimalUnit(Convert.ToDecimal(value));
 		}
 
 		[DebuggerStepThrough]
-		public static explicit operator Int16(DecimalUnit aValue)
+		public static explicit operator Int16(DecimalUnit value)
 		{
-			return Convert.ToInt16(aValue._value);
+			return Convert.ToInt16(value._value);
 		}
 
 		[DebuggerStepThrough]
-		public static explicit operator Int32(DecimalUnit aValue)
+		public static explicit operator Int32(DecimalUnit value)
 		{
-			return Convert.ToInt32(aValue._value);
+			return Convert.ToInt32(value._value);
 		}
 
 		[DebuggerStepThrough]
-		public static explicit operator Double(DecimalUnit aValue)
+		public static explicit operator Double(DecimalUnit value)
 		{
-			return Convert.ToDouble(aValue);
+			return Convert.ToDouble(value);
 		}
 
 		#endregion
@@ -145,9 +130,9 @@ namespace Singularity
 		#region Operator Overloads
 
 		[DebuggerStepThrough]
-		public static Boolean operator ==(DecimalUnit leftUnit, DecimalUnit rightleftDecimalUnitnit)
+		public static Boolean operator ==(DecimalUnit leftUnit, DecimalUnit rightLeftDecimalUnit)
 		{
-			return leftUnit._value.Equals(rightleftDecimalUnitnit._value);
+			return leftUnit._value.Equals(rightLeftDecimalUnit._value);
 		}
 
 		[DebuggerStepThrough]
@@ -194,13 +179,7 @@ namespace Singularity
 			return !Mask.IsEmpty() ? Mask.FormatX(FormattedValue, UnitAbbreviation) : String.Empty;
 		}
 
-		private Decimal FormattedValue
-		{
-			get
-			{
-				return _formatConversion == null ? _value : _formatConversion(_value);
-			}
-		}
+		private Decimal FormattedValue => _formatConversion == null ? _value : _formatConversion(_value);
 
 		#region IFormattable Members
 
@@ -211,9 +190,6 @@ namespace Singularity
 
 		#endregion
 
-		public static DecimalUnit Zero
-		{
-			get { return new DecimalUnit(); }
-		}
+		public static DecimalUnit Zero => new DecimalUnit();
 	}
 }

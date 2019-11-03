@@ -456,7 +456,10 @@ namespace Singularity
 			{
 				if (dateTimeFormat.IsEmpty())
 				{
-					TryParse(value, out result);
+					if (TryParse(value, out result))
+					{
+						return result;
+					}
 				}
 				else
 				{
@@ -629,7 +632,7 @@ namespace Singularity
 		/// Right pads the passed String using the passed pad String for the total number of spaces. 
 		/// It will not cut-off the pad even if it causes the String to exceed the total width.
 		/// </summary>
-		/// <param name="aAdd">The pad String</param>
+		/// <param name="value">The pad String</param>
 		/// <param name="totalWidth">The total width of the resulting String</param>
 		/// <returns>Copy of String with the padding applied</returns>
 		/// <remarks>Allows a padding String, as opposed to a padding character.</remarks>

@@ -236,6 +236,5 @@ namespace Singularity.EfDataService
 
 		protected EfDbContext Context;
 		private Expression<Func<TEntity, Boolean>> _filter;
-		private Int32 _defaultCommandTimeout = 30;
 	}
 }

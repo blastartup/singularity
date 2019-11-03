@@ -13,6 +13,7 @@ namespace Singularity.EmailService
 		/// </summary>
 		/// <param name="templateMailMessage">MailMessage to clone.</param>
 		/// <returns>A cloned MailMessage.</returns>
+		[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope")]
 		public static MailMessage Clone(this MailMessage templateMailMessage)
 		{
 			MailMessage result = new MailMessage();

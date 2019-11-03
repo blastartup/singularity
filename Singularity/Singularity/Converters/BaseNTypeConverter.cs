@@ -10,39 +10,39 @@ namespace Singularity
 	[DebuggerStepThrough]
 	public sealed class BaseNTypeConverter : TypeConverter
 	{
-		public override Object ConvertFrom(ITypeDescriptorContext context, CultureInfo culture, Object aValue)
+		public override Object ConvertFrom(ITypeDescriptorContext context, CultureInfo culture, Object value)
 		{
 			try
 			{
-				if (aValue is String)
+				if (value is String)
 				{
-					String lValue = (String)aValue;
+					String lValue = (String)value;
 					if (!lValue.IsEmpty())
 					{
-						return new BaseN(Convert.ToInt32(aValue.ToString()));
+						return new BaseN(Convert.ToInt32(lValue, CultureInfo.CurrentCulture));
 					}
 					return BaseN.Zero;
 				}
 
-				if (aValue is Int32 || aValue is Int16 || aValue is Byte || aValue is String)
+				if (value is Int32 || value is Int16 || value is Byte)
 				{
-					return new BaseN(Convert.ToInt32(aValue));
+					return new BaseN(Convert.ToInt32(value, CultureInfo.CurrentCulture));
 				}
 
-				if (aValue is BaseN)
+				if (value is BaseN)
 				{
-					return aValue;
+					return value;
 				}
 
-				if (aValue == DBNull.Value || aValue == null)
+				if (value == DBNull.Value || value == null)
 				{
 					return BaseN.Zero;
 				}
-				return base.ConvertFrom(context, culture, aValue);
+				return base.ConvertFrom(context, culture, value);
 			}
 			catch (FormatException ex)
 			{
-				throw new FormatException("aValue {0}".FormatX(aValue), ex);
+				throw new FormatException("aValue {0}".FormatX(value), ex);
 			}
 		}
 

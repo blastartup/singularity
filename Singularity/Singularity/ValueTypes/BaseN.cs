@@ -256,41 +256,32 @@ namespace Singularity
 
 		#region IFType Members
 
-		public Boolean IsEmpty
-		{
-			get { return MValue == 0; }
-		}
+		public Boolean IsEmpty => MValue == 0;
 
-		public Boolean IsValid
-		{
-			get { return true; }
-		}
+		public Boolean IsValid => true;
 
-		public Boolean IsDefault
-		{
-			get { return this == _mDefault; }
-		}
+		public Boolean IsDefault => this == _mDefault;
 
 		public BaseN Default
 		{
-			get { return new BaseN(_mDefault); }
-			set { _mDefault = value.MValue; }
+			get => new BaseN(_mDefault);
+			set => _mDefault = value.MValue;
 		}
 
 		private Int32 _mDefault;
 
 		public BaseN Ceiling
 		{
-			get { return new BaseN(_mCeiling); }
-			set { _mCeiling = value.MValue; }
+			get => new BaseN(_mCeiling);
+			set => _mCeiling = value.MValue;
 		}
 
 		private Int32 _mCeiling;
 
 		public BaseN Floor
 		{
-			get { return new BaseN(_mFloor); }
-			set { _mFloor = value.MValue; }
+			get => new BaseN(_mFloor);
+			set => _mFloor = value.MValue;
 		}
 
 		private Int32 _mFloor;
@@ -316,10 +307,7 @@ namespace Singularity
 
 		#endregion
 
-		private String Sign
-		{
-			get { return (MValue < 0) ? ValueLib.MinusSign.StringValue : String.Empty; }
-		}
+		private String Sign => (MValue < 0) ? ValueLib.MinusSign.StringValue : String.Empty;
 
 		public static readonly BaseN Zero = new BaseN(0);
 		internal readonly Int32 MValue;

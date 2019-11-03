@@ -37,9 +37,9 @@ namespace Singularity
 		/// <param name="input">Number to be limited.</param>
 		/// <param name="maxValue">The maximum value.</param>
 		/// <returns></returns>
-		public static Double LimitMax(this Double input, Double aMaxValue)
+		public static Double LimitMax(this Double input, Double maxValue)
 		{
-			return aMaxValue * Convert.ToDouble(input > aMaxValue) + input * Convert.ToDouble(input <= aMaxValue);
+			return maxValue * Convert.ToDouble(input > maxValue) + input * Convert.ToDouble(input <= maxValue);
 		}
 
 		/// <summary>
@@ -48,9 +48,9 @@ namespace Singularity
 		/// <param name="input">Number to be limited.</param>
 		/// <param name="maxValue">The minimum value.</param>
 		/// <returns></returns>
-		public static Double LimitMin(this Double input, Double aMinValue)
+		public static Double LimitMin(this Double input, Double minValue)
 		{
-			return aMinValue * Convert.ToDouble(input < aMinValue) + input * Convert.ToDouble(input >= aMinValue);
+			return minValue * Convert.ToDouble(input < minValue) + input * Convert.ToDouble(input >= minValue);
 		}
 
 		/// <summary>
@@ -62,6 +62,7 @@ namespace Singularity
 		/// <returns>A number between the low and high limits inclusive.</returns>
 		public static Double LimitInRange(this Double input, Double lowLimit, Double highLimit)
 		{
+			// ReSharper disable once NotAccessedVariable
 			Boolean notUsed;
 			return LimitInRange(input, lowLimit, highLimit, out notUsed);
 		}

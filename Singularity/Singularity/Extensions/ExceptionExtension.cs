@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.Linq;
 
 // ReSharper disable once CheckNamespace
@@ -24,33 +25,33 @@ namespace Singularity
 			if (exception != null) 
 			{
 				var message = new DelimitedStringBuilder();
-				message.Add("Exception:{0}", exception.GetType().Name);
-				message.Add("Message:{0}", exception.Message);
+				message.Add(CultureInfo.CurrentCulture, "Exception:{0}", exception.GetType().Name);
+				message.Add(CultureInfo.CurrentCulture, "Message:{0}", exception.Message);
 
 				if (exception.Source != null)
 				{
-					message.Add("Source:" + exception.Source.Replace(ValueLib.EndOfLine.StringValue, ValueLib.Space.StringValue));
+					message.Add(CultureInfo.CurrentCulture, "Source:" + exception.Source.Replace(ValueLib.EndOfLine.StringValue, ValueLib.Space.StringValue));
 				}
 
 				if (exception.Data.Count > 0)
 				{
-					message.Add("Addition Information:");
-					message.Add(exception.Data.ToDescription());
+					message.Add(CultureInfo.CurrentCulture, "Addition Information:");
+					message.Add(CultureInfo.CurrentCulture, exception.Data.ToDescription());
 				}
 
 				if (!exception.HelpLink.IsEmpty())
 				{
-					message.Add("Help Link:" + exception.HelpLink);
+					message.Add(CultureInfo.CurrentCulture, "Help Link:" + exception.HelpLink);
 				}
 
 				if (exception.StackTrace != null)
 				{
-					message.Add("Stack Trace:" + exception.StackTrace);
+					message.Add(CultureInfo.CurrentCulture, "Stack Trace:" + exception.StackTrace);
 				}
 
 				if (exception.InnerException != null)
 				{
-					message.Add("Inner " + exception.InnerException.ToLogString());
+					message.Add(CultureInfo.CurrentCulture, "Inner " + exception.InnerException.ToLogString());
 				}
 				result = message.ToDelimitedString(ValueLib.Comma.CharValue);
 			}

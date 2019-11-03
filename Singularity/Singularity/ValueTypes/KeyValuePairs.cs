@@ -106,8 +106,8 @@ namespace Singularity
 
 		public String this[String key]
 		{
-			get { return InternalValue[LowerCaseKeyIfCaseInsensitive(key)]; }
-			set { InternalValue[LowerCaseKeyIfCaseInsensitive(key)] = value; }
+			get => InternalValue[LowerCaseKeyIfCaseInsensitive(key)];
+			set => InternalValue[LowerCaseKeyIfCaseInsensitive(key)] = value;
 		}
 
 		#endregion

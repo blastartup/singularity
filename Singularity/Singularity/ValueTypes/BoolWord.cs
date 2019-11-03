@@ -2,7 +2,8 @@
 using System.Collections;
 using System.ComponentModel;
 using System.Diagnostics;
-
+// ReSharper disable UnusedMember.Global
+// ReSharper disable IdentifierTypo
 // ReSharper disable once CheckNamespace
 
 namespace Singularity
@@ -94,8 +95,8 @@ namespace Singularity
 
 		public BoolWord Default
 		{
-			get { return _default; }
-			set { _default = value._value; }
+			get => _default;
+			set => _default = value._value;
 		}
 		private Boolean _default;
 

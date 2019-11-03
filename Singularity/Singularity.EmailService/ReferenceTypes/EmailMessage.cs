@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Net.Mail;
+// ReSharper disable ConvertToAutoProperty
+// ReSharper disable UnusedMember.Global
 
 // ReSharper disable once CheckNamespace
 
@@ -18,10 +21,16 @@ namespace Singularity.EmailService
 			_notification = new Notification();
 		}
 
+		[SuppressMessage("ReSharper", "AccessToDisposedClosure")]
 		public MailMessage ToMailMessage()
 		{
+			if (!IsValid)
+			{
+				return null;
+			}
+
 			MailMessage mailMessage = null;
-			if (IsValid)
+			try
 			{
 				mailMessage = new MailMessage
 				{
@@ -40,23 +49,22 @@ namespace Singularity.EmailService
 				{
 					Bcc.ForEach(e => mailMessage.Bcc.Add(e));
 				}
+				return mailMessage;
 			}
-			return mailMessage;
+			catch (SystemException)
+			{
+				mailMessage?.Dispose();
+				return null;
+			}
 		}
 
 		public IMessageFrom From { get; set; }
 
-		public EmailAddressCollection To 
-		{
-			get { return _to ?? (_to = new EmailAddressCollection()); }
-		}
+		public EmailAddressCollection To => _to ?? (_to = new EmailAddressCollection());
 
 		private EmailAddressCollection _to;
 
-		public EmailAddressCollection Bcc
-		{
-			get { return _bcc ?? (_bcc = new EmailAddressCollection()); }
-		}
+		public EmailAddressCollection Bcc => _bcc ?? (_bcc = new EmailAddressCollection());
 
 		private EmailAddressCollection _bcc;
 
@@ -65,29 +73,26 @@ namespace Singularity.EmailService
 
 		public DateTime DateScheduled
 		{
-			get { return _dateScheduled; }
-			set { _dateScheduled = value; }
+			get => _dateScheduled;
+			set => _dateScheduled = value;
 		}
 
 		private DateTime _dateScheduled;
 
 		public Boolean IsBodyHtml
 		{
-			get { return _isBodyHtml; }
-			set { _isBodyHtml = value; }
+			get => _isBodyHtml;
+			set => _isBodyHtml = value;
 		}
 
 		private Boolean _isBodyHtml;
 
-		public virtual Boolean IsValid
-		{
-			get { return From != null && (To != null || Bcc != null) && Subject != null && Body != null; }
-		}
+		public virtual Boolean IsValid => From != null && (To != null || Bcc != null) && Subject != null && Body != null;
 
 		public INotification Notification 
 		{
-			get { return _notification; }
-			set { _notification = value; }
+			get => _notification;
+			set => _notification = value;
 		}
 
 		private INotification _notification;

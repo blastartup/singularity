@@ -209,12 +209,12 @@ namespace Singularity
 		/// <summary>
 		/// 
 		/// </summary>
-		/// <param name="datetime"></param>
+		/// <param name="dateTime"></param>
 		/// <param name="roundingInterval"></param>
 		/// <returns></returns>
-		public static DateTime Round(this DateTime datetime, TimeSpan roundingInterval)
+		public static DateTime Round(this DateTime dateTime, TimeSpan roundingInterval)
 		{
-			return new DateTime((datetime - DateTime.MinValue).Round(roundingInterval).Ticks);
+			return new DateTime((dateTime - DateTime.MinValue).Round(roundingInterval).Ticks);
 		}
 
 		public static DateTime EndOfDay(this DateTime date)

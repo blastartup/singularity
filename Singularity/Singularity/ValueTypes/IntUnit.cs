@@ -27,34 +27,19 @@ namespace Singularity
 		}
 		private readonly Int32 _value;
 
-		public String UnitAbbreviation
-		{
-			get { return _abbreviation; }
-		}
+		public String UnitAbbreviation => _abbreviation;
 		private readonly String _abbreviation;
 
-		public String Mask
-		{
-			get { return _mask; }
-		}
+		public String Mask => _mask;
 		private readonly String _mask;
 
-		public String Name
-		{
-			get { return _name; }
-		}
+		public String Name => _name;
 		private readonly String _name;
 
-		public String Description
-		{
-			get { return _description; }
-		}
+		public String Description => _description;
 		private readonly String _description;
 
-		public Boolean IsEmpty
-		{
-			get { return _value.IsEmpty(); }
-		}
+		public Boolean IsEmpty => _value.IsEmpty();
 
 		#region Object Overrides
 
@@ -80,39 +65,39 @@ namespace Singularity
 		}
 
 		[DebuggerStepThrough]
-		public static implicit operator IntUnit(BaseN aValue)
+		public static implicit operator IntUnit(BaseN value)
 		{
-			return new IntUnit(aValue.MValue);
+			return new IntUnit(value.MValue);
 		}
 
 		[DebuggerStepThrough]
-		public static implicit operator Int32(IntUnit aValue)
+		public static implicit operator Int32(IntUnit value)
 		{
-			return aValue._value;
+			return value._value;
 		}
 
 		[DebuggerStepThrough]
-		public static implicit operator IntUnit(Byte aValue)
+		public static implicit operator IntUnit(Byte value)
 		{
-			return new IntUnit(aValue.ToInt());
+			return new IntUnit(value.ToInt());
 		}
 
 		[DebuggerStepThrough]
-		public static implicit operator IntUnit(Int16 aValue)
+		public static implicit operator IntUnit(Int16 value)
 		{
-			return new IntUnit(aValue.ToInt());
+			return new IntUnit(value.ToInt());
 		}
 
 		[DebuggerStepThrough]
-		public static explicit operator Int16(IntUnit aValue)
+		public static explicit operator Int16(IntUnit value)
 		{
-			return Convert.ToInt16(aValue._value);
+			return Convert.ToInt16(value._value);
 		}
 
 		[DebuggerStepThrough]
-		public static explicit operator Decimal(IntUnit aValue)
+		public static explicit operator Decimal(IntUnit value)
 		{
-			return Convert.ToDecimal(aValue);
+			return Convert.ToDecimal(value);
 		}
 
 		#endregion
@@ -166,9 +151,6 @@ namespace Singularity
 
 		#endregion
 
-		public static IntUnit Zero
-		{
-			get { return new IntUnit(); }
-		}
+		public static IntUnit Zero => new IntUnit();
 	}
 }

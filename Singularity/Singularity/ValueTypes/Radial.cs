@@ -25,23 +25,20 @@ namespace Singularity
 
 		public Coord Coord
 		{
-			get { return _coord; }
-			set { _coord = value; }
+			get => _coord;
+			set => _coord = value;
 		}
 
 		private Coord _coord;
 
 		public Int32 Radius
 		{
-			get { return _radius; }
-			set { _radius = value; }
+			get => _radius;
+			set => _radius = value;
 		}
 
 		private Int32 _radius;
 
-		public Boolean IsEmpty
-		{
-			get { return _coord.IsEmpty || _radius.IsEmpty(); }
-		}
+		public Boolean IsEmpty => _coord.IsEmpty || _radius.IsEmpty();
 	}
 }

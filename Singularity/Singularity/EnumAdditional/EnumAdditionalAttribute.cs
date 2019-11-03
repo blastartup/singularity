@@ -20,18 +20,18 @@ namespace Singularity
 		/// <param name="humanisedName">A humanised name or heading to assign to Enum.</param>
 		/// <param name="code">A code to assign to Enum.</param>
 		/// <param name="description">Describe the Enum.</param>
-		/// <param name="keyGuid">A primary key (Guid) as a string matching the equivelant enum in the database type table.</param>
+		/// <param name="key">A primary key (Guid) as a string matching the equivelant enum in the database type table.</param>
 		/// <param name="alternateValue">An alternate value other than the enum numerical one.</param>
-		public EnumAdditionalAttribute(String humanisedName, String code = null, String description = null, String keyGuid = null, String alternateValue = null)
+		public EnumAdditionalAttribute(String humanisedName, String code = null, String description = null, String key = null, String alternateValue = null)
 		{
 			_humanisedName = humanisedName;
 			_code = code;
 			_description = description;
 			_alternateValue = alternateValue;
 
-			if (!keyGuid.IsEmpty() && keyGuid.IsGuid())
+			if (!key.IsEmpty() && key.IsGuid())
 			{
-				_key = keyGuid.ToGuid();
+				_key = key.ToGuid();
 			}
 		}
 

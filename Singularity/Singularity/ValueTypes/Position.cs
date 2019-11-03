@@ -61,7 +61,6 @@ namespace Singularity
 
 		private Double _latitude;
 		private Double _longitude;
-		private String _name;
 
 		/// <summary>
 		///  latitude in degrees. valid range is -90 to +90
@@ -71,10 +70,7 @@ namespace Singularity
 
 		public Double Latitude
 		{
-			get
-			{
-				return _latitude;
-			}
+			get => _latitude;
 
 			set
 			{
@@ -93,19 +89,21 @@ namespace Singularity
 
 		public Double Longitude
 		{
-			get
-			{
-				return _longitude;
-			}
+			get => _longitude;
 
 			//  fix points into the +-180 range.
 			set
 			{
 				_longitude = value;
 				while (_longitude <= -180)
+				{
 					_longitude += 360;
+				}
+
 				while (_longitude > 180)
+				{
 					_longitude -= 360;
+				}
 			}
 		}
 
@@ -114,9 +112,10 @@ namespace Singularity
 		/// </summary>
 		public String Name
 		{
-			get { return _name; }
-			set { _name = value; }
+			get => _name;
+			set => _name = value;
 		}
+		private String _name;
 
 		/// <summary>
 		///  erase the contents
@@ -158,7 +157,6 @@ namespace Singularity
 		/// <summary>
 		///  stringify
 		/// </summary>
-
 		public override String ToString()
 		{
 			return String.Format("{0} ({1},{2})", Name, Latitude, Longitude);
@@ -170,7 +168,6 @@ namespace Singularity
 		///  cos(theta)==theta for small values of theta assumption that so simplifies
 		///  things like pendulum calculations
 		/// </summary>
-
 		public Double GetHorizontalRadialDistance(Position p2)
 		{
 			Double diff = p2.Longitude - Longitude;
@@ -180,7 +177,6 @@ namespace Singularity
 		/// <summary>
 		///  get distance between latitudes
 		/// </summary>
-
 		public Double GetVerticalRadialDistance(Position p2)
 		{
 			Double diff = p2.Latitude - Latitude;
@@ -195,12 +191,11 @@ namespace Singularity
 		/// actually this routine doesn't work that well at all.    
 		///  </summary>
 		/// <returns> square of the angular distance between points</returns>
-
-		public Double GetSquaredRadialDistance(Position p2)
+		public Double GetSquaredRadialDistance(Position position)
 		{
 			Double dx, dy;
-			dx = GetHorizontalRadialDistance(p2);
-			dy = GetVerticalRadialDistance(p2);
+			dx = GetHorizontalRadialDistance(position);
+			dy = GetVerticalRadialDistance(position);
 			return (dx * dx) + (dy * dy);
 		}
 
@@ -208,7 +203,6 @@ namespace Singularity
 		/// hashcode 
 		/// </summary>
 		/// <returns> name derived hash </returns>
-
 		public override Int32 GetHashCode()
 		{
 			return _name.GetHashCode();
@@ -219,7 +213,6 @@ namespace Singularity
 		/// the sort routine is latitude then longitude 
 		/// (so northern scotland is &lt;england; england &lt;canada)
 		/// </summary>
-
 		Int32 IComparable.CompareTo(Object o)
 		{
 			Position p = (Position)o;

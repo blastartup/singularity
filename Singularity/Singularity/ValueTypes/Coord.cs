@@ -28,24 +28,24 @@ namespace Singularity
 
 		public Double Latitude
 		{
-			get { return _latitude; }
-			set { _latitude = value; }
+			get => _latitude;
+			set => _latitude = value;
 		}
 		private Double _latitude;
 
 		public Double Longitude
 		{
-			get { return _longitude; }
-			set { _longitude = value; }
+			get => _longitude;
+			set => _longitude = value;
 		}
 		private Double _longitude;
 
-		public Double Distance(Coord pos2)
+		public Double Distance(Coord position)
 		{
-			return Distance(pos2, DistanceUnit.Kilometers);
+			return Distance(position, DistanceUnit.Kilometers);
 		}
 
-		public Double Distance(Coord pos2, DistanceUnit unit)
+		public Double Distance(Coord position, DistanceUnit unit)
 		{
 			Double r = 6371;
 
@@ -62,10 +62,10 @@ namespace Singularity
 					break;
 			}
 
-			Double dLat = (pos2.Latitude - Latitude).ToRadians();
-			Double dLon = (pos2.Longitude - Longitude).ToRadians();
+			Double dLat = (position.Latitude - Latitude).ToRadians();
+			Double dLon = (position.Longitude - Longitude).ToRadians();
 			Double d1 = Math.Sin(dLat / 2) * Math.Sin(dLat / 2) +
-				 Math.Cos(Latitude.ToRadians()) * Math.Cos(pos2.Latitude.ToRadians()) *
+				 Math.Cos(Latitude.ToRadians()) * Math.Cos(position.Latitude.ToRadians()) *
 				 Math.Sin(dLon / 2) * Math.Sin(dLon / 2);
 			Double d2 = 2 * Math.Asin(Math.Min(1, Math.Sqrt(d1)));
 			return r * d2;
@@ -73,9 +73,6 @@ namespace Singularity
 
 		public static readonly Coord Empty = new Coord(0, 0);
 		
-		public Boolean IsEmpty
-		{
-			get { return Longitude.IsEmpty() && Latitude.IsEmpty(); }
-		}
+		public Boolean IsEmpty => Longitude.IsEmpty() && Latitude.IsEmpty();
 	}
 }

@@ -110,14 +110,28 @@ namespace Singularity.DataService
 				throw new ArgumentException($"Argument databaseName cannot be empty.", "databaseName");
 			}
 
-			if (databaseFileInfo.IsEmpty())
+			if (databaseFileInfo == null)
 			{
-				databaseFileInfo = new FileInfo($"{databaseName}_{DateTime.Now:yyyyMMddHHmmss}.bak");
+				if (backupFolder == null)
+				{
+					databaseFileInfo = new FileInfo($"{databaseName}_{DateTime.Now:yyyyMMddHHmmss}.bak");
+				}
+				else
+				{
+					databaseFileInfo = new FileInfo(Path.Combine(backupFolder.FullName, $"{databaseName}_{DateTime.Now:yyyyMMddHHmmss}.bak"));
+				}
+			}
+			else 
+			{
+				if (backupFolder != null)
+				{
+					databaseFileInfo = new FileInfo(Path.Combine(backupFolder.FullName, databaseFileInfo.Name));
+				}
 			}
 
 			var scriptBuilder = new DelimitedStringBuilder();
 			// ReSharper disable once AssignNullToNotNullAttribute
-			scriptBuilder.AddIfNotEmpty(BackupDatabaseQuery.FormatX(databaseName, Path.Combine(backupFolder?.FullName ?? String.Empty, databaseFileInfo.FullName)));
+			scriptBuilder.AddIfNotEmpty(BackupDatabaseQuery.FormatX(databaseName, databaseFileInfo.FullName));
 
 			try
 			{

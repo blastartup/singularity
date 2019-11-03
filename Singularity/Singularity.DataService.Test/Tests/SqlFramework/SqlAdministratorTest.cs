@@ -25,15 +25,16 @@ namespace Singularity.DataService.Test.SqlFramework
 			};
 
 			var sa = new SqlAdministratorMock(masterSqlConnectionBuilder.ToSqlConnection());
-			if (!sa.DatabaseExists(database))
+			if (!sa.DatabaseExists(database).Condition)
 			{
 				sa.CreateDatabase(database);
 			}
-			Assert.IsTrue(sa.DatabaseExists(database));
+			Assert.IsTrue(sa.DatabaseExists(database).Condition);
 
 			Directory.EnumerateFiles(@"F:\Program Files\Microsoft SQL Server\MSSQL13.FUNKEY\MSSQL\Backup", "TurbineEncore_Tee*.bak").ForEach(File.Delete);
 
-			Assert.IsTrue(!sa.BackupDatabase("TurbineEncore_Tee").IsEmpty());
+			var databaseBackupFileInfo = sa.BackupDatabase("TurbineEncore_Tee", backupFolder:new DirectoryInfo(@"F:\Program Files\Microsoft SQL Server\MSSQL13.FUNKEY\MSSQL\Backup"));
+			Assert.IsNotNull(databaseBackupFileInfo);
 			Assert.IsTrue(Directory.EnumerateFiles(@"F:\Program Files\Microsoft SQL Server\MSSQL13.FUNKEY\MSSQL\Backup", "TurbineEncore_Tee*.bak").Count() == 1);
 		}
 
@@ -49,18 +50,18 @@ namespace Singularity.DataService.Test.SqlFramework
 			};
 
 			var sa = new SqlAdministratorMock(masterSqlConnectionBuilder.ToSqlConnection());
-			if (sa.DatabaseExists(database))
+			if (sa.DatabaseExists(database).Condition)
 			{
 				sa.DeleteDatabase(database);
 			}
-			Assert.IsTrue(!sa.DatabaseExists(database));
+			Assert.IsTrue(!sa.DatabaseExists(database).Condition);
 
 			var backupFileName = Directory.EnumerateFiles(@"F:\Program Files\Microsoft SQL Server\MSSQL13.FUNKEY\MSSQL\Backup", "TurbineEncore_Tee*.bak").FirstOrDefault();
 
 			Assert.IsTrue(!backupFileName.IsEmpty());
 
-			Assert.IsTrue(sa.RestoreDatabase(new FileInfo(backupFileName), "TurbineEncore_Tee"));
-			Assert.IsTrue(sa.DatabaseExists(database));
+			Assert.IsTrue(sa.RestoreDatabase(new FileInfo(backupFileName), "TurbineEncore_Tee").Condition);
+			Assert.IsTrue(sa.DatabaseExists(database).Condition);
 		}
 
 		[TestMethod]
@@ -75,18 +76,18 @@ namespace Singularity.DataService.Test.SqlFramework
 			};
 
 			var sa = new SqlAdministratorMock(masterSqlConnectionBuilder.ToSqlConnection());
-			if (sa.DatabaseExists(database))
+			if (sa.DatabaseExists(database).Condition)
 			{
 				sa.DeleteDatabase(database);
 			}
-			Assert.IsTrue(!sa.DatabaseExists(database));
+			Assert.IsTrue(!sa.DatabaseExists(database).Condition);
 
 			var backupFileName = Directory.EnumerateFiles(@"F:\Program Files\Microsoft SQL Server\MSSQL13.FUNKEY\MSSQL\Backup", "TurbineEncore_Tee*.bak").FirstOrDefault();
 
 			Assert.IsTrue(!backupFileName.IsEmpty());
 
-			Assert.IsTrue(sa.RestoreDatabase(new FileInfo(backupFileName), "TurbineEncore_Tee", new DirectoryInfo(@"F:\Temp")));
-			Assert.IsTrue(sa.DatabaseExists(database));
+			Assert.IsTrue(sa.RestoreDatabase(new FileInfo(backupFileName), "TurbineEncore_Tee", new DirectoryInfo(@"F:\Temp")).Condition);
+			Assert.IsTrue(sa.DatabaseExists(database).Condition);
 		}
 
 		[TestMethod]
@@ -116,14 +117,20 @@ namespace Singularity.DataService.Test.SqlFramework
 			};
 
 			var sa = new SqlAdministratorMock(masterSqlConnectionBuilder.ToSqlConnection());
-			if (!sa.DatabaseExists(database))
+			if (!sa.DatabaseExists(database).Condition)
 			{
 				sa.CreateDatabase(database);
 			}
-			Assert.IsTrue(sa.DatabaseExists(database));
+			Assert.IsTrue(sa.DatabaseExists(database2).Condition);
 
-			Assert.IsTrue(sa.CloneDatabase(database, database2));
-			Assert.IsTrue(sa.DatabaseExists(database2));
+			if (sa.DatabaseExists(database2).Condition)
+			{
+				sa.DeleteDatabase(database2);
+			}
+			Assert.IsTrue(!sa.DatabaseExists(database2).Condition);
+
+			Assert.IsTrue(sa.CloneDatabase(database, database2).Condition);
+			Assert.IsTrue(sa.DatabaseExists(database2).Condition);
 		}
 
 	}

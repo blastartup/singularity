@@ -20,16 +20,16 @@ namespace Singularity
 
 		public String Message
 		{
-			get { return _message; }
-			set { _message = value; }
+			get => _message;
+			set => _message = value;
 		}
 
 		private String _message;
 
 		public Exception Exception
 		{
-			get { return _exception; }
-			set { _exception = value; }
+			get => _exception;
+			set => _exception = value;
 		}
 
 		private Exception _exception;

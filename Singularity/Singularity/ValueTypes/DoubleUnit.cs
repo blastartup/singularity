@@ -27,34 +27,19 @@ namespace Singularity
 		}
 		private readonly Double _value;
 
-		public String UnitAbbreviation
-		{
-			get { return _abbreviation; }
-		}
+		public String UnitAbbreviation => _abbreviation;
 		private readonly String _abbreviation;
 
-		public String Mask
-		{
-			get { return _mask; }
-		}
+		public String Mask => _mask;
 		private readonly String _mask;
 
-		public String Name
-		{
-			get { return _name; }
-		}
+		public String Name => _name;
 		private readonly String _name;
 
-		public String Description
-		{
-			get { return _description; }
-		}
+		public String Description => _description;
 		private readonly String _description;
 
-		public Boolean IsEmpty
-		{
-			get { return _value.IsEmpty(); }
-		}
+		public Boolean IsEmpty => _value.IsEmpty();
 
 		#region Object Overrides
 
@@ -74,57 +59,57 @@ namespace Singularity
 		#region Casting
 
 		[DebuggerStepThrough]
-		public static implicit operator DoubleUnit(Double aValue)
+		public static implicit operator DoubleUnit(Double value)
 		{
-			return new DoubleUnit(aValue);
+			return new DoubleUnit(value);
 		}
 
 		[DebuggerStepThrough]
-		public static implicit operator DoubleUnit(BaseN aValue)
+		public static implicit operator DoubleUnit(BaseN value)
 		{
-			return new DoubleUnit(aValue.MValue);
+			return new DoubleUnit(value.MValue);
 		}
 
 		[DebuggerStepThrough]
-		public static implicit operator Double(DoubleUnit aValue)
+		public static implicit operator Double(DoubleUnit value)
 		{
-			return aValue._value;
+			return value._value;
 		}
 
 		[DebuggerStepThrough]
-		public static implicit operator DoubleUnit(Byte aValue)
+		public static implicit operator DoubleUnit(Byte value)
 		{
-			return new DoubleUnit(Convert.ToDouble(aValue));
+			return new DoubleUnit(Convert.ToDouble(value));
 		}
 
 		[DebuggerStepThrough]
-		public static implicit operator DoubleUnit(Int16 aValue)
+		public static implicit operator DoubleUnit(Int16 value)
 		{
-			return new DoubleUnit(Convert.ToDouble(aValue));
+			return new DoubleUnit(Convert.ToDouble(value));
 		}
 
 		[DebuggerStepThrough]
-		public static implicit operator DoubleUnit(Int32 aValue)
+		public static implicit operator DoubleUnit(Int32 value)
 		{
-			return new DoubleUnit(Convert.ToDouble(aValue));
+			return new DoubleUnit(Convert.ToDouble(value));
 		}
 
 		[DebuggerStepThrough]
-		public static explicit operator Int16(DoubleUnit aValue)
+		public static explicit operator Int16(DoubleUnit value)
 		{
-			return Convert.ToInt16(aValue._value);
+			return Convert.ToInt16(value._value);
 		}
 
 		[DebuggerStepThrough]
-		public static explicit operator Int32(DoubleUnit aValue)
+		public static explicit operator Int32(DoubleUnit value)
 		{
-			return Convert.ToInt32(aValue._value);
+			return Convert.ToInt32(value._value);
 		}
 
 		[DebuggerStepThrough]
-		public static explicit operator Decimal(DoubleUnit aValue)
+		public static explicit operator Decimal(DoubleUnit value)
 		{
-			return Convert.ToDecimal(aValue);
+			return Convert.ToDecimal(value);
 		}
 
 		#endregion
@@ -190,9 +175,6 @@ namespace Singularity
 
 		#endregion
 
-		public static DoubleUnit Zero
-		{
-			get { return new DoubleUnit(); }
-		}
+		public static DoubleUnit Zero => new DoubleUnit();
 	}
 }

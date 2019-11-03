@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -94,9 +95,6 @@ namespace Singularity.DataService
 				var asyncSqlCommand = new AsyncSqlCommand(sqlCommand);
 				Parallel.ForEach(sqlEntities.AsParallel(), (e, loopState) =>
 				{
-
-
-
 					if (e is IModifiable modifiableEntity)
 					{
 						modifiableEntity.CreatedDate = NowDateTime;
@@ -176,7 +174,9 @@ namespace Singularity.DataService
 			SqlDataAdapter sqlDataAdapter = null;
 			try
 			{
-				sqlDataAdapter = new SqlDataAdapter($"select top 0 * from {TableName}", Context.SqlConnection);
+				var sqlQuery = "select top 0 * from @TableName";
+				var sqlCommand = new SqlCommand(sqlQuery, Context.SqlConnection);
+				sqlDataAdapter = new SqlDataAdapter(sqlCommand);
 				sqlDataAdapter.Fill(table);
 			}
 			finally
@@ -219,6 +219,7 @@ namespace Singularity.DataService
 
 		#region Updating
 
+		[System.Diagnostics.CodeAnalysis.SuppressMessage("Security", "CA2100:Review SQL queries for security vulnerabilities", Justification = "<Pending>")]
 		public Boolean UpdateEntity(TSqlEntity sqlEntity)
 		{
 			Boolean result;
@@ -295,6 +296,7 @@ namespace Singularity.DataService
 			try
 			{
 				sqlCommand.CommandType = CommandType.Text;
+				Debug.Assert(UpdateQuery != null, nameof(UpdateQuery) + " != null");
 				sqlCommand.CommandText = UpdateQuery;
 				sqlCommand.Parameters.AddRange(PopulateUpdateParameters((TSqlEntity)deletableSqlEntity).ToArray());
 
@@ -587,7 +589,9 @@ namespace Singularity.DataService
 		public void Reseed(Int64 newPrimaryKey = 0)
 		{
 			newPrimaryKey--;
-			SqlCommand cmd = new SqlCommand($"DBCC CheckIdent ({TableName}, reseed, {newPrimaryKey})", Context.SqlConnection);
+			var cmd = new SqlCommand("DBCC CheckIdent (@TableName, reseed, @NewPrimaryKey)", Context.SqlConnection);
+			cmd.Parameters.AddWithValue("@TableName", TableName);
+			cmd.Parameters.AddWithValue("@NewPrimaryKey", newPrimaryKey);
 			cmd.ExecuteNonQuery();
 		}
 

@@ -53,7 +53,7 @@ namespace Singularity
 		/// <summary>
 		/// Typical work days: Monday - Friday.
 		/// </summary>
-		WorkDays = Monday | Tuesday | Wednesday | Thursday | Friday,
+		Workdays = Monday | Tuesday | Wednesday | Thursday | Friday,
 
 		/// <summary>
 		/// Typical weekend: Saturday, Sunday.
@@ -63,6 +63,6 @@ namespace Singularity
 		/// <summary>
 		/// All days of the week.
 		/// </summary>
-		All = WorkDays | Weekend
+		All = Workdays | Weekend
 	}
 }
