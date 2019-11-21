@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 
 // ReSharper disable once CheckNamespace
-namespace Singularity.DataService.SqlFramework
+namespace Singularity.DataService.Models
 {
 	public sealed class SqlUserDefinedDataTypeCollection : SqlObject, IEnumerable<SqlUserDefinedDataType>, ICollection<SqlUserDefinedDataType>
 	{

@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using Singularity.DataService.SqlFramework.Models;
 
 // ReSharper disable once CheckNamespace
-namespace Singularity.DataService.SqlFramework
+namespace Singularity.DataService.Models
 {
 	public sealed class SqlColumn : SqlObject
 	{

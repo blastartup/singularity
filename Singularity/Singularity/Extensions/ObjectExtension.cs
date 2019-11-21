@@ -174,16 +174,10 @@ namespace Singularity
 		#region ToX()
 
 		[DebuggerStepThrough]
-		public static String ToStringSafe(this Object value)
-		{
-			return ToStringSafe(value, String.Empty);
-		}
+		public static String ToStringSafe(this Object value) => ToStringSafe(value, String.Empty);
 
 		[DebuggerStepThrough]
-		public static String ToStringSafe(this Object value, String replacementValue)
-		{
-			return value?.ToString() ?? replacementValue;
-		}
+		public static String ToStringSafe(this Object value, String replacementValue) => value?.ToString() ?? replacementValue;
 
 		#region ToByte
 

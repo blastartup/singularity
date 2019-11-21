@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Data.SqlClient;
-using Singularity.DataService.SqlFramework.Repositories;
 
 // ReSharper disable once CheckNamespace
 namespace Singularity.DataService

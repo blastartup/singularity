@@ -2,7 +2,7 @@
 using System.Diagnostics;
 
 // ReSharper disable InconsistentNaming
-// ReSharper disable once CheckNamespace
+// ReSharper disable CheckNamespace
 
 namespace Singularity
 {

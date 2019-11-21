@@ -25,7 +25,7 @@ namespace Singularity
 		/// <summary>
 		/// Extend the FList to only add elements that are not empty.
 		/// </summary>
-		/// <param name="elements">A collection of elememts of which only the non empty ones will be added.</param>
+		/// <param name="elements">A collection of elements of which only the non empty ones will be added.</param>
 		public static void AddRangeNonEmpty<T>(this List<T> list, IEnumerable<T> elements)
 		{
 			foreach (T lElement in elements)

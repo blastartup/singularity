@@ -5,9 +5,9 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Singularity.DataService.SqlFramework.Models;
+using Singularity.DataService.Models;
 
-namespace Singularity.DataService.SqlFramework
+namespace Singularity.DataService
 {
 	public class SqlJobService
 	{

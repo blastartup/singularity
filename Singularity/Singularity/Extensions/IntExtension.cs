@@ -122,20 +122,20 @@ namespace Singularity
 		/// <param name="input">Number to be limited.</param>
 		/// <param name="maxValue">The maximum value.</param>
 		/// <returns></returns>
-		public static Int32 LimitMax(this Int32 input, Int32 aMaxValue)
+		public static Int32 LimitMax(this Int32 input, Int32 maxValue)
 		{
-			return aMaxValue * Convert.ToInt32(input > aMaxValue) + input * Convert.ToInt32(input <= aMaxValue);
+			return maxValue * Convert.ToInt32(input > maxValue) + input * Convert.ToInt32(input <= maxValue);
 		}
 
 		/// <summary>
 		/// Returns either the given input or minimum value, effectively limiting the given input value to the given minimum argument.
 		/// </summary>
 		/// <param name="input">Number to be limited.</param>
-		/// <param name="maxValue">The minimum value.</param>
+		/// <param name="minValue">The minimum value.</param>
 		/// <returns></returns>
-		public static Int32 LimitMin(this Int32 input, Int32 aMinValue)
+		public static Int32 LimitMin(this Int32 input, Int32 minValue)
 		{
-			return aMinValue * Convert.ToInt32(input < aMinValue) + input * Convert.ToInt32(input >= aMinValue);
+			return minValue * Convert.ToInt32(input < minValue) + input * Convert.ToInt32(input >= minValue);
 		}
 
 		/// <summary>

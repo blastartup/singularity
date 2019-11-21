@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Singularity.DataService.SqlFramework.Models
+namespace Singularity.DataService.Models
 {
 	public class SqlJobServer
 	{

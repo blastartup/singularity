@@ -35,7 +35,7 @@ namespace Singularity
 				{
 					if (attemptCounter < 4)
 					{
-						if (!ex.Message.ToLower(CultureInfo.CurrentCulture).Contains("network"))
+						if (!ex.Message.ToLower(Factory.CurrentCultureInfo).Contains("network"))
 						{
 							break;
 						}
@@ -73,7 +73,7 @@ namespace Singularity
 				{
 					if (attemptCounter < 4)
 					{
-						if (!ex.Message.ToLower(CultureInfo.CurrentCulture).Contains("network"))
+						if (!ex.Message.ToLower(Factory.CurrentCultureInfo).Contains("network"))
 						{
 							break;
 						}

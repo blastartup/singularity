@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 // ReSharper disable once CheckNamespace
-namespace Singularity.DataService.SqlFramework
+namespace Singularity.DataService
 {
 	// Type: Microsoft.SqlServer.Management.Smo.SqlDataType
 	// Assembly: Microsoft.SqlServer.Smo, Version=15.100.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91

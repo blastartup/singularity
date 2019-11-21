@@ -1337,20 +1337,12 @@ namespace Singularity
 			}
 		}
 
-		public static String Surround(this String value, String surroundValue)
-		{
-			return Surround(value, surroundValue, surroundValue);
-		}
+		public static String Surround(this String value, String surroundValue) => Surround(value, surroundValue, surroundValue);
 
-		public static String Surround(this String value, String startSurroundValue, String endSurroundValue)
-		{
-			return startSurroundValue + value + endSurroundValue;
-		}
+		public static String Surround(this String value, String startSurroundValue, String endSurroundValue) => startSurroundValue + value + endSurroundValue;
 
-		public static String Desurround(this String value)
-		{
-			return value.Substring(1, value.Length - 2);
-		}
+		// ReSharper disable once IdentifierTypo
+		public static String Desurround(this String value) => value.Substring(1, value.Length - 2);
 
 		#endregion
 
@@ -1682,7 +1674,7 @@ namespace Singularity
 			if (value.IsEmpty()) return value;
 			if (!acceptUnderscores)
 			{
-				return CultureInfo.CurrentCulture.TextInfo.ToTitleCase(value);
+				return Factory.CurrentCultureInfo.TextInfo.ToTitleCase(value);
 			}
 
 			var resultBuilder = new StringBuilder(value.Length);
@@ -1694,7 +1686,7 @@ namespace Singularity
 				{
 					if (wordBuilder.Length > 0)
 					{
-						resultBuilder.Append(CultureInfo.CurrentCulture.TextInfo.ToTitleCase(wordBuilder.ToString()));
+						resultBuilder.Append(Factory.CurrentCultureInfo.TextInfo.ToTitleCase(wordBuilder.ToString()));
 						wordBuilder = new StringBuilder(15);
 					}
 

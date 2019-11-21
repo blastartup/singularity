@@ -140,7 +140,7 @@ namespace Singularity
 					var enumStringCode = attributes[0].Code;
 
 					//Check for equality then select actual enum value.
-					if (String.Compare(enumStringCode, code, ignoreCase, CultureInfo.CurrentCulture) == 0)
+					if (String.Compare(enumStringCode, code, ignoreCase, Factory.CurrentCultureInfo) == 0)
 					{
 						output = Enum.Parse(enumType, fieldInfo.Name);
 						break;

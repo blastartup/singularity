@@ -5,8 +5,10 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Singularity.DataService.Models;
 
-namespace Singularity.DataService.SqlFramework.Repositories
+// ReSharper disable once CheckNamespace
+namespace Singularity.DataService
 {
 	public class SqlTableRepository<TSqlEntityContext> : SqlRepositoryMaster<SqlTable, Int64, TSqlEntityContext>
 		where TSqlEntityContext : SqlEntityContext, new()

@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 // ReSharper disable once CheckNamespace
-namespace Singularity.DataService.SqlFramework
+namespace Singularity.DataService.Models
 {
 	public class SqlServer
 	{

@@ -25,33 +25,33 @@ namespace Singularity
 			if (exception != null) 
 			{
 				var message = new DelimitedStringBuilder();
-				message.Add(CultureInfo.CurrentCulture, "Exception:{0}", exception.GetType().Name);
-				message.Add(CultureInfo.CurrentCulture, "Message:{0}", exception.Message);
+				message.Add(Factory.CurrentCultureInfo, "Exception:{0}", exception.GetType().Name);
+				message.Add(Factory.CurrentCultureInfo, "Message:{0}", exception.Message);
 
 				if (exception.Source != null)
 				{
-					message.Add(CultureInfo.CurrentCulture, "Source:" + exception.Source.Replace(ValueLib.EndOfLine.StringValue, ValueLib.Space.StringValue));
+					message.Add(Factory.CurrentCultureInfo, "Source:" + exception.Source.Replace(ValueLib.EndOfLine.StringValue, ValueLib.Space.StringValue));
 				}
 
 				if (exception.Data.Count > 0)
 				{
-					message.Add(CultureInfo.CurrentCulture, "Addition Information:");
-					message.Add(CultureInfo.CurrentCulture, exception.Data.ToDescription());
+					message.Add(Factory.CurrentCultureInfo, "Addition Information:");
+					message.Add(Factory.CurrentCultureInfo, exception.Data.ToDescription());
 				}
 
 				if (!exception.HelpLink.IsEmpty())
 				{
-					message.Add(CultureInfo.CurrentCulture, "Help Link:" + exception.HelpLink);
+					message.Add(Factory.CurrentCultureInfo, "Help Link:" + exception.HelpLink);
 				}
 
 				if (exception.StackTrace != null)
 				{
-					message.Add(CultureInfo.CurrentCulture, "Stack Trace:" + exception.StackTrace);
+					message.Add(Factory.CurrentCultureInfo, "Stack Trace:" + exception.StackTrace);
 				}
 
 				if (exception.InnerException != null)
 				{
-					message.Add(CultureInfo.CurrentCulture, "Inner " + exception.InnerException.ToLogString());
+					message.Add(Factory.CurrentCultureInfo, "Inner " + exception.InnerException.ToLogString());
 				}
 				result = message.ToDelimitedString(ValueLib.Comma.CharValue);
 			}

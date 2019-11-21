@@ -3,10 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Singularity.DataService.SqlFramework.Models;
 
 // ReSharper disable once CheckNamespace
-namespace Singularity.DataService.SqlFramework
+namespace Singularity.DataService.Models
 {
 	public class SqlDatabase
 	{

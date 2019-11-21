@@ -24,7 +24,7 @@ namespace Singularity
 		*/
 
 		/// <summary>
-		/// An extension of IList&gt;T&lt; to sort the given list.
+		/// An extension of IList<T> to sort the given list.
 		/// </summary>
 		/// <typeparam name="T">The data type of the give list.</typeparam>
 		/// <param name="list">The list to sort.</param>

@@ -19,14 +19,14 @@ namespace Singularity
 					String lValue = (String)value;
 					if (!lValue.IsEmpty())
 					{
-						return new BaseN(Convert.ToInt32(lValue, CultureInfo.CurrentCulture));
+						return new BaseN(Convert.ToInt32(lValue, Factory.CurrentCultureInfo));
 					}
 					return BaseN.Zero;
 				}
 
 				if (value is Int32 || value is Int16 || value is Byte)
 				{
-					return new BaseN(Convert.ToInt32(value, CultureInfo.CurrentCulture));
+					return new BaseN(Convert.ToInt32(value, Factory.CurrentCultureInfo));
 				}
 
 				if (value is BaseN)

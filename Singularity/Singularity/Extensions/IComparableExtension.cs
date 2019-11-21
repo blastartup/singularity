@@ -23,7 +23,7 @@ namespace Singularity
 			return nullableValue.HasValue ? nullableValue.Value : replacementValue;
 		}
 
-		[DebuggerStepThrough]
+		[DebuggerStepThrough] 
 		public static T ValueOnNull<T>(this T? nullableValue) where T : struct
 		{
 			return nullableValue.HasValue ? nullableValue.Value : new T();

@@ -7,10 +7,13 @@ using Singularity;
 
 namespace Singularity
 {
+	[Obsolete("Not complete.")]
 	public abstract class CodeRegion : IStateEmpty
 	{
 		protected CodeRegion(String regionName, Words sourceCode)
 		{
+			throw new InvalidOperationException("This feature isn't complete yet.");
+
 			_isEmpty = true;
 			_name = regionName;
 			_lines = sourceCode;
