@@ -1575,6 +1575,7 @@ namespace Singularity
 		/// <summary>
 		/// Removes new line characters from a String
 		/// </summary>
+		/// <param name="value"></param>
 		/// <param name="addSpace">True to add a space after removing a new line character</param>
 		/// <returns>Returns a copy of the String after removing the new line character</returns>
 		public static String RemoveNewLines(this String value, Boolean addSpace)

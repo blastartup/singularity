@@ -30,9 +30,9 @@ namespace Singularity
 		/// <returns>Original items unchanged.</returns>
 		public static IEnumerable<T> CatchExceptions<T>(this IEnumerable<T> items, Action<Exception> action = null)
 		{
-			using (IEnumerator<T> enumerator = items.GetEnumerator())
+			using (var enumerator = items.GetEnumerator())
 			{
-				Boolean next = true;
+				var next = true;
 
 				while (next)
 				{
@@ -40,7 +40,7 @@ namespace Singularity
 					{
 						next = enumerator.MoveNext();
 					}
-					catch (Exception ex)
+					catch (SystemException ex)
 					{
 						action?.Invoke(ex);
 						continue;
@@ -64,9 +64,9 @@ namespace Singularity
 		/// <returns>Original items unchanged.</returns>
 		public static IEnumerable<T> CatchExceptions<T, TException>(this IEnumerable<T> items, Action<Exception> action = null) where TException : Exception
 		{
-			using (IEnumerator<T> enumerator = items.GetEnumerator())
+			using (var enumerator = items.GetEnumerator())
 			{
-				Boolean next = true;
+				var next = true;
 
 				while (next)
 				{
@@ -96,7 +96,7 @@ namespace Singularity
 		{
 			if (disposableItems != null)
 			{
-				IEnumerable<IDisposable> actualDisposableItems = disposableItems.Where(i => i != null);
+				var actualDisposableItems = disposableItems.Where(i => i != null);
 				actualDisposableItems.ForEach(i => i.Dispose());
 			}
 		}
@@ -112,7 +112,7 @@ namespace Singularity
 		[DebuggerStepThrough]
 		public static IEnumerable<TValue> DistinctOn<TValue, TKey>(this IEnumerable<TValue> sequence, Func<TValue, TKey> keySelector)
 		{
-			HashSet<TKey> dummyUniqueSet = new HashSet<TKey>();
+			var dummyUniqueSet = new HashSet<TKey>();
 			return sequence.Where(value => dummyUniqueSet.Add(keySelector(value)));
 		}
 
@@ -130,7 +130,7 @@ namespace Singularity
 			return from item in items
 					 join otherItem in otherItems on getKey(item) equals getKey(otherItem) into tempItems
 					 from temp in tempItems.DefaultIfEmpty()
-					 where ReferenceEquals(null, temp) || temp.Equals(default(T))
+					 where temp == null || temp.Equals(default(T))
 					 select item;
 
 		}
@@ -144,10 +144,10 @@ namespace Singularity
 		[DebuggerStepThrough]
 		public static void ForEach<T>(this IEnumerable<T> enumerable, Action<T> action)
 		{
-			if (enumerable == null) throw new ArgumentException("Given enumerable argument cannot be null.", "enumerable");
-			if (action == null) throw new ArgumentException("Given action argument cannot be null.", "action");
+			if (enumerable == null) throw new ArgumentException("Given enumerable argument cannot be null.", nameof(enumerable));
+			if (action == null) throw new ArgumentException("Given action argument cannot be null.", nameof(action));
 
-			foreach (T item in enumerable) action(item);
+			foreach (var item in enumerable) action(item);
 		}
 
 		/// <summary>
@@ -158,19 +158,19 @@ namespace Singularity
 		[DebuggerStepThrough]
 		public static Decimal Median(this IEnumerable<Decimal> values)
 		{
-			List<Decimal> sortedList = new List<Decimal>(values);
+			var sortedList = new List<Decimal>(values);
 			sortedList.Sort();
 
 			Decimal median;
 
-			Decimal half = (sortedList.Count - 1m) / 2;
+			var half = (sortedList.Count - 1m) / 2;
 			if (sortedList.Count % 2 == 1)
 			{
 				median = sortedList[Convert.ToInt32(Math.Ceiling(half))];
 			}
 			else
 			{
-				Int32 middleValue = Convert.ToInt32(Math.Floor(half));
+				var middleValue = Convert.ToInt32(Math.Floor(half));
 				median = (sortedList[middleValue] + sortedList[middleValue + 1]) / 2;
 			}
 			return median;
@@ -189,14 +189,14 @@ namespace Singularity
 
 			Double median;
 
-			Decimal half = (sortedList.Count - 1m) / 2;
+			var half = (sortedList.Count - 1m) / 2;
 			if (sortedList.Count % 2 == 1)
 			{
 				median = sortedList[Convert.ToInt32(Math.Ceiling(half))];
 			}
 			else
 			{
-				Int32 middleValue = Convert.ToInt32(Math.Floor(half));
+				var middleValue = Convert.ToInt32(Math.Floor(half));
 				median = (Double)(sortedList[middleValue] + sortedList[middleValue + 1]) / 2;
 			}
 			return median;
@@ -214,14 +214,14 @@ namespace Singularity
 			sortedList.Sort();
 
 			Single median;
-			Decimal half = (sortedList.Count - 1m) / 2;
+			var half = (sortedList.Count - 1m) / 2;
 			if (sortedList.Count % 2 == 1)
 			{
 				median = sortedList[Convert.ToInt32(Math.Ceiling(half))];
 			}
 			else
 			{
-				Int32 middleValue = Convert.ToInt32(Math.Floor(half));
+				var middleValue = Convert.ToInt32(Math.Floor(half));
 				median = (sortedList[middleValue] + sortedList[middleValue + 1]) / 2;
 			}
 			return median;
@@ -240,16 +240,16 @@ namespace Singularity
 						to calculate the average manually so as a consequence we also add the 'counter' within a single iteration. */
 
 			Decimal average = 0;
-			Int32 counter = 0;
+			var counter = 0;
 			Decimal total = 0;
-			foreach (Decimal value in values)
+			foreach (var value in values)
 			{
 				total += value;
 				counter++;
 			}
 			average = total / counter;
 
-			Double sumOfSqrs = values.Sum(value => Math.Pow((Double)(value - average), 2));
+			var sumOfSqrs = values.Sum(value => Math.Pow((Double)(value - average), 2));
 			return Math.Sqrt(sumOfSqrs / (counter - 1));
 		}
 
@@ -260,8 +260,8 @@ namespace Singularity
 				return String.Empty;
 			}
 
-			DelimitedStringBuilder csvBuilder = new DelimitedStringBuilder();
-			foreach (String item in items)
+			var csvBuilder = new DelimitedStringBuilder();
+			foreach (var item in items)
 			{
 				csvBuilder.Add(ToCsvValue(item));
 			}
@@ -282,21 +282,21 @@ namespace Singularity
 				return String.Empty;
 			}
 
-			StringBuilder csvBuilder = new StringBuilder();
-			PropertyInfo[] properties = typeof(T).GetProperties().Where(p => !typeof(IEnumerable).IsAssignableFrom(p.ReflectedType)).ToArray();
-			String header = String.Join(",", properties.Select(p => p.Name));
+			var csvBuilder = new StringBuilder();
+			var properties = typeof(T).GetProperties().Where(p => !typeof(IEnumerable).IsAssignableFrom(p.ReflectedType)).ToArray();
+			var header = String.Join(",", properties.Select(p => p.Name));
 			csvBuilder.AppendLine(header);
-			foreach (T item in items)
+			foreach (var item in items)
 			{
-				Int32 idx = 0;
-				String[] array = new String[properties.Length];
-				foreach (PropertyInfo property in properties)
+				var idx = 0;
+				var array = new String[properties.Length];
+				foreach (var property in properties)
 				{
 					array[idx] = ToCsvValue(property.GetValue(item, null));
 					idx++;
 				}
 
-				String line = String.Join(",", array);
+				var line = String.Join(",", array);
 				csvBuilder.AppendLine(line);
 			}
 			return csvBuilder.ToString();
@@ -314,19 +314,19 @@ namespace Singularity
 				return String.Empty;
 			}
 
-			StringBuilder csvBuilder = new StringBuilder();
-			Boolean first = true;
+			var csvBuilder = new StringBuilder();
+			var first = true;
 			PropertyInfo[] properties = null;
-			foreach (Object item in items)
+			foreach (var item in items)
 			{
 				if (first)
 				{
 					first = false;
 					properties = item.GetType().GetProperties();
-					String header = String.Join(",", properties.Select(p => p.Name));
+					var header = String.Join(",", properties.Select(p => p.Name));
 					csvBuilder.AppendLine(header);
 				}
-				String line = String.Join(",", properties.Select(p => p.GetValue(item, null).ToCsvValue()).ToArray());
+				var line = String.Join(",", properties.Select(p => p.GetValue(item, null).ToCsvValue()).ToArray());
 				csvBuilder.AppendLine(line);
 			}
 			return csvBuilder.ToString();
@@ -344,30 +344,27 @@ namespace Singularity
 				return String.Empty;
 			}
 
-			StringBuilder csvBuilder = new StringBuilder();
+			var csvBuilder = new StringBuilder();
 
 			List<String> properties = null;
-			Boolean first = true;
+			var first = true;
 
-			foreach (IDictionary<String, Object> item in items)
+			foreach (var item in items)
 			{
 				if (first) // add header
 				{
 					first = false;
 					properties = item.Keys.ToList();
-					String header = String.Join(",", properties);
+					var header = String.Join(",", properties);
 					csvBuilder.AppendLine(header);
 				}
 
-				String line = String.Join(",",
+				var line = String.Join(",",
 					properties.Select(p =>
 					{
-						Object value;
-						item.TryGetValue(p, out value);
+						item.TryGetValue(p, out var value);
 						return value.ToCsvValue();
-					}
-						)
-						.ToArray()
+					}).ToArray()
 					);
 				csvBuilder.AppendLine(line);
 			}
@@ -381,32 +378,28 @@ namespace Singularity
 		/// <returns>A comma delimited string.</returns>
 		public static String ToCsv(this IEnumerable<ExpandoObject> items)
 		{
-			if (items.IsEmpty())
-			{
-				return String.Empty;
-			}
+			if (items.IsEmpty()) return String.Empty;
 
-			StringBuilder csvBuilder = new StringBuilder();
+			var csvBuilder = new StringBuilder();
 
 			List<String> properties = null;
-			Boolean first = true;
+			var first = true;
 
-			foreach (ExpandoObject eoitem in items)
+			foreach (var eoItem in items)
 			{
-				IDictionary<String, Object> item = eoitem as IDictionary<String, Object>;
+				var item = eoItem as IDictionary<String, Object>;
 				if (first) // add header
 				{
 					first = false;
 					properties = item.Keys.ToList();
-					String header = String.Join(",", properties);
+					var header = String.Join(",", properties);
 					csvBuilder.AppendLine(header);
 				}
 
-				String line = String.Join(",",
+				var line = String.Join(",",
 					properties.Select(p =>
 					{
-						Object value;
-						item.TryGetValue(p, out value);
+						item.TryGetValue(p, out var value);
 						return value.ToCsvValue();
 					}
 					)
@@ -424,8 +417,8 @@ namespace Singularity
 			{
 				return $"\"{item.ToString().Replace("\"", "\\\"").Replace(",", String.Empty)}\"";
 			}
-			Double dummy;
-			if (Double.TryParse(item.ToString(), out dummy))
+
+			if (Double.TryParse(item.ToString(), out _))
 			{
 				return $"{item}";
 			}
@@ -441,7 +434,7 @@ namespace Singularity
 		/// <returns>The list as a delimited string.</returns>
 		public static String ToDelimitedString<T>(this IEnumerable<T> items, String delimiter = null)
 		{
-			DelimitedStringBuilder result = new DelimitedStringBuilder(items.Cast<String>());
+			var result = new DelimitedStringBuilder(items.Cast<String>());
 			return result.ToDelimitedString(delimiter ?? ValueLib.CommaSpace.StringValue);
 		}
 
@@ -450,7 +443,7 @@ namespace Singularity
 		/// </summary>
 		/// <typeparam name="T">Generic data type of the list of items.</typeparam>
 		/// <param name="items">A List of generic items.</param>
-		/// <param name="tableClass">The table overal style.</param>
+		/// <param name="tableClass">The table overall style.</param>
 		/// <param name="headerClass">The table header style.</param>
 		/// <param name="rowClass">The primary table row style.</param>
 		/// <param name="alternateRowClass">The alternate table row style.</param>
@@ -458,7 +451,7 @@ namespace Singularity
 		public static String ToHtmlTable<T>(this IEnumerable<T> items, String tableClass, String headerClass, String rowClass, String alternateRowClass)
 		{
 
-			StringBuilder result = new StringBuilder();
+			var result = new StringBuilder();
 			if (String.IsNullOrEmpty(tableClass))
 			{
 				result.Append("<table id=\"" + typeof(T).Name + "Table\" >");
@@ -468,8 +461,8 @@ namespace Singularity
 				result.Append("<table id=\"" + typeof(T).Name + "Table\" class=\"" + tableClass + "\" >");
 			}
 
-			PropertyInfo[] propertyArray = typeof(T).GetProperties();
-			foreach (PropertyInfo prop in propertyArray)
+			var propertyArray = typeof(T).GetProperties();
+			foreach (var prop in propertyArray)
 			{
 				if (String.IsNullOrEmpty(headerClass))
 				{
@@ -481,8 +474,8 @@ namespace Singularity
 				}
 			}
 
-			Int32 lineCounter = 0;
-			foreach (T item in items)
+			var lineCounter = 0;
+			foreach (var item in items)
 			{
 				if (!String.IsNullOrEmpty(rowClass) && !String.IsNullOrEmpty(alternateRowClass))
 				{
@@ -493,9 +486,9 @@ namespace Singularity
 					result.AppendFormat("<tr >");
 				}
 
-				foreach (PropertyInfo prop in propertyArray)
+				foreach (var prop in propertyArray)
 				{
-					Object value = prop.GetValue(item, null);
+					var value = prop.GetValue(item, null);
 					result.AppendFormat("<td >{0}</td >", value ?? String.Empty);
 				}
 				result.AppendLine("</tr >");
@@ -512,22 +505,22 @@ namespace Singularity
 				return items.OrderBy(s => s);
 			}
 
-			Type type = typeof(T);
+			var type = typeof(T);
 			IOrderedEnumerable<T> result = null;
-			Boolean thenBy = false;
+			var thenBy = false;
 
 
 			foreach (var sortProperty in sortElements.Select(p => new { PropertyInfo = type.GetProperty(p.PropertyName), p.Descending }))
 			{
-				ParameterExpression parameter = Expression.Parameter(type, "o");
-				PropertyInfo propertyInfo = sortProperty.PropertyInfo;
-				Type propertyType = propertyInfo.PropertyType;
-				Boolean descending = sortProperty.Descending;
+				var parameter = Expression.Parameter(type, "o");
+				var propertyInfo = sortProperty.PropertyInfo;
+				var propertyType = propertyInfo.PropertyType;
+				var descending = sortProperty.Descending;
 
 				if (thenBy)
 				{
-					ParameterExpression prevExpr = Expression.Parameter(typeof(IOrderedEnumerable<T>), "prevExpr");
-					Func<IOrderedEnumerable<T>, IOrderedEnumerable<T>> thenByExpression = Expression.Lambda<Func<IOrderedEnumerable<T>, IOrderedEnumerable<T>>>(
+					var prevExpr = Expression.Parameter(typeof(IOrderedEnumerable<T>), "prevExpr");
+					var thenByExpression = Expression.Lambda<Func<IOrderedEnumerable<T>, IOrderedEnumerable<T>>>(
 						 Expression.Call(
 							  (!descending ? ThenByMethod : ThenByDescendingMethod).MakeGenericMethod(type, propertyType),
 							  prevExpr,
@@ -540,8 +533,8 @@ namespace Singularity
 				}
 				else
 				{
-					ParameterExpression prevExpr = Expression.Parameter(typeof(IEnumerable<T>), "prevExpr");
-					Func<IEnumerable<T>, IOrderedEnumerable<T>> orderByExpression = Expression.Lambda<Func<IEnumerable<T>, IOrderedEnumerable<T>>>(
+					var prevExpr = Expression.Parameter(typeof(IEnumerable<T>), "prevExpr");
+					var orderByExpression = Expression.Lambda<Func<IEnumerable<T>, IOrderedEnumerable<T>>>(
 						 Expression.Call(
 							  (!descending ? OrderByMethod : OrderByDescendingMethod).MakeGenericMethod(type, propertyType),
 							  prevExpr,
@@ -572,7 +565,7 @@ namespace Singularity
 
 		public static MethodInfo MethodOf<T>(Expression<Func<T>> method)
 		{
-			MethodCallExpression methodCallExpression = (MethodCallExpression)method.Body;
+			var methodCallExpression = (MethodCallExpression)method.Body;
 			return methodCallExpression.Method;
 		}
 
@@ -610,8 +603,8 @@ namespace Singularity
 																													Func<TInner, TKey> fk,
 																													Func<TSource, TInner, TResult> result)
 		{
-			List<TResult> left = source.LeftJoin(inner, pk, fk, result).ToList();
-			List<TResult> right = source.RightJoin(inner, pk, fk, result).ToList();
+			var left = source.LeftJoin(inner, pk, fk, result).ToList();
+			var right = source.RightJoin(inner, pk, fk, result).ToList();
 
 			return left.Union(right);
 		}
@@ -652,8 +645,8 @@ namespace Singularity
 																											 Func<TInner, TKey> fk,
 																											 Func<TSource, TInner, TResult> result)
 		{
-			List<TResult> left = source.LeftExcludingJoin(inner, pk, fk, result).ToList();
-			List<TResult> right = source.RightExcludingJoin(inner, pk, fk, result).ToList();
+			var left = source.LeftExcludingJoin(inner, pk, fk, result).ToList();
+			var right = source.RightExcludingJoin(inner, pk, fk, result).ToList();
 
 			return left.Union(right);
 		}

@@ -145,10 +145,7 @@ namespace Singularity
 		/// <param name="commandLine"></param>
 		/// <returns></returns>
 		[DebuggerHidden]
-		public static Words FromCommandLine(String commandLine)
-		{
-			return new Words(Split(commandLine));
-		}
+		public static Words FromCommandLine(String commandLine) => new Words(Split(commandLine));
 
 		private static List<String> Split(String commandLine)
 		{
@@ -209,10 +206,7 @@ namespace Singularity
 		/// <param name="words">Word collection to implicitly cast to a String.</param>
 		/// <returns></returns>
 		[DebuggerHidden]
-		public static implicit operator String(Words words)
-		{
-			return words.ToString();
-		}
+		public static implicit operator String(Words words) => words.ToString();
 
 		/// <remarks>This is exception safe if the index is invalid.</remarks>
 		[DebuggerHidden]
@@ -281,16 +275,10 @@ namespace Singularity
 		}
 
 		[DebuggerHidden]
-		public Words Clone()
-		{
-			return new Words(ToString(), _delimiter);
-		}
+		public Words Clone() => new Words(ToString(), _delimiter);
 
 		[DebuggerHidden]
-		public Boolean Contains(String word)
-		{
-			return _internalList.Contains(word);
-		}
+		public Boolean Contains(String word) => _internalList.Contains(word);
 
 		[DebuggerHidden]
 		public Int32 Count => _internalList.Count();
@@ -325,10 +313,7 @@ namespace Singularity
 		}
 
 		[DebuggerHidden]
-		public IEnumerator<String> GetEnumerator()
-		{
-			return _internalList.GetEnumerator();
-		}
+		public IEnumerator<String> GetEnumerator() => _internalList.GetEnumerator();
 
 		[DebuggerHidden]
 		public Words GetWords(Int32 startIndex, Int32? count = null)
@@ -359,10 +344,7 @@ namespace Singularity
 		}
 
 		[DebuggerHidden]
-		public Int32 IndexOf(String item)
-		{
-			return _internalList.IndexOf(item);
-		}
+		public Int32 IndexOf(String item) => _internalList.IndexOf(item);
 
 		public Int32 IndexOf(Predicate<String> predicate, Int32 index = 0, Int32 count = 1)
 		{
@@ -424,10 +406,7 @@ namespace Singularity
 		}
 
 		[DebuggerHidden]
-		public Boolean Remove(Words words)
-		{
-			return Remove(words._internalList.ToArray());
-		}
+		public Boolean Remove(Words words) => Remove(words._internalList.ToArray());
 
 		[DebuggerHidden]
 		public Boolean Remove(params String[] wordStrings)
@@ -506,23 +485,17 @@ namespace Singularity
 		}
 
 		[DebuggerHidden]
-		public override String ToString()
-		{
-			return String.Join(_delimiter, _internalList.ToArray());
-		}
+		public override String ToString() => String.Join(_delimiter, _internalList.ToArray());
+
+		//[DebuggerHidden]
+		//public void UpdateRange(CodeRegion originalRegion, Words newWords)
+		//{
+		//	RemoveRange(originalRegion.StartLineIndex + 1, (originalRegion.LineIndexCount - 2).LimitMin(1));
+		//	InsertRange(originalRegion.StartLineIndex + 1, newWords);
+		//}
 
 		[DebuggerHidden]
-		public void UpdateRange(CodeRegion originalRegion, Words newWords)
-		{
-			RemoveRange(originalRegion.StartLineIndex + 1, (originalRegion.LineIndexCount - 2).LimitMin(1));
-			InsertRange(originalRegion.StartLineIndex + 1, newWords);
-		}
-
-		[DebuggerHidden]
-		IEnumerator IEnumerable.GetEnumerator()
-		{
-			return _internalList.GetEnumerator();
-		}
+		IEnumerator IEnumerable.GetEnumerator() => _internalList.GetEnumerator();
 
 		[DebuggerHidden]
 		public String Delimiter

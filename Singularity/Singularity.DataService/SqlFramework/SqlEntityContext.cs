@@ -88,15 +88,9 @@ namespace Singularity.DataService
 			}
 		}
 
-		public IReply<Boolean> ExecuteMultiLinedSql(String mulitLinedSqlScript)
-		{
-			return SqlAdministrator.ExecuteMultiLinedSql(SqlConnection, mulitLinedSqlScript, SqlTransaction);
-		}
+		public IReply<Boolean> ExecuteMultiLinedSql(String mulitLinedSqlScript) => SqlAdministrator.ExecuteMultiLinedSql(SqlConnection, mulitLinedSqlScript, SqlTransaction);
 
-		internal SqlTransaction BeginTransaction()
-		{
-			return _sqlTransaction ?? (_sqlTransaction = _sqlConnection.BeginTransaction());
-		}
+		internal SqlTransaction BeginTransaction() => _sqlTransaction ?? (_sqlTransaction = _sqlConnection.BeginTransaction());
 
 		internal Boolean Commit()
 		{
@@ -118,10 +112,7 @@ namespace Singularity.DataService
 
 		internal void Rollback() => _sqlTransaction?.Rollback();
 
-		public Boolean TableExists(String tableName)
-		{
-			return ExecuteScalar(TableExistsQuery, new SqlParameter[]{ new SqlParameter("@TableName",  tableName)}).ToInt() == 1;
-		}
+		public Boolean TableExists(String tableName) => ExecuteScalar(TableExistsQuery, new SqlParameter[]{ new SqlParameter("@TableName",  tableName)}).ToInt() == 1;
 
 		public IReply<Boolean> CreateTables()
 		{
@@ -156,6 +147,7 @@ namespace Singularity.DataService
 			}
 		}
 
+		[System.Diagnostics.CodeAnalysis.SuppressMessage("Security", "CA2100:Review SQL queries for security vulnerabilities", Justification = "Approved")]
 		private SqlCommand CreateCommand(String query, CommandType commandType, SqlParameter[] filterParameters)
 		{
 			SqlCommand sqlCommand = new SqlCommand(query, _sqlConnection)

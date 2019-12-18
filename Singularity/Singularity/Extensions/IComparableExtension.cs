@@ -18,6 +18,7 @@ namespace Singularity
 		/// <remarks>Simply nest this method call if you want multiple fallbacks like a tertiary 
 		/// preference eg: FallbackOnNull(firstPreint?, FallbackOnNull(seondPreint?, finalInt)) </remarks>
 		[DebuggerStepThrough]
+
 		public static T ValueOnNull<T>(this T? nullableValue, T replacementValue) where T : struct
 		{
 			return nullableValue.HasValue ? nullableValue.Value : replacementValue;

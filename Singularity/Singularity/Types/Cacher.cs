@@ -26,7 +26,8 @@ namespace Singularity
 		/// <summary>
 		/// Retrieve cached item
 		/// </summary>
-		/// <typeparam name="T">Type of cached item</typeparam>
+		/// <typeparam name="TKey">Type of cached item key</typeparam>
+		/// <typeparam name="TValue">Type of cached item value</typeparam>
 		/// <param name="key">Name of cached item</param>
 		/// <param name="value">Cached value. Default(T) if item doesn't exist.</param>
 		/// <returns>Cached item as type</returns>
@@ -36,7 +37,8 @@ namespace Singularity
 		/// Insert value into the cache using
 		/// appropriate name/value pairs
 		/// </summary>
-		/// <typeparam name="T">Type of cached item</typeparam>
+		/// <typeparam name="TKey">Type of cached item key</typeparam>
+		/// <typeparam name="TValue">Type of cached item value</typeparam>
 		/// <param name="value">Item to be cached</param>
 		/// <param name="key">Name of item</param>
 		public abstract void Set(TKey key, TValue value);
@@ -44,6 +46,7 @@ namespace Singularity
 		/// <summary>
 		/// Remove item from cache
 		/// </summary>
+		/// <typeparam name="TKey">Type of cached item key</typeparam>
 		/// <param name="key">Name of cached item</param>        
 		public abstract void Clear(TKey key);
 

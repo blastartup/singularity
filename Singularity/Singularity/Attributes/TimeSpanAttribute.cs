@@ -19,9 +19,9 @@ namespace Singularity
 			private set;
 		}
 
-		public TimeSpanAttribute(String aName)
+		public TimeSpanAttribute(String name)
 		{
-			this.Name = aName;
+			this.Name = name;
 		}
 
 		/// <summary>
@@ -36,14 +36,15 @@ namespace Singularity
 		/// Uses reflection to retrieve an instance of this attribute 
 		/// on a given enum
 		/// </summary>
-		public static TimeSpanAttribute RetrieveAttribute(Enum aTarget)
+		public static TimeSpanAttribute RetrieveAttribute(ETemporalGroupFlag aTarget)
 		{
-			Object[] lAttributeCollection = aTarget.GetType().GetField(aTarget.ToString()).GetCustomAttributes(typeof(TimeSpanAttribute), true);
+			Object[] attributeCollection = aTarget.GetType().GetField(aTarget.ToString()).GetCustomAttributes(typeof(TimeSpanAttribute), true);
 
-			if (lAttributeCollection != null && lAttributeCollection.Length > 0)
-				return (TimeSpanAttribute)lAttributeCollection[0];
-			else
-				return null;
+			if (attributeCollection.Length > 0)
+			{
+				return (TimeSpanAttribute)attributeCollection[0];
+			}
+			return null;
 		}
 	}
 

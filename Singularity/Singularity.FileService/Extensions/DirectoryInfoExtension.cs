@@ -16,11 +16,10 @@ namespace Singularity.FileService
 		/// Return a file count as quickly as possible.
 		/// </summary>
 		/// <param name="folder">The folder you wish to create.</param>
+		/// <param name="searchPattern">File search pattern.</param>
+		/// <param name="searchOption">Search option.</param>
 		/// <returns>Whether or not the folder was created rather than the mere fact the folder exists.</returns>
-		public static Int32 Count(this DirectoryInfo folder, String searchPattern, SearchOption searchOption)
-		{
-			return folder.EnumerateDirectories().AsParallel().SelectMany(d => FastDirectoryEnumerator.EnumerateFiles(folder.FullName, searchPattern, searchOption)).Count();
-		}
+		public static Int32 Count(this DirectoryInfo folder, String searchPattern, SearchOption searchOption) => folder.EnumerateDirectories().AsParallel().SelectMany(d => FastDirectoryEnumerator.EnumerateFiles(folder.FullName, searchPattern, searchOption)).Count();
 
 		/// <summary>
 		/// Delete all the files and folders within the current folder but without deleting the current folder itself.

@@ -11,7 +11,7 @@ namespace Singularity
 		// static constructor
 		static TimeSpanArticulator()
 		{
-			_mGroupTypes = new List<ETemporalGroupFlag>(Enum.GetValues(typeof(ETemporalGroupFlag)) as IEnumerable<ETemporalGroupFlag>);
+			_mGroupTypes = new List<ETemporalGroupFlag>(Enum.GetValues(typeof(ETemporalGroupFlag)).OfType<ETemporalGroupFlag>());
 		}
 
 		/// <summary>

@@ -729,7 +729,7 @@ namespace Singularity
 			if (@object != null && nestCounter < MaxNesting)
 			{
 				nestCounter++;
-				List<PropertyInfo> properties = @object.GetType().GetProperties(BindingFlags.Instance | BindingFlags.Public).Where(p => p != null).ToList();
+				List<PropertyInfo> properties = @object.GetType().GetProperties(BindingFlags.Instance | BindingFlags.Public).ToList();
 				foreach (PropertyInfo property in properties)
 				{
 					Object valueObject = property.GetValue(@object, null);

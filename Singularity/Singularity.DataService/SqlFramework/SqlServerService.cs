@@ -134,9 +134,7 @@ ORDER BY c.column_id";
 
 		private SqlServer NewSqlServer()
 		{
-			var results = new SqlServer();
-			results.State = _sqlConnection.State;
-			results.ServerVersion = _sqlConnection.ServerVersion;
+			var results = new SqlServer {State = _sqlConnection.State, ServerVersion = _sqlConnection.ServerVersion};
 
 			var sqlQuery = "select * from sys.dm_server_services";
 			var sqlCommand = new SqlCommand(sqlQuery, _sqlConnection);
@@ -197,7 +195,7 @@ ORDER BY c.column_id";
 
 		private SqlDatabase NewSqlDatabase()
 		{
-			var results = new SqlDatabase(DatabaseName);
+			var sqlDatabase = new SqlDatabase(DatabaseName);
 			var sqlQuery = "select o.[type], o.[create_date], o.[modify_date], s.name [Schema], t.name from sys.objects o inner join sys.tables t on o.object_id = t.object_id inner join sys.schemas s on o.Schema_id = s.schema_id where o.type in ('U','S','IT')";
 			var sqlCommand = new SqlCommand(sqlQuery, _sqlConnection);
 			SqlDataReader sqlDataReader = null;
@@ -206,13 +204,13 @@ ORDER BY c.column_id";
 				sqlDataReader = sqlCommand.ExecuteReader();
 				while (sqlDataReader.Read())
 				{
-					results.SqlTables.Add(new SqlTable(sqlDataReader["name"].ToString())
+					sqlDatabase.SqlTables.Add(new SqlTable(sqlDataReader["name"].ToString())
 					{
 						IsSystemObject = sqlDataReader["type"].ToString().In("U", "IT"),
 						CreateDate = sqlDataReader["create_date"].ToDateTime(),
 						ModifiedDate = sqlDataReader["modify_date"].ToDateTime(),
-						Database = _sqlDatabase,
-						DefaultSchema = sqlDataReader["Schema"].ToString()
+						Database = sqlDatabase,
+						DefaultSchema = sqlDataReader["Schema"].ToString(),
 					});
 				}
 			}
@@ -236,8 +234,7 @@ ORDER BY c.column_id";
 						Scale = sqlDataReader["scale"].ToInt(),
 						IsNullable = sqlDataReader["is_nullable"].ToBool()
 					};
-					ESqlDataTypes systemDataType = ESqlDataTypes.None;
-					if (Enum.TryParse(sqlDataReader["SystemTypeName"].ToString(), out systemDataType))
+					if (Enum.TryParse(sqlDataReader["SystemTypeName"].ToString(), out ESqlDataTypes systemDataType))
 					{
 						udt.ESqlDataType = systemDataType;
 					}
@@ -246,7 +243,7 @@ ORDER BY c.column_id";
 						udt.ESqlDataType = ESqlDataTypes.None;
 					}
 
-					results.SqlUserDefinedDataTypes.Add(udt);
+					sqlDatabase.SqlUserDefinedDataTypes.Add(udt);
 				}
 			}
 			finally
@@ -254,7 +251,7 @@ ORDER BY c.column_id";
 				sqlDataReader?.Dispose();
 			}
 
-			return results;
+			return sqlDatabase;
 		}
 
 		public SqlDatabase SqlDatabase()

@@ -149,12 +149,9 @@
     <Compile Include="Providers\RoundingProvider.cs" />
     <Compile Include="Providers\VerhoeffCheckDigit.cs" />
     <Compile Include="Types\AssemblyInfo.cs" />
-    <Compile Include="Types\Base\CodeRegion.cs" />
     <Compile Include="Types\ConciseAssembler.cs" />
     <Compile Include="Types\MemoryCacher.cs" />
     <Compile Include="Types\StringCache.cs" />
-    <Compile Include="Types\VbCodeRegion.cs" />
-    <Compile Include="Types\CSharpCodeRegion.cs" />
     <Compile Include="Types\StaticCacher.cs" />
     <Compile Include="Replies\Reply.cs" />
     <Compile Include="Replies\ReplyErrorMessage.cs" />
@@ -206,6 +203,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="_CreateNewNuGetPackage\DoNotModify\NuGet.exe" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Types\Base\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

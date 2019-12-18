@@ -5,6 +5,8 @@ using System.Threading.Tasks;
 
 namespace Singularity
 {
+	[Obsolete("Not migrated to .NET Core 3.0.")]
+	// Last used by web apps especially iMobileMedia
 	public abstract class BaseFaultManager<TTraceLog> : IFaultManager where TTraceLog : class
 	{
 		protected BaseFaultManager(String route, Guid? transitId, String version)

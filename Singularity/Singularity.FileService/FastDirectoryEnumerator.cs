@@ -20,10 +20,7 @@ namespace Singularity.FileService
         /// </summary>
         public readonly FileAttributes Attributes;
 
-        public DateTime CreationTime
-        {
-            get { return this.CreationTimeUtc.ToLocalTime(); }
-        }
+        public DateTime CreationTime => CreationTimeUtc.ToLocalTime();
 
         /// <summary>
         /// File creation time in UTC
@@ -33,11 +30,8 @@ namespace Singularity.FileService
         /// <summary>
         /// Gets the last access time in local time.
         /// </summary>
-        public DateTime LastAccesTime
-        {
-            get { return this.LastAccessTimeUtc.ToLocalTime(); }
-        }
-        
+        public DateTime LastAccessTime => LastAccessTimeUtc.ToLocalTime();
+
         /// <summary>
         /// File last access time in UTC
         /// </summary>
@@ -46,11 +40,8 @@ namespace Singularity.FileService
         /// <summary>
         /// Gets the last access time in local time.
         /// </summary>
-        public DateTime LastWriteTime
-        {
-            get { return this.LastWriteTimeUtc.ToLocalTime(); }
-        }
-        
+        public DateTime LastWriteTime => LastWriteTimeUtc.ToLocalTime();
+
         /// <summary>
         /// File last write time in UTC
         /// </summary>
@@ -59,17 +50,17 @@ namespace Singularity.FileService
         /// <summary>
         /// Size of the file in bytes
         /// </summary>
-        public readonly long Size;
+        public readonly Int64 Size;
 
         /// <summary>
         /// Name of the file
         /// </summary>
-        public readonly string Name;
+        public readonly String Name;
 
         /// <summary>
         /// Full path to the file.
         /// </summary>
-        public readonly string Path;
+        public readonly String Path;
 
         /// <summary>
         /// Returns a <see cref="T:System.String"/> that represents the current <see cref="T:System.Object"/>.
@@ -77,9 +68,9 @@ namespace Singularity.FileService
         /// <returns>
         /// A <see cref="T:System.String"/> that represents the current <see cref="T:System.Object"/>.
         /// </returns>
-        public override string ToString()
+        public override String ToString()
         {
-            return this.Name;
+            return Name;
         }
 
         /// <summary>
@@ -88,34 +79,31 @@ namespace Singularity.FileService
         /// <param name="dir">The directory that the file is stored at</param>
         /// <param name="findData">WIN32_FIND_DATA structure that this
         /// object wraps.</param>
-        internal FileData(string dir, WIN32_FIND_DATA findData) 
+        internal FileData(String dir, WIN32_FIND_DATA findData) 
         {
-            this.Attributes = findData.dwFileAttributes;
+            Attributes = findData.dwFileAttributes;
 
 
-            this.CreationTimeUtc = ConvertDateTime(findData.ftCreationTime_dwHighDateTime, 
+            CreationTimeUtc = ConvertDateTime(findData.ftCreationTime_dwHighDateTime, 
                                                 findData.ftCreationTime_dwLowDateTime);
 
-            this.LastAccessTimeUtc = ConvertDateTime(findData.ftLastAccessTime_dwHighDateTime,
+            LastAccessTimeUtc = ConvertDateTime(findData.ftLastAccessTime_dwHighDateTime,
                                                 findData.ftLastAccessTime_dwLowDateTime);
 
-            this.LastWriteTimeUtc = ConvertDateTime(findData.ftLastWriteTime_dwHighDateTime,
+            LastWriteTimeUtc = ConvertDateTime(findData.ftLastWriteTime_dwHighDateTime,
                                                 findData.ftLastWriteTime_dwLowDateTime);
 
-            this.Size = CombineHighLowInts(findData.nFileSizeHigh, findData.nFileSizeLow);
+            Size = CombineHighLowInts(findData.nFileSizeHigh, findData.nFileSizeLow);
 
-            this.Name = findData.cFileName;
-            this.Path = System.IO.Path.Combine(dir, findData.cFileName);
+            Name = findData.cFileName;
+            Path = System.IO.Path.Combine(dir, findData.cFileName);
         }
 
-        private static long CombineHighLowInts(uint high, uint low)
-        {
-            return (((long)high) << 0x20) | low;
-        }
+        private static Int64 CombineHighLowInts(UInt32 high, UInt32 low) => (((Int64)high) << 0x20) | low;
 
-        private static DateTime ConvertDateTime(uint high, uint low)
+        private static DateTime ConvertDateTime(UInt32 high, UInt32 low)
         {
-            long fileTime = CombineHighLowInts(high, low);
+            Int64 fileTime = CombineHighLowInts(high, low);
             return DateTime.FromFileTimeUtc(fileTime);
         }
     }
@@ -128,20 +116,20 @@ namespace Singularity.FileService
     internal class WIN32_FIND_DATA
     {
         public FileAttributes dwFileAttributes;
-        public uint ftCreationTime_dwLowDateTime;
-        public uint ftCreationTime_dwHighDateTime;
-        public uint ftLastAccessTime_dwLowDateTime;
-        public uint ftLastAccessTime_dwHighDateTime;
-        public uint ftLastWriteTime_dwLowDateTime;
-        public uint ftLastWriteTime_dwHighDateTime;
-        public uint nFileSizeHigh;
-        public uint nFileSizeLow;
-        public int dwReserved0;
-        public int dwReserved1;
+        public UInt32 ftCreationTime_dwLowDateTime;
+        public UInt32 ftCreationTime_dwHighDateTime;
+        public UInt32 ftLastAccessTime_dwLowDateTime;
+        public UInt32 ftLastAccessTime_dwHighDateTime;
+        public UInt32 ftLastWriteTime_dwLowDateTime;
+        public UInt32 ftLastWriteTime_dwHighDateTime;
+        public UInt32 nFileSizeHigh;
+        public UInt32 nFileSizeLow;
+        public Int32 dwReserved0;
+        public Int32 dwReserved1;
         [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 260)]
-        public string cFileName;
+        public String cFileName;
         [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 14)]
-        public string cAlternateFileName;
+        public String cAlternateFileName;
 
         /// <summary>
         /// Returns a <see cref="T:System.String"/> that represents the current <see cref="T:System.Object"/>.
@@ -149,7 +137,7 @@ namespace Singularity.FileService
         /// <returns>
         /// A <see cref="T:System.String"/> that represents the current <see cref="T:System.Object"/>.
         /// </returns>
-        public override string ToString()
+        public override String ToString()
         {
             return "File name=" + cFileName;
         }
@@ -176,10 +164,7 @@ namespace Singularity.FileService
         /// <exception cref="ArgumentNullException">
         /// <paramref name="path"/> is a null reference (Nothing in VB)
         /// </exception>
-        public static IEnumerable<FileData> EnumerateFiles(string path)
-        {
-            return FastDirectoryEnumerator.EnumerateFiles(path, "*");
-        }
+        public static IEnumerable<FileData> EnumerateFiles(String path) => EnumerateFiles(path, "*");
 
         /// <summary>
         /// Gets <see cref="FileData"/> for all the files in a directory that match a 
@@ -195,12 +180,9 @@ namespace Singularity.FileService
         /// <exception cref="ArgumentNullException">
         /// <paramref name="filter"/> is a null reference (Nothing in VB)
         /// </exception>
-        public static IEnumerable<FileData> EnumerateFiles(string path, string searchPattern)
-        {
-            return FastDirectoryEnumerator.EnumerateFiles(path, searchPattern, SearchOption.TopDirectoryOnly);
-        }
+        public static IEnumerable<FileData> EnumerateFiles(String path, String searchPattern) => EnumerateFiles(path, searchPattern, SearchOption.TopDirectoryOnly);
 
-		/// <summary>
+        /// <summary>
 		/// Gets <see cref="FileData"/> for all the files in a directory that 
 		/// match a specific filter, optionally including all sub directories.
 		/// </summary>
@@ -222,7 +204,7 @@ namespace Singularity.FileService
 		/// <paramref name="searchOption"/> is not one of the valid values of the
 		/// <see cref="System.IO.SearchOption"/> enumeration.
 		/// </exception>
-		public static IEnumerable<FileData> EnumerateFiles(string path, string searchPattern, SearchOption searchOption)
+		public static IEnumerable<FileData> EnumerateFiles(String path, String searchPattern, SearchOption searchOption)
         {
             if (path == null)
             {
@@ -237,28 +219,29 @@ namespace Singularity.FileService
                 throw new ArgumentOutOfRangeException("searchOption");
             }
 
-            string fullPath = Path.GetFullPath(path);
+            String fullPath = Path.GetFullPath(path);
 
             return new FileEnumerable(fullPath, searchPattern, searchOption);
         }
 
-        /// <summary>
-        /// Gets <see cref="FileData"/> for all the files in a directory that match a 
-        /// specific filter.
-        /// </summary>
-        /// <param name="path">The path to search.</param>
-        /// <param name="searchPattern">The search string to match against files in the path.</param>
-        /// <returns>An object that implements <see cref="IEnumerable{FileData}"/> and 
-        /// allows you to enumerate the files in the given directory.</returns>
-        /// <exception cref="ArgumentNullException">
-        /// <paramref name="path"/> is a null reference (Nothing in VB)
-        /// </exception>
-        /// <exception cref="ArgumentNullException">
-        /// <paramref name="filter"/> is a null reference (Nothing in VB)
-        /// </exception>
-        public static FileData[] GetFiles(string path, string searchPattern, SearchOption searchOption)
+		/// <summary>
+		/// Gets <see cref="FileData"/> for all the files in a directory that match a 
+		/// specific filter.
+		/// </summary>
+		/// <param name="path">The path to search.</param>
+		/// <param name="searchPattern">The search string to match against files in the path.</param>
+		/// <param name="searchOption">Search option.</param>
+		/// <returns>An object that implements <see cref="IEnumerable{FileData}"/> and 
+		/// allows you to enumerate the files in the given directory.</returns>
+		/// <exception cref="ArgumentNullException">
+		/// <paramref name="path"/> is a null reference)
+		/// </exception>
+		/// <exception cref="ArgumentNullException">
+		/// <paramref name="searchPattern"/> is a null reference
+		/// </exception>
+		public static FileData[] GetFiles(String path, String searchPattern, SearchOption searchOption)
         {
-            IEnumerable<FileData> e = FastDirectoryEnumerator.EnumerateFiles(path, searchPattern, searchOption);
+            IEnumerable<FileData> e = EnumerateFiles(path, searchPattern, searchOption);
             List<FileData> list = new List<FileData>(e);
 
             FileData[] retval = new FileData[list.Count];
@@ -273,9 +256,9 @@ namespace Singularity.FileService
         /// </summary>
         private class FileEnumerable : IEnumerable<FileData>
         {
-            private readonly string m_path;
-            private readonly string m_filter;
-            private readonly SearchOption m_searchOption;
+            private readonly String _path;
+            private readonly String _filter;
+            private readonly SearchOption _searchOption;
 
             /// <summary>
             /// Initializes a new instance of the <see cref="FileEnumerable"/> class.
@@ -286,11 +269,11 @@ namespace Singularity.FileService
             /// One of the SearchOption values that specifies whether the search 
             /// operation should include all subdirectories or only the current directory.
             /// </param>
-            public FileEnumerable(string path, string filter, SearchOption searchOption)
+            public FileEnumerable(String path, String filter, SearchOption searchOption)
             {
-                m_path = path;
-                m_filter = filter;
-                m_searchOption = searchOption;
+                _path = path;
+                _filter = filter;
+                _searchOption = searchOption;
             }
 
             #region IEnumerable<FileData> Members
@@ -302,10 +285,7 @@ namespace Singularity.FileService
             /// A <see cref="T:System.Collections.Generic.IEnumerator`1"/> that can 
             /// be used to iterate through the collection.
             /// </returns>
-            public IEnumerator<FileData> GetEnumerator()
-            {
-                return new FileEnumerator(m_path, m_filter, m_searchOption);
-            }
+            public IEnumerator<FileData> GetEnumerator() => new FileEnumerator(_path, _filter, _searchOption);
 
             #endregion
 
@@ -318,10 +298,7 @@ namespace Singularity.FileService
             /// An <see cref="T:System.Collections.IEnumerator"/> object that can be 
             /// used to iterate through the collection.
             /// </returns>
-            System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
-            {
-                return new FileEnumerator(m_path, m_filter, m_searchOption);
-            }
+            System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator() => new FileEnumerator(_path, _filter, _searchOption);
 
             #endregion
         }
@@ -333,14 +310,13 @@ namespace Singularity.FileService
         {
             [ReliabilityContract(Consistency.WillNotCorruptState, Cer.Success)]
             [DllImport("kernel32.dll")]
-            private static extern bool FindClose(IntPtr handle);
+            private static extern Boolean FindClose(IntPtr handle);
 
             /// <summary>
             /// Initializes a new instance of the <see cref="SafeFindHandle"/> class.
             /// </summary>
             [SecurityPermission(SecurityAction.LinkDemand, UnmanagedCode = true)]
-            internal SafeFindHandle()
-                : base(true)
+            internal SafeFindHandle() : base(true)
             {
             }
 
@@ -352,10 +328,7 @@ namespace Singularity.FileService
             /// event of a catastrophic failure, false. In this case, it 
             /// generates a releaseHandleFailed MDA Managed Debugging Assistant.
             /// </returns>
-            protected override bool ReleaseHandle()
-            {
-                return FindClose(base.handle);
-            }
+            protected override Boolean ReleaseHandle() => FindClose(handle);
         }
 
         /// <summary>
@@ -365,36 +338,34 @@ namespace Singularity.FileService
         [System.Security.SuppressUnmanagedCodeSecurity]
         private class FileEnumerator : IEnumerator<FileData>
         {
-            [DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
-            private static extern SafeFindHandle FindFirstFile(string fileName, 
-                [In, Out] WIN32_FIND_DATA data);
+            [DllImport("kernel32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
+            private static extern SafeFindHandle FindFirstFile(String fileName, [In, Out] WIN32_FIND_DATA data);
 
             [DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
-            private static extern bool FindNextFile(SafeFindHandle hndFindFile, 
-                    [In, Out, MarshalAs(UnmanagedType.LPStruct)] WIN32_FIND_DATA lpFindFileData);
+            private static extern Boolean FindNextFile(SafeFindHandle hndFindFile, [In, Out, MarshalAs(UnmanagedType.LPStruct)] WIN32_FIND_DATA lpFindFileData);
 
             /// <summary>
             /// Hold context information about where we current are in the directory search.
             /// </summary>
             private class SearchContext
             {
-                public readonly string Path;
-                public Stack<string> SubdirectoriesToProcess;
+                public readonly String Path;
+                public Stack<String> SubdirectoriesToProcess;
 
-                public SearchContext(string path)
+                public SearchContext(String path)
                 {
-                    this.Path = path;
+                    Path = path;
                 }
             }
 
-            private string m_path;
-            private string m_filter;
-            private SearchOption m_searchOption;
-            private Stack<SearchContext> m_contextStack;
-            private SearchContext m_currentContext;
+            private String _path;
+            private String _filter;
+            private SearchOption _searchOption;
+            private Stack<SearchContext> _contextStack;
+            private SearchContext _currentContext;
 
-            private SafeFindHandle m_hndFindFile;
-            private WIN32_FIND_DATA m_win_find_data = new WIN32_FIND_DATA();
+            private SafeFindHandle _hndFindFile;
+            private WIN32_FIND_DATA _win_find_data = new WIN32_FIND_DATA();
 
             /// <summary>
             /// Initializes a new instance of the <see cref="FileEnumerator"/> class.
@@ -405,16 +376,16 @@ namespace Singularity.FileService
             /// One of the SearchOption values that specifies whether the search 
             /// operation should include all subdirectories or only the current directory.
             /// </param>
-            public FileEnumerator(string path, string filter, SearchOption searchOption)
+            public FileEnumerator(String path, String filter, SearchOption searchOption)
             {
-                m_path = path;
-                m_filter = filter;
-                m_searchOption = searchOption;
-                m_currentContext = new SearchContext(path);
+                _path = path;
+                _filter = filter;
+                _searchOption = searchOption;
+                _currentContext = new SearchContext(path);
                 
-                if (m_searchOption == SearchOption.AllDirectories)
+                if (_searchOption == SearchOption.AllDirectories)
                 {
-                    m_contextStack = new Stack<SearchContext>();
+                    _contextStack = new Stack<SearchContext>();
                 }
             }
 
@@ -427,10 +398,7 @@ namespace Singularity.FileService
             /// <returns>
             /// The element in the collection at the current position of the enumerator.
             /// </returns>
-            public FileData Current
-            {
-                get { return new FileData(m_path, m_win_find_data); }
-            }
+            public FileData Current => new FileData(_path, _win_find_data);
 
             #endregion
 
@@ -442,9 +410,9 @@ namespace Singularity.FileService
             /// </summary>
             public void Dispose()
             {
-                if (m_hndFindFile != null)
+                if (_hndFindFile != null)
                 {
-                    m_hndFindFile.Dispose();
+                    _hndFindFile.Dispose();
                 }
             }
 
@@ -459,10 +427,7 @@ namespace Singularity.FileService
             /// <returns>
             /// The element in the collection at the current position of the enumerator.
             /// </returns>
-            object System.Collections.IEnumerator.Current
-            {
-                get { return new FileData(m_path, m_win_find_data); }
-            }
+            Object System.Collections.IEnumerator.Current => new FileData(_path, _win_find_data);
 
             /// <summary>
             /// Advances the enumerator to the next element of the collection.
@@ -474,74 +439,74 @@ namespace Singularity.FileService
             /// <exception cref="T:System.InvalidOperationException">
             /// The collection was modified after the enumerator was created.
             /// </exception>
-            public bool MoveNext()
+            public Boolean MoveNext()
             {
-                bool retval = false;
+                Boolean retval = false;
 
                 //If the handle is null, this is first call to MoveNext in the current 
                 // directory.  In that case, start a new search.
-                if (m_currentContext.SubdirectoriesToProcess == null)
+                if (_currentContext.SubdirectoriesToProcess == null)
                 {
-                    if (m_hndFindFile == null)
+                    if (_hndFindFile == null)
                     {
-                        new FileIOPermission(FileIOPermissionAccess.PathDiscovery, m_path).Demand();
+                        new FileIOPermission(FileIOPermissionAccess.PathDiscovery, _path).Demand();
 
-                        string searchPath = Path.Combine(m_path, m_filter);
-                        m_hndFindFile = FindFirstFile(searchPath, m_win_find_data);
-                        retval = !m_hndFindFile.IsInvalid;
+                        String searchPath = Path.Combine(_path, _filter);
+                        _hndFindFile = FindFirstFile(searchPath, _win_find_data);
+                        retval = !_hndFindFile.IsInvalid;
                     }
                     else
                     {
                         //Otherwise, find the next item.
-                        retval = FindNextFile(m_hndFindFile, m_win_find_data);
+                        retval = FindNextFile(_hndFindFile, _win_find_data);
                     }
                 }
 
                 //If the call to FindNextFile or FindFirstFile succeeded...
                 if (retval)
                 {
-                    if (((FileAttributes)m_win_find_data.dwFileAttributes & FileAttributes.Directory) == FileAttributes.Directory)
+                    if (((FileAttributes)_win_find_data.dwFileAttributes & FileAttributes.Directory) == FileAttributes.Directory)
                     {
                         //Ignore folders for now.   We call MoveNext recursively here to 
                         // move to the next item that FindNextFile will return.
                         return MoveNext();
                     }
                 }
-                else if (m_searchOption == SearchOption.AllDirectories)
+                else if (_searchOption == SearchOption.AllDirectories)
                 {
                     //SearchContext context = new SearchContext(m_hndFindFile, m_path);
                     //m_contextStack.Push(context);
                     //m_path = Path.Combine(m_path, m_win_find_data.cFileName);
                     //m_hndFindFile = null;
 
-                    if (m_currentContext.SubdirectoriesToProcess == null)
+                    if (_currentContext.SubdirectoriesToProcess == null)
                     {
-                        string[] subDirectories = Directory.GetDirectories(m_path);
-                        m_currentContext.SubdirectoriesToProcess = new Stack<string>(subDirectories);
+                        String[] subDirectories = Directory.GetDirectories(_path);
+                        _currentContext.SubdirectoriesToProcess = new Stack<String>(subDirectories);
                     }
 
-                    if (m_currentContext.SubdirectoriesToProcess.Count > 0)
+                    if (_currentContext.SubdirectoriesToProcess.Count > 0)
                     {
-                        string subDir = m_currentContext.SubdirectoriesToProcess.Pop();
+                        String subDir = _currentContext.SubdirectoriesToProcess.Pop();
 
-                        m_contextStack.Push(m_currentContext);
-                        m_path = subDir;
-                        m_hndFindFile = null;
-                        m_currentContext = new SearchContext(m_path);
+                        _contextStack.Push(_currentContext);
+                        _path = subDir;
+                        _hndFindFile = null;
+                        _currentContext = new SearchContext(_path);
                         return MoveNext();
                     }
 
                     //If there are no more files in this directory and we are 
                     // in a sub directory, pop back up to the parent directory and
                     // continue the search from there.
-                    if (m_contextStack.Count > 0)
+                    if (_contextStack.Count > 0)
                     {
-                        m_currentContext = m_contextStack.Pop();
-                        m_path = m_currentContext.Path;
-                        if (m_hndFindFile != null)
+                        _currentContext = _contextStack.Pop();
+                        _path = _currentContext.Path;
+                        if (_hndFindFile != null)
                         {
-                            m_hndFindFile.Close();
-                            m_hndFindFile = null;
+                            _hndFindFile.Close();
+                            _hndFindFile = null;
                         }
 
                         return MoveNext();
@@ -559,7 +524,7 @@ namespace Singularity.FileService
             /// </exception>
             public void Reset()
             {
-                m_hndFindFile = null;
+                _hndFindFile = null;
             }
 
             #endregion
