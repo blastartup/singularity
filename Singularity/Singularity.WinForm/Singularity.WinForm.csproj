@@ -62,6 +62,9 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\VersionInfo.cs">
+      <Link>VersionInfo.cs</Link>
+    </Compile>
     <Compile Include="Async\AsyncAction.cs" />
     <Compile Include="Async\RepetitiveExecutionAsyncActor.cs" />
     <Compile Include="Async\SingleExecutionAsyncActor.cs" />
@@ -85,7 +88,6 @@
     <Compile Include="UserControls\RoundedButton.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="VersionInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Singularity\Singularity.csproj">
